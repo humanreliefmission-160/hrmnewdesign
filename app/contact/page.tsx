@@ -47,7 +47,7 @@ export default function Contact() {
               <div className="contact-info-card">
                 <div
                   style={{
-                    fontFamily: "'Getronde',Georgia,serif",
+                    fontFamily: "'Rubik',sans-serif",
                     fontSize: "1.1rem",
                     fontWeight: 700,
                     marginBottom: "1.5rem",
@@ -101,7 +101,7 @@ export default function Contact() {
               >
                 <div
                   style={{
-                    fontFamily: "'Getronde',Georgia,serif",
+                    fontFamily: "'Rubik',sans-serif",
                     fontSize: "1rem",
                     fontWeight: 700,
                     marginBottom: "0.6rem",
@@ -131,7 +131,7 @@ export default function Contact() {
             <div className="contact-form-card">
               <div
                 style={{
-                  fontFamily: "'Getronde',Georgia,serif",
+                  fontFamily: "'Rubik',sans-serif",
                   fontSize: "1.4rem",
                   fontWeight: 700,
                   marginBottom: "0.5rem",
