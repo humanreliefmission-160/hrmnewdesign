@@ -2,16 +2,21 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
     <footer>
       <div className="footer-grid">
         <div>
-          <div className="footer-brand-name">Human Relief Mission</div>
-          <div className="footer-desc">
-            Delivering emergency relief, education, and sustainable development
-            aid to communities in need across the world since 2003.
+          <div>
+            <Link href="/" >
+              <Image src="/hhtw.svg" alt="Helping Box" width={200} height={200} />
+            </Link>
+            <div className="footer-desc">
+              Delivering emergency relief, education, and sustainable development
+              aid to communities in need across the world since 2016.
+            </div>
           </div>
           <div className="footer-socials">
             <a className="social-btn">f</a>
@@ -77,20 +82,14 @@ export default function Footer() {
               <Link href="/donate">Sadaqah</Link>
             </li>
           </ul>
-          <div className="helping-box" style={{ marginTop: "1.5rem" }}>
-            HELPING
-            <br />
-            HUMANITY
-            <br />
-            THROUGH
-            <br />
-            WELFARE.
-          </div>
         </div>
       </div>
       <div className="footer-bottom">
-        <p>Copyright © Human Relief Mission 2025. All Rights Reserved</p>
-        <p className="footer-charity">Charity No. 1160380</p>
+        <div>
+          <p>Copyright &copy; Human Relief Mission 2026. All Rights Reserved</p>
+          <p className="footer-charity">Charity No. 1160380</p>
+        </div>
+        <Image src="/donation-policy-icon.svg" alt="Helping Box" width={75} height={75} />
       </div>
     </footer>
   );

@@ -81,7 +81,7 @@ export default function Donate() {
     <div id="page-donate" className="page active">
       <div className="donation-hero">
         <div className="about-breadcrumb">
-          <Link href="/" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>
+          <Link href="/" style={{ color: "color-mix(in srgb, var(--white) 50%, transparent)", textDecoration: "none" }}>
             Home
           </Link>{" "}
           / <span>Donate</span>
@@ -178,8 +178,8 @@ export default function Donate() {
           {donationState.type === "monthly" && (
             <div
               style={{
-                background: "rgba(101,1,153,0.08)",
-                border: "1px solid rgba(101,1,153,0.2)",
+                background: "var(--purple-faint)",
+                border: "1px solid color-mix(in srgb, var(--purple) 20%, transparent)",
                 borderRadius: "8px",
                 padding: "1rem 1.2rem",
                 marginBottom: "1.5rem",
@@ -193,7 +193,7 @@ export default function Donate() {
           )}
           <div
             style={{
-              background: "#fff",
+              background: "var(--white)",
               border: "2px solid var(--light-grey)",
               borderRadius: "12px",
               padding: "1.5rem",
@@ -343,7 +343,7 @@ export default function Donate() {
           {donationState.giftAid && (
             <div
               style={{
-                background: "rgba(101,1,153,0.08)",
+                background: "var(--purple-faint)",
                 borderLeft: "4px solid var(--purple)",
                 padding: "1rem 1.2rem",
                 borderRadius: "0 8px 8px 0",
@@ -430,7 +430,7 @@ export default function Donate() {
           <div
             style={{
               padding: "1rem 1.2rem",
-              background: "#fff",
+              background: "var(--white)",
               border: "1px solid var(--light-grey)",
               borderRadius: "8px",
               marginBottom: "1.5rem",

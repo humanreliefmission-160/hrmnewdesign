@@ -8,7 +8,7 @@ export default function About() {
     <div id="page-about" className="page active">
       <div className="about-hero">
         <div className="about-breadcrumb">
-          <Link href="/" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>
+          <Link href="/" style={{ color: "color-mix(in srgb, var(--white) 50%, transparent)", textDecoration: "none" }}>
             Home
           </Link>{" "}
           / <span>About Us</span>
@@ -25,7 +25,7 @@ export default function About() {
         </p>
       </div>
 
-      <section className="section" style={{ background: "#fff" }}>
+      <section className="section" style={{ background: "var(--white)" }}>
         <div className="section-inner">
           <div className="mission-grid">
             <div>
@@ -70,11 +70,11 @@ export default function About() {
           <div style={{ textAlign: "center", marginBottom: "3rem" }}>
             <div
               className="section-tag"
-              style={{ background: "rgba(255,255,255,0.15)", color: "#fff" }}
+              style={{ background: "color-mix(in srgb, var(--white) 15%, transparent)", color: "var(--white)" }}
             >
               Our Numbers
             </div>
-            <h2 className="section-title" style={{ color: "#fff" }}>
+            <h2 className="section-title" style={{ color: "var(--white)" }}>
               {"The Impact We've Made"}
             </h2>
           </div>
@@ -82,8 +82,8 @@ export default function About() {
             <div
               className="impact-card"
               style={{
-                background: "rgba(255,255,255,0.12)",
-                border: "1px solid rgba(255,255,255,0.2)",
+                background: "color-mix(in srgb, var(--white) 12%, transparent)",
+                border: "1px solid color-mix(in srgb, var(--white) 20%, transparent)",
               }}
             >
               <div className="impact-icon">🌍</div>
@@ -92,7 +92,7 @@ export default function About() {
               </div>
               <div
                 className="impact-label"
-                style={{ color: "rgba(255,255,255,0.7)" }}
+                style={{ color: "color-mix(in srgb, var(--white) 70%, transparent)" }}
               >
                 Countries
               </div>
@@ -100,8 +100,8 @@ export default function About() {
             <div
               className="impact-card"
               style={{
-                background: "rgba(255,255,255,0.12)",
-                border: "1px solid rgba(255,255,255,0.2)",
+                background: "color-mix(in srgb, var(--white) 12%, transparent)",
+                border: "1px solid color-mix(in srgb, var(--white) 20%, transparent)",
               }}
             >
               <div className="impact-icon">👥</div>
@@ -110,7 +110,7 @@ export default function About() {
               </div>
               <div
                 className="impact-label"
-                style={{ color: "rgba(255,255,255,0.7)" }}
+                style={{ color: "color-mix(in srgb, var(--white) 70%, transparent)" }}
               >
                 Beneficiaries
               </div>
@@ -118,8 +118,8 @@ export default function About() {
             <div
               className="impact-card"
               style={{
-                background: "rgba(255,255,255,0.12)",
-                border: "1px solid rgba(255,255,255,0.2)",
+                background: "color-mix(in srgb, var(--white) 12%, transparent)",
+                border: "1px solid color-mix(in srgb, var(--white) 20%, transparent)",
               }}
             >
               <div className="impact-icon">🏗️</div>
@@ -128,7 +128,7 @@ export default function About() {
               </div>
               <div
                 className="impact-label"
-                style={{ color: "rgba(255,255,255,0.7)" }}
+                style={{ color: "color-mix(in srgb, var(--white) 70%, transparent)" }}
               >
                 Projects Completed
               </div>
@@ -136,8 +136,8 @@ export default function About() {
             <div
               className="impact-card"
               style={{
-                background: "rgba(255,255,255,0.12)",
-                border: "1px solid rgba(255,255,255,0.2)",
+                background: "color-mix(in srgb, var(--white) 12%, transparent)",
+                border: "1px solid color-mix(in srgb, var(--white) 20%, transparent)",
               }}
             >
               <div className="impact-icon">❤️</div>
@@ -146,7 +146,7 @@ export default function About() {
               </div>
               <div
                 className="impact-label"
-                style={{ color: "rgba(255,255,255,0.7)" }}
+                style={{ color: "color-mix(in srgb, var(--white) 70%, transparent)" }}
               >
                 Years of Service
               </div>
@@ -215,7 +215,7 @@ export default function About() {
         </div>
       </section>
 
-      <section className="section" style={{ background: "#fff" }}>
+      <section className="section" style={{ background: "var(--white)" }}>
         <div className="section-inner">
           <div className="section-tag">The People Behind It</div>
           <h2 className="section-title">Our Leadership Team</h2>

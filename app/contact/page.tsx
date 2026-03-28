@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
 export default function Contact() {
@@ -20,7 +20,7 @@ export default function Contact() {
     <div id="page-contact" className="page active">
       <div className="contact-hero">
         <div className="about-breadcrumb">
-          <Link href="/" style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}>
+          <Link href="/" style={{ color: "color-mix(in srgb, var(--white) 50%, transparent)", textDecoration: "none" }}>
             Home
           </Link>{" "}
           / <span>Contact Us</span>
@@ -28,7 +28,7 @@ export default function Contact() {
         <h1>Get In Touch</h1>
         <p
           style={{
-            color: "rgba(255,255,255,0.8)",
+            color: "color-mix(in srgb, var(--white) 80%, transparent)",
             fontSize: "1.05rem",
             maxWidth: "500px",
             margin: "0 auto",
@@ -96,7 +96,7 @@ export default function Contact() {
                   padding: "1.5rem",
                   background: "var(--purple)",
                   borderRadius: "12px",
-                  color: "#fff",
+                  color: "var(--white)",
                 }}
               >
                 <div
@@ -112,7 +112,7 @@ export default function Contact() {
                 <p
                   style={{
                     fontSize: "0.875rem",
-                    color: "rgba(255,255,255,0.8)",
+                    color: "color-mix(in srgb, var(--white) 80%, transparent)",
                     lineHeight: 1.6,
                     marginBottom: "1rem",
                   }}
