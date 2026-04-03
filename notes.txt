@@ -1,0 +1,269 @@
+BEGIN;
+
+-- Extensions
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE EXTENSION IF NOT EXISTS citext;
+
+-- --------------------------------------------------
+-- Utility: auto update updated_at
+-- --------------------------------------------------
+CREATE OR REPLACE FUNCTION set_updated_at()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$;
+
+-- --------------------------------------------------
+-- Lookup Tables
+-- --------------------------------------------------
+
+CREATE TABLE source_channel (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  code TEXT UNIQUE NOT NULL,
+  label TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE donation_status (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  code TEXT UNIQUE NOT NULL,
+  label TEXT NOT NULL,
+  is_final BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE donation_type (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  code TEXT UNIQUE NOT NULL,
+  label TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE payment_method (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  code TEXT UNIQUE NOT NULL,
+  label TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- --------------------------------------------------
+-- Core Person (Donor Identity)
+-- --------------------------------------------------
+
+CREATE TABLE person (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  first_name TEXT,
+  last_name TEXT,
+  full_name TEXT GENERATED ALWAYS AS (
+    trim(coalesce(first_name,'') || ' ' || coalesce(last_name,''))
+  ) STORED,
+  primary_email CITEXT,
+  primary_phone TEXT,
+  date_of_birth DATE,
+  archived_at TIMESTAMPTZ,
+  CONSTRAINT person_email_chk
+    CHECK (primary_email IS NULL OR primary_email ~* '^[^@\s]+@[^@\s]+\.[^@\s]+$')
+);
+
+CREATE UNIQUE INDEX person_email_uq
+  ON person (primary_email)
+  WHERE primary_email IS NOT NULL;
+
+CREATE TRIGGER person_updated_at
+BEFORE UPDATE ON person
+FOR EACH ROW
+EXECUTE FUNCTION set_updated_at();
+
+-- --------------------------------------------------
+-- Address
+-- --------------------------------------------------
+
+CREATE TABLE address (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  line1 TEXT NOT NULL,
+  line2 TEXT,
+  city TEXT,
+  region TEXT,
+  post_code TEXT,
+  country_code CHAR(2) NOT NULL,
+  archived_at TIMESTAMPTZ
+);
+
+CREATE TRIGGER address_updated_at
+BEFORE UPDATE ON address
+FOR EACH ROW
+EXECUTE FUNCTION set_updated_at();
+
+CREATE TABLE person_address (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  person_id UUID NOT NULL REFERENCES person(id) ON DELETE CASCADE,
+  address_id UUID NOT NULL REFERENCES address(id) ON DELETE RESTRICT,
+  is_primary BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (person_id, address_id)
+);
+
+CREATE UNIQUE INDEX person_primary_address_uq
+  ON person_address (person_id)
+  WHERE is_primary = TRUE;
+
+-- --------------------------------------------------
+-- Donor Profile
+-- --------------------------------------------------
+
+CREATE TABLE donor_profile (
+  person_id UUID PRIMARY KEY REFERENCES person(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  gift_aid_eligible BOOLEAN NOT NULL DEFAULT FALSE,
+  gift_aid_declared_at TIMESTAMPTZ,
+  source_channel_id UUID REFERENCES source_channel(id) ON DELETE SET NULL
+);
+
+CREATE TRIGGER donor_profile_updated_at
+BEFORE UPDATE ON donor_profile
+FOR EACH ROW
+EXECUTE FUNCTION set_updated_at();
+
+-- --------------------------------------------------
+-- Campaign
+-- --------------------------------------------------
+
+CREATE TABLE campaign (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  code TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TRIGGER campaign_updated_at
+BEFORE UPDATE ON campaign
+FOR EACH ROW
+EXECUTE FUNCTION set_updated_at();
+
+-- --------------------------------------------------
+-- Donation
+-- --------------------------------------------------
+
+CREATE TABLE donation (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  donor_person_id UUID NOT NULL REFERENCES donor_profile(person_id) ON DELETE RESTRICT,
+  campaign_id UUID REFERENCES campaign(id) ON DELETE SET NULL,
+  amount NUMERIC(12,2) NOT NULL CHECK (amount > 0),
+  currency CHAR(3) NOT NULL CHECK (currency ~ '^[A-Z]{3}$'),
+  gift_aid_claimed BOOLEAN NOT NULL DEFAULT FALSE,
+  donation_type_id UUID NOT NULL REFERENCES donation_type(id) ON DELETE RESTRICT,
+  payment_method_id UUID NOT NULL REFERENCES payment_method(id) ON DELETE RESTRICT,
+  status_id UUID NOT NULL REFERENCES donation_status(id) ON DELETE RESTRICT,
+  payment_provider TEXT,
+  transaction_id TEXT,
+  received_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TRIGGER donation_updated_at
+BEFORE UPDATE ON donation
+FOR EACH ROW
+EXECUTE FUNCTION set_updated_at();
+
+CREATE UNIQUE INDEX donation_provider_txn_uq
+  ON donation (payment_provider, transaction_id)
+  WHERE payment_provider IS NOT NULL AND transaction_id IS NOT NULL;
+
+CREATE INDEX donation_donor_idx
+  ON donation (donor_person_id, received_at DESC);
+
+CREATE INDEX donation_status_idx
+  ON donation (status_id, received_at DESC);
+
+-- --------------------------------------------------
+-- Contact Messages
+-- --------------------------------------------------
+
+CREATE TABLE contact_message (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  person_id UUID REFERENCES person(id) ON DELETE SET NULL,
+  first_name TEXT,
+  last_name TEXT,
+  email CITEXT NOT NULL,
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  is_read BOOLEAN NOT NULL DEFAULT FALSE,
+  source_channel_id UUID REFERENCES source_channel(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  read_at TIMESTAMPTZ
+);
+
+CREATE INDEX contact_message_read_idx
+  ON contact_message (is_read, created_at DESC);
+
+-- --------------------------------------------------
+-- Marketing Subscription
+-- --------------------------------------------------
+
+CREATE TABLE marketing_subscription (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  person_id UUID REFERENCES person(id) ON DELETE SET NULL,
+  email CITEXT NOT NULL,
+  first_name TEXT,
+  last_name TEXT,
+  source_channel_id UUID REFERENCES source_channel(id) ON DELETE SET NULL,
+  subscribed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  unsubscribed_at TIMESTAMPTZ,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (email) WHERE is_active = TRUE
+);
+
+-- --------------------------------------------------
+-- Consent Audit Log
+-- --------------------------------------------------
+
+CREATE TABLE consent_event (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  person_id UUID NOT NULL REFERENCES person(id) ON DELETE CASCADE,
+  channel TEXT NOT NULL CHECK (channel IN ('email','sms','phone','post')),
+  purpose TEXT NOT NULL CHECK (purpose IN ('marketing','fundraising','service')),
+  status TEXT NOT NULL CHECK (status IN ('granted','withdrawn')),
+  recorded_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  source_channel_id UUID REFERENCES source_channel(id) ON DELETE SET NULL,
+  notes TEXT
+);
+
+CREATE INDEX consent_event_person_idx
+  ON consent_event (person_id, recorded_at DESC);
+
+-- --------------------------------------------------
+-- Admin Users (Only Internal Logins)
+-- --------------------------------------------------
+
+CREATE TABLE app_user (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email CITEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'staff'
+    CHECK (role IN ('admin','finance','fundraising','staff')),
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  last_login_at TIMESTAMPTZ
+);
+
+CREATE TRIGGER app_user_updated_at
+BEFORE UPDATE ON app_user
+FOR EACH ROW
+EXECUTE FUNCTION set_updated_at();
+
+COMMIT;
