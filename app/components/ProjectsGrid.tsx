@@ -31,15 +31,14 @@ export default function ProjectsGrid() {
                 can focus on learning and achieving their dreams.
               </p>
               <div className="flex justify-between items-center mt-6 pt-4 border-t border-brand-lgrey">
-                <Link href="/donate" className="text-purple font-bold text-sm hover:underline">
-                  Find out More
-                </Link>
-                <Link href="/about" className="text-brand-black font-bold text-sm underline hover:text-brand-grey">
-                  Learn More
+                <YellowCTA text="Find out more" />
+                <Link href="/donate" className="text-brand-black font-bold text-sm underline hover:text-brand-grey">
+                  Donate Now
                 </Link>
               </div>
             </div>
           </div>
+
           {/* Card 2 */}
           <div className="bg-brand-white rounded-xl overflow-hidden shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover group">
             <div className="aspect-4/3 relative overflow-hidden">
@@ -53,15 +52,14 @@ export default function ProjectsGrid() {
                 can focus on learning and achieving their dreams.
               </p>
               <div className="flex justify-between items-center mt-6 pt-4 border-t border-brand-lgrey">
-                <Link href="/donate" className="text-purple font-bold text-sm hover:underline">
-                  Find out More
-                </Link>
-                <Link href="/about" className="text-brand-black font-bold text-sm underline hover:text-brand-grey">
-                  Learn More
+                <YellowCTA text="Find out more" />
+                <Link href="/donate" className="text-brand-black font-bold text-sm underline hover:text-brand-grey">
+                  Donate Now
                 </Link>
               </div>
             </div>
           </div>
+
           {/* Card 3 */}
           <div className="bg-brand-white rounded-xl overflow-hidden shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover group">
             <div className="aspect-4/3 relative overflow-hidden">
@@ -75,11 +73,9 @@ export default function ProjectsGrid() {
                 can focus on learning and achieving their dreams.
               </p>
               <div className="flex justify-between items-center mt-6 pt-4 border-t border-brand-lgrey">
-                <Link href="/donate" className="text-purple font-bold text-sm hover:underline">
-                  Find out More
-                </Link>
-                <Link href="/about" className="text-brand-black font-bold text-sm underline hover:text-brand-grey">
-                  Learn More
+                <YellowCTA text="Find out more" />
+                <Link href="/donate" className="text-brand-black font-bold text-sm underline hover:text-brand-grey">
+                  Donate Now
                 </Link>
               </div>
             </div>
