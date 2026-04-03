@@ -1,78 +1,31 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
+import YellowCTA from "./YellowCTA";
 
-export default function Hero() {
+export default function HeroTwo() {
   return (
-    <section className="hero-img">
-      <div className="hero-overlay">
-        <div className="hero-circle-1"></div>
-        <div className="hero-circle-2"></div>
-        <div className="hero-content">
-          <div className="hero-text">
-            <div className="hero-tag">
-              <span className="hero-tag-dot"></span>
-              Helping Humanity Through Welfare
-            </div>
-            <h1>Bags for Students</h1>
-            <p>
-              Human Relief Mission delivers life saving aid, education, and hope to communities in need across the globe. Together, we change lives.
-            </p>
-            <div className="hero-btns">
-              <Link href="/donate" className="btn btn-yellow">
-                Donate Now
-              </Link>
-              <Link href="/about" className="btn btn-outline">
-                Learn More
-              </Link>
-            </div>
-            <div className="hero-stats">
-              <div>
-                <div className="hero-stat-num">500M+</div>
-                <div className="hero-stat-label">Meals Delivered</div>
-              </div>
-              <div>
-                <div className="hero-stat-num">45+</div>
-                <div className="hero-stat-label">Countries</div>
-              </div>
-              <div>
-                <div className="hero-stat-num">2M+</div>
-                <div className="hero-stat-label">Lives Changed</div>
-              </div>
-            </div>
-          </div>
-          <div className="hero-image-side">
-            <div className="hero-card-wrap">
-              <div className="hero-img-placeholder">
-                <div className="hero-img-bg">
-                  <Image src="/img-placeholder.JPG" alt="img-placeholder" width={550} height={400} loading="eager" />
-                </div>
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    color: "var(--white)",
-                    fontWeight: 700,
-                    fontSize: "0.9rem",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.08em",
-                    padding: "0.8rem 1.75rem",
-                    textAlign: "center",
-                    background: "var(--purple-dark)",
-                  }}
-                >
-                  Bags For Students Programme
-                </div>
-              </div>
-              <div className="floating-badge">
-                <span>10,000+</span>
-                Students Supported
-              </div>
-            </div>
-          </div>
+    <section className="relative w-full lg:h-[92vh] flex flex-col md:h-[84vh] sm:h-[70vh] h-[84vh] lg:px-20 lg:py-20 sm:px-5 sm:py-10 px-5 py-10">
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/img-placeholder.JPG"
+          alt="Humanitarian aid worker with beneficiaries at refugee camp"
+          className="w-full h-full object-cover object-center"
+        />
+        {/* Dark gradient overlay — stronger at bottom-left for text readability */}
+        <div
+          className="absolute inset-0 bg-[linear-gradient(to_top,rgba(26,26,26,0.75)_0%,rgba(26,26,26,0.45)_20%,rgba(26,26,26,0.25)_50%,rgba(26,26,26,0.35)_100%)]"
+        />
+        {/* Left-side gradient for text area */}
+        <div
+          className="absolute inset-0 bg-[linear-gradient(to_right,rgba(26,26,26,0.5)_0%,rgba(26,26,26,0.15)_70%,transparent_100%)]"
+        />
+      </div>
+
+      <div className="flex-1 flex items-end text-white relative z-10 justify-items-start">
+        <div className="text-left">
+          <h1 className="text-4xl md:text-6xl font-bold mb-2 font-body">Donate your Zakat today</h1>
+          <p className="text-xl md:text-2xl text-white/90">Content goes here...</p>
+          <YellowCTA text="Donate Now" href="/donate" className="mt-8" />
         </div>
       </div>
     </section>

@@ -1,47 +1,22 @@
 import Link from 'next/link'
+import YellowCTA from './YellowCTA'
 
 export default function FinalCTA() {
   return (
-    <section
-      style={{
-        background: "var(--purple-dark)",
-        padding: "5rem 2rem",
-        textAlign: "start",
-      }}
-    >
-      <div style={{ maxWidth: "1140px", margin: "0 auto" }}>
-        <h2
-          style={{
-            fontFamily: "'Rubik', cursive",
-            fontSize: "clamp(2rem,4vw,3rem)",
-            color: "var(--white)",
-            marginBottom: "1rem",
-          }}
-        >
+    <section className="bg-purple-dark py-20 px-4 md:px-8 text-start">
+      <div className="max-w-[1140px] mx-auto">
+        <h2 className="font-body text-4xl md:text-5xl font-bold text-brand-white mb-4">
           Be the change you wish
           <br />
           to see in the world
         </h2>
-        <p
-          style={{
-            color: "color-mix(in srgb, var(--white) 65%, transparent)",
-            fontSize: "1.05rem",
-            lineHeight: 1.7,
-            marginBottom: "2rem",
-          }}
-        >
+        <p className="text-brand-white/65 text-[1.05rem] leading-[1.7] mb-8">
           Your donation, no matter how small, can transform a life.
           <br />
           Start today.
         </p>
-        <Link
-          href="/donate"
-          className="btn btn-yellow"
-        >
-          Make a Donation
-        </Link>
+        <YellowCTA text="Make a Donation" href="/donate" />
       </div>
     </section>
-
   )
-}
+}
