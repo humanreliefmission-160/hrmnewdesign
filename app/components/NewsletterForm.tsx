@@ -1,42 +1,40 @@
 "use client";
 
+import YellowCTA from "./YellowCTA";
+
 export default function NewsletterForm() {
   return (
-    <section className="section-purple">
-      <div className="section-inner">
+    <section className="bg-purple py-20 px-4 md:px-8">
+      <div className="max-w-[1140px] mx-auto">
         <div
-          className="section-tag"
-          style={{ background: "color-mix(in srgb, var(--white) 15%, transparent)", color: "var(--white)" }}
+          className="inline-block bg-brand-white/15 text-brand-white font-bold text-[0.75rem] tracking-widest uppercase px-4 py-1.5 mb-4"
         >
           Stay Connected
         </div>
-        <h2 className="section-title">Keep In Touch</h2>
-        <p className="section-subtitle">
+        <h2 className="text-4xl md:text-5xl font-bold text-brand-white mb-[1.2rem]">Keep In Touch</h2>
+        <p className="text-[1.05rem] text-brand-white/75 leading-[1.7] max-w-[600px]">
           Get updates about our lifesaving work around the world. Join over
           50,000 supporters.
         </p>
-        <div className="form-row">
+        <div className="flex flex-wrap gap-4 mt-6">
           <input
-            className="form-input"
+            className="flex-1 max-w-[200px] min-w-[150px] px-5 py-3.5 border-2 border-brand-white/25 bg-brand-white/10 text-brand-white font-body text-[0.9rem] outline-none transition-colors focus:border-purple-light placeholder:text-brand-white/50"
             type="text"
             placeholder="First Name"
-            style={{ maxWidth: "200px" }}
           />
           <input
-            className="form-input"
+            className="flex-1 max-w-[200px] min-w-[150px] px-5 py-3.5 border-2 border-brand-white/25 bg-brand-white/10 text-brand-white font-body text-[0.9rem] outline-none transition-colors focus:border-purple-light placeholder:text-brand-white/50"
             type="text"
             placeholder="Last Name"
-            style={{ maxWidth: "200px" }}
           />
         </div>
-        <div className="newsletter-form">
+        <div className="flex flex-wrap gap-4 mt-8 max-w-[560px]">
           <input
-            className="form-input"
+            className="flex-1 px-5 py-3.5 border-2 border-brand-white/25 bg-brand-white/10 text-brand-white font-body text-[0.9rem] outline-none transition-colors focus:border-purple-light placeholder:text-brand-white/50"
             type="email"
             placeholder="Email Address"
-            style={{ flex: 1 }}
           />
-          <button className="btn btn-yellow">Subscribe</button>
+          <YellowCTA text="Subscribe" />
         </div>
       </div>
     </section>
