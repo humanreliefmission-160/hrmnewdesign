@@ -12,7 +12,7 @@ export default function HeroTwo() {
           className="w-full h-full object-cover object-center"
         />
         {/* Dark gradient overlay — stronger at bottom-left for text readability */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(26,26,26,0.75)_10%,rgba(26,26,26,0.45)_40%,rgba(26,26,26,0.25)_50%,rgba(26,26,26,0.35)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(26,26,26,0.75)_10%,rgba(26,26,26,0.45)_40%,rgba(26,26,26,0.25)_60%,rgba(26,26,26,0.35)_100%)]" />
         {/* Left-side gradient for text area */}
         {/* <div
           className="absolute inset-0 bg-[linear-gradient(to_right,rgba(26,26,26,0.5)_0%,rgba(26,26,26,0.15)_70%,transparent_100%)]"
