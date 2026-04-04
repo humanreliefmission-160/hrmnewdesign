@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import PageHeader from "../components/PageHeader";
 import YellowCTA from "../components/YellowCTA";
 
 export default function Contact() {
@@ -19,21 +19,11 @@ export default function Contact() {
 
   return (
     <div id="page-contact" className="block min-h-screen">
-      <div className="bg-purple pt-32 pb-16 px-4 md:px-8 text-brand-white text-center">
-        <div className="max-w-[1140px] mx-auto">
-          <div className="text-[0.75rem] font-bold tracking-widest uppercase mb-4 text-brand-white/50">
-            <Link href="/" className="hover:text-white transition-colors">
-              Home
-            </Link>{" "}
-            / <span className="text-white">Contact Us</span>
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 font-body leading-tight md:leading-none">Get In Touch</h1>
-          <p className="text-brand-white/80 text-[1.05rem] max-w-[500px] mx-auto leading-[1.7]">
-            Have a question, want to volunteer, or need to reach our team?
-            {" We'd love to hear from you."}
-          </p>
-        </div>
-      </div>
+      <PageHeader 
+        title="Get In Touch"
+        subtitle={<>Have a question, want to volunteer, or need to reach our team? We'd love to hear from you.</>}
+        breadcrumb="Contact Us"
+      />
 
       <section className="py-20 px-4 md:px-8 bg-brand-white">
         <div className="max-w-[1140px] mx-auto">
@@ -101,12 +91,12 @@ export default function Contact() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div className="flex flex-col gap-1.5">
                   <label className="block text-sm font-bold text-brand-black">First Name *</label>
-                  <input className="w-full px-4 py-3 border border-brand-lgrey rounded-lg focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50" type="text" placeholder="John" />
+                  <input className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 bg-brand-white" type="text" placeholder="John" />
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="block text-sm font-bold text-brand-black">Last Name *</label>
                   <input
-                    className="w-full px-4 py-3 border border-brand-lgrey rounded-lg focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50"
+                    className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 bg-brand-white"
                     type="text"
                     placeholder="Smith"
                   />
@@ -115,7 +105,7 @@ export default function Contact() {
               <div className="flex flex-col gap-1.5 mb-4">
                 <label className="block text-sm font-bold text-brand-black">Email Address *</label>
                 <input
-                  className="w-full px-4 py-3 border border-brand-lgrey rounded-lg focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50"
+                  className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 bg-brand-white"
                   type="email"
                   placeholder="john@example.com"
                 />
@@ -123,14 +113,14 @@ export default function Contact() {
               <div className="flex flex-col gap-1.5 mb-4">
                 <label className="block text-sm font-bold text-brand-black">Phone Number</label>
                 <input
-                  className="w-full px-4 py-3 border border-brand-lgrey rounded-lg focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50"
+                  className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 bg-brand-white"
                   type="tel"
                   placeholder="+44 7700 000000"
                 />
               </div>
               <div className="flex flex-col gap-1.5 mb-4">
                 <label className="block text-sm font-bold text-brand-black">Subject *</label>
-                <select className="w-full px-4 py-3 border border-brand-lgrey rounded-lg focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all bg-white">
+                <select className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all bg-brand-white">
                   <option value="">Select a subject...</option>
                   <option>General Enquiry</option>
                   <option>Donation Query</option>
@@ -143,7 +133,7 @@ export default function Contact() {
               <div className="flex flex-col gap-1.5 mb-6">
                 <label className="block text-sm font-bold text-brand-black">Message *</label>
                 <textarea
-                  className="w-full px-4 py-3 border border-brand-lgrey rounded-lg focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 min-h-[120px]"
+                  className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 min-h-[120px] bg-brand-white"
                   placeholder="How can we help you?"
                 ></textarea>
               </div>

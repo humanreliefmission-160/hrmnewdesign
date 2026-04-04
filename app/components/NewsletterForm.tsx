@@ -18,19 +18,19 @@ export default function NewsletterForm() {
         </p>
         <div className="flex flex-wrap gap-4 mt-6">
           <input
-            className="flex-1 max-w-[200px] min-w-[150px] px-5 py-3.5 border-2 border-brand-white/25 bg-brand-white/10 text-brand-white font-body text-[0.9rem] outline-none transition-colors focus:border-purple-light placeholder:text-brand-white/50"
+            className="flex-1 max-w-[200px] min-w-[150px] px-5 py-3.5 border-2 border-brand-white/25 bg-brand-white/10 text-brand-white font-body text-[0.9rem] outline-none transition-colors focus:border-purple-light placeholder:text-brand-white/50 rounded-sm"
             type="text"
             placeholder="First Name"
           />
           <input
-            className="flex-1 max-w-[200px] min-w-[150px] px-5 py-3.5 border-2 border-brand-white/25 bg-brand-white/10 text-brand-white font-body text-[0.9rem] outline-none transition-colors focus:border-purple-light placeholder:text-brand-white/50"
+            className="flex-1 max-w-[200px] min-w-[150px] px-5 py-3.5 border-2 border-brand-white/25 bg-brand-white/10 text-brand-white font-body text-[0.9rem] outline-none transition-colors focus:border-purple-light placeholder:text-brand-white/50 rounded-sm"
             type="text"
             placeholder="Last Name"
           />
         </div>
         <div className="flex flex-wrap gap-4 mt-8 max-w-[560px]">
           <input
-            className="flex-1 px-5 py-3.5 border-2 border-brand-white/25 bg-brand-white/10 text-brand-white font-body text-[0.9rem] outline-none transition-colors focus:border-purple-light placeholder:text-brand-white/50"
+            className="flex-1 px-5 py-3.5 border-2 border-brand-white/25 bg-brand-white/10 text-brand-white font-body text-[0.9rem] outline-none transition-colors focus:border-purple-light placeholder:text-brand-white/50 rounded-sm"
             type="email"
             placeholder="Email Address"
           />

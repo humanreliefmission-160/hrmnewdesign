@@ -20,19 +20,19 @@ export default function NavbarThree() {
 
           <ul className="hidden md:flex items-center gap-8 list-none">
             <li>
-              <Link href="/about" className="text-[0.875rem] font-semibold text-brand-black no-underline cursor-pointer transition-colors duration-200 tracking-wide hover:text-yellow">About Us</Link>
+              <Link href="/about" className="text-[0.875rem] font-semibold text-brand-black no-underline cursor-pointer transition-colors duration-200 tracking-wide hover:text-purple">About Us</Link>
             </li>
             <li>
-              <Link href="/" className="text-[0.875rem] font-semibold text-brand-black no-underline cursor-pointer transition-colors duration-200 tracking-wide hover:text-yellow">Projects</Link>
+              <Link href="/" className="text-[0.875rem] font-semibold text-brand-black no-underline cursor-pointer transition-colors duration-200 tracking-wide hover:text-purple">Projects</Link>
             </li>
             <li>
-              <Link href="/" className="text-[0.875rem] font-semibold text-brand-black no-underline cursor-pointer transition-colors duration-200 tracking-wide hover:text-yellow">Locations</Link>
+              <Link href="/" className="text-[0.875rem] font-semibold text-brand-black no-underline cursor-pointer transition-colors duration-200 tracking-wide hover:text-purple">Locations</Link>
             </li>
             <li>
-              <Link href="/about" className="text-[0.875rem] font-semibold text-brand-black no-underline cursor-pointer transition-colors duration-200 tracking-wide hover:text-yellow">About</Link>
+              <Link href="/about" className="text-[0.875rem] font-semibold text-brand-black no-underline cursor-pointer transition-colors duration-200 tracking-wide hover:text-purple">About</Link>
             </li>
             <li>
-              <Link href="/contact" className="text-[0.875rem] font-semibold text-brand-black no-underline cursor-pointer transition-colors duration-200 tracking-wide hover:text-yellow">Contact Us</Link>
+              <Link href="/contact" className="text-[0.875rem] font-semibold text-brand-black no-underline cursor-pointer transition-colors duration-200 tracking-wide hover:text-purple">Contact Us</Link>
             </li>
           </ul>
 
