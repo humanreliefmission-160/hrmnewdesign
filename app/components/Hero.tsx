@@ -12,13 +12,11 @@ export default function HeroTwo() {
           className="w-full h-full object-cover object-center"
         />
         {/* Dark gradient overlay — stronger at bottom-left for text readability */}
-        <div
-          className="absolute inset-0 bg-[linear-gradient(to_top,rgba(26,26,26,0.75)_0%,rgba(26,26,26,0.45)_20%,rgba(26,26,26,0.25)_50%,rgba(26,26,26,0.35)_100%)]"
-        />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(26,26,26,0.75)_10%,rgba(26,26,26,0.45)_40%,rgba(26,26,26,0.25)_50%,rgba(26,26,26,0.35)_100%)]" />
         {/* Left-side gradient for text area */}
-        <div
+        {/* <div
           className="absolute inset-0 bg-[linear-gradient(to_right,rgba(26,26,26,0.5)_0%,rgba(26,26,26,0.15)_70%,transparent_100%)]"
-        />
+        /> */}
       </div>
 
       <div className="flex-1 flex items-end text-white relative z-10 justify-items-start">
