@@ -3,6 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { FaFacebookF, FaLinkedinIn, FaYoutube } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import { BiLogoInstagramAlt } from "react-icons/bi";
 
 export default function Footer() {
   return (
@@ -11,7 +14,7 @@ export default function Footer() {
         <div>
           <div>
             <Link href="/" >
-              <Image src="/hhtw.svg" alt="Helping Box" width={200} height={200} />
+              <Image src="/hhtw.svg" alt="Helping Humanity Through Welfare" width={200} height={200} />
             </Link>
             <div className="text-[0.875rem] leading-[1.7] my-6">
               Delivering emergency relief, education, and sustainable development
@@ -19,30 +22,41 @@ export default function Footer() {
             </div>
           </div>
           <div className="flex gap-3">
-            <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">f</a>
-            <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">in</a>
-            <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">yt</a>
-            <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">𝕏</a>
-            <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">tt</a>
+            <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+              <FaFacebookF fill="#f5f5f5" />
+            </a>
+            <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+              <FaLinkedinIn fill="#F5F5F5" />
+            </a>
+            <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+              <FaYoutube fill="#F5F5F5" />
+            </a>
+            <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+              <FaXTwitter fill="#F5F5F5" />
+            </a>
+            <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+              <BiLogoInstagramAlt fill="#F5F5F5" />
+
+            </a>
           </div>
         </div>
         <div>
           <div className="text-brand-white font-bold text-[0.875rem] tracking-widest uppercase mb-6">Quick Links</div>
           <ul className="list-none flex flex-col gap-2.5">
             <li>
-              <Link href="/about" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-yellow">About Us</Link>
+              <Link href="/about" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">About Us</Link>
             </li>
             <li>
-              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-yellow">Projects</Link>
+              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Projects</Link>
             </li>
             <li>
-              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-yellow">Locations</Link>
+              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Locations</Link>
             </li>
             <li>
-              <Link href="/contact" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-yellow">Contact Us</Link>
+              <Link href="/contact" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Contact Us</Link>
             </li>
             <li>
-              <Link href="/donate" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-yellow">Donate</Link>
+              <Link href="/donate" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Donate</Link>
             </li>
           </ul>
         </div>
@@ -50,19 +64,19 @@ export default function Footer() {
           <div className="text-brand-white font-bold text-[0.875rem] tracking-widest uppercase mb-6">Our Work</div>
           <ul className="list-none flex flex-col gap-2.5">
             <li>
-              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-yellow">Food Relief</Link>
+              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Food Relief</Link>
             </li>
             <li>
-              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-yellow">Education</Link>
+              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Education</Link>
             </li>
             <li>
-              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-yellow">Water & Sanitation</Link>
+              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Water & Sanitation</Link>
             </li>
             <li>
-              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-yellow">Emergency Aid</Link>
+              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Emergency Aid</Link>
             </li>
             <li>
-              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-yellow">Orphan Support</Link>
+              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Orphan Support</Link>
             </li>
           </ul>
         </div>
@@ -70,16 +84,16 @@ export default function Footer() {
           <div className="text-brand-white font-bold text-[0.875rem] tracking-widest uppercase mb-6">Giving</div>
           <ul className="list-none flex flex-col gap-2.5">
             <li>
-              <Link href="/donate" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-yellow">One-Off Donation</Link>
+              <Link href="/donate" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">One-Off Donation</Link>
             </li>
             <li>
-              <Link href="/donate" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-yellow">Monthly Giving</Link>
+              <Link href="/donate" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Monthly Giving</Link>
             </li>
             <li>
-              <Link href="/donate" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-yellow">Zakat</Link>
+              <Link href="/donate" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Zakat</Link>
             </li>
             <li>
-              <Link href="/donate" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-yellow">Sadaqah</Link>
+              <Link href="/donate" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Sadaqah</Link>
             </li>
           </ul>
         </div>

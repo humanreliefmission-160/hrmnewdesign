@@ -2,30 +2,17 @@
 
 import React from "react";
 import Link from "next/link";
+import PageHeader from "../components/PageHeader";
 
 export default function About() {
   return (
     <div id="page-about" className="block min-h-screen">
-      <div className="bg-purple pt-32 pb-16 px-4 md:px-8 text-brand-white">
-        <div className="max-w-[1140px] mx-auto">
-          <div className="text-[0.75rem] font-bold tracking-widest uppercase mb-4 text-brand-white/50">
-            <Link href="/" className="hover:text-white transition-colors">
-              Home
-            </Link>{" "}
-            / <span className="text-white">About Us</span>
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 font-body leading-tight">
-            About Human Relief
-            <br />
-            Mission
-          </h1>
-          <p className="text-lg md:text-xl text-brand-white/85 max-w-[600px] leading-[1.7]">
-            We are a UK-based international humanitarian charity, delivering
-            relief and development aid to communities facing crisis, poverty, and
-            inequality.
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        title={<>About <br /> Human Relief Mission</>}
+        subtitle="We are a UK-based international humanitarian charity, delivering relief and development aid to communities facing crisis, poverty, and inequality."
+        breadcrumb="About Us"
+        centered={true}
+      />
 
       <section className="py-20 px-4 md:px-8 bg-brand-white">
         <div className="max-w-[1140px] mx-auto">

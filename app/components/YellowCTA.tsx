@@ -10,7 +10,7 @@ interface YellowCTAProps {
 }
 
 const YellowCTA: React.FC<YellowCTAProps> = ({ text, href, onClick, className = "", disabled = false }) => {
-  const baseClasses = `inline-flex items-center gap-2 font-bold text-[1rem] cursor-pointer transition-all duration-200 no-underline px-5 pt-3 pb-2 bg-yellow text-brand-black [clip-path:polygon(0_0,100%_15%,100%_100%,0_100%)] hover:bg-yellow-hover hover:-translate-y-0.5 hover:shadow-btn disabled:opacity-70 disabled:cursor-not-allowed ${className}`;
+  const baseClasses = `inline-flex items-center gap-2 font-bold text-[1rem] cursor-pointer transition-all duration-200 no-underline px-5 pt-3 pb-2 bg-yellow text-brand-black [clip-path:polygon(0_0,100%_13.5%,100%_100%,0_100%)] hover:bg-yellow-hover hover:-translate-y-0.5 hover:shadow-btn disabled:opacity-70 disabled:cursor-not-allowed ${className}`;
 
   if (href && !disabled) {
     return (
