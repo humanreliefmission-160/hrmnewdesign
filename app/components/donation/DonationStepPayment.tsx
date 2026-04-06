@@ -2,6 +2,12 @@ import React from 'react';
 import YellowCTA from '../YellowCTA';
 import { DonationState } from './types';
 import DonationStepFooter from './DonationStepFooter';
+import { IoCardSharp, IoShieldCheckmark } from 'react-icons/io5';
+import { BsBank2 } from 'react-icons/bs';
+import { FaCcApplePay } from 'react-icons/fa';
+import { GrPaypal } from 'react-icons/gr';
+import { AiFillLock } from 'react-icons/ai';
+import { IoIosCheckmarkCircle } from 'react-icons/io';
 
 interface DonationStepPaymentProps {
   currentStep: number;
@@ -62,12 +68,24 @@ export default function DonationStepPayment({
       </div>
 
       <h2 className="text-lg font-bold text-brand-black mb-4 font-body">Select payment method</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8 items-center">
         {[
-          { name: "Card", icon: "💳" },
-          { name: "Direct Debit", icon: "🏦" },
-          { name: "Apple Pay", icon: "📱" },
-          { name: "PayPal", icon: "🅿️" },
+          {
+            name: "Card",
+            icon: <IoCardSharp fill='#650199' className='sm:w-7 w-7 h-auto' />
+          },
+          {
+            name: "Direct Debit",
+            icon: <BsBank2 fill='#650199' className='sm:w-7 w-7 h-auto' />
+          },
+          {
+            name: "Apple Pay",
+            icon: <FaCcApplePay fill='#650199' className='sm:w-7 w-7 h-auto' />
+          },
+          {
+            name: "PayPal",
+            icon: <GrPaypal fill='#650199' className='sm:w-7 w-7 h-auto' />
+          },
         ].map((method) => (
           <div
             key={method.name}
@@ -121,11 +139,22 @@ export default function DonationStepPayment({
         className="w-full justify-center text-lg py-4"
       />
 
-      <div className="grid grid-cols-2 gap-3 mt-8">
-        <div className="bg-gray-50 p-2 rounded text-[0.7rem] font-bold text-brand-grey text-center border border-brand-lgrey">🔒 SSL Secure</div>
-        <div className="bg-gray-50 p-2 rounded text-[0.7rem] font-bold text-brand-grey text-center border border-brand-lgrey">✅ Regulated Charity</div>
-        <div className="bg-gray-50 p-2 rounded text-[0.7rem] font-bold text-brand-grey text-center border border-brand-lgrey">🏦 Direct Debit Guarantee</div>
-        <div className="bg-gray-50 p-2 rounded text-[0.7rem] font-bold text-brand-grey text-center border border-brand-lgrey">🎁 Gift Aid Registered</div>
+      <div className="grid grid-cols-1 gap-3 mt-8 sm:grid-cols-2">
+        <div className="bg-gray-50 p-2 rounded text-[0.7rem] font-bold text-brand-grey text-center border border-brand-lgrey flex items-center justify-center gap-2">
+          <AiFillLock fill='#6B6B6B' className='sm:w-3 w-3 h-auto' /> SSL Secure
+        </div>
+        <div className="bg-gray-50 p-2 rounded text-[0.7rem] font-bold text-brand-grey text-center border border-brand-lgrey flex items-center justify-center gap-2">
+          <IoShieldCheckmark fill='#6B6B6B' className='sm:w-3 w-3 h-auto' />
+          Regulated Charity
+        </div>
+        <div className="bg-gray-50 p-2 rounded text-[0.7rem] font-bold text-brand-grey text-center border border-brand-lgrey flex items-center justify-center gap-2">
+          <BsBank2 fill='#6B6B6B' className='sm:w-3 w-3 h-auto' />
+          Direct Debit Guarantee
+        </div>
+        <div className="bg-gray-50 p-2 rounded text-[0.7rem] font-bold text-brand-grey text-center border border-brand-lgrey flex items-center justify-center gap-2">
+          <IoIosCheckmarkCircle fill='#6B6B6B' className='sm:w-3 w-3 h-auto' />
+          Gift Aid Registered
+        </div>
       </div>
 
       <DonationStepFooter onBack={() => goStep(4)} />

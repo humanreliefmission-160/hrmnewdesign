@@ -22,17 +22,17 @@ export default function DonationStepDetails({ currentStep, donationState, goStep
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div className="flex flex-col gap-1.5">
           <label className="block text-sm font-bold text-brand-black">First Name *</label>
-          <input className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white" type="text" placeholder="John" />
+          <input className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:bg-purple-faint focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white" type="text" placeholder="John" />
         </div>
         <div className="flex flex-col gap-1.5">
           <label className="block text-sm font-bold text-brand-black">Last Name *</label>
-          <input className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white" type="text" placeholder="Smith" />
+          <input className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:bg-purple-faint focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white" type="text" placeholder="Smith" />
         </div>
       </div>
       <div className="flex flex-col gap-1.5 mb-4">
         <label className="block text-sm font-bold text-brand-black">Email Address *</label>
         <input
-          className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white"
+          className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:bg-purple-faint focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white"
           type="email"
           placeholder="john@example.com"
         />
@@ -40,7 +40,7 @@ export default function DonationStepDetails({ currentStep, donationState, goStep
       <div className="flex flex-col gap-1.5 mb-6">
         <label className="block text-sm font-bold text-brand-black">Phone Number</label>
         <input
-          className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white"
+          className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:bg-purple-faint focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white"
           type="tel"
           placeholder="+44 7700 000000"
         />
@@ -52,7 +52,7 @@ export default function DonationStepDetails({ currentStep, donationState, goStep
               Address (required for Gift Aid) *
             </label>
             <input
-              className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white"
+              className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:bg-purple-faint focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white"
               type="text"
               placeholder="123 Example Street"
             />
@@ -60,12 +60,12 @@ export default function DonationStepDetails({ currentStep, donationState, goStep
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div className="flex flex-col gap-1.5">
               <label className="block text-sm font-bold text-brand-black">City *</label>
-              <input className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white" type="text" placeholder="Leeds" />
+              <input className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:bg-purple-faint focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white" type="text" placeholder="Leeds" />
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="block text-sm font-bold text-brand-black">Postcode *</label>
               <input
-                className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white"
+                className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:bg-purple-faint focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white"
                 type="text"
                 placeholder="LS1 2AB"
               />
@@ -73,7 +73,7 @@ export default function DonationStepDetails({ currentStep, donationState, goStep
           </div>
         </div>
       )}
-      <div className="p-4 bg-white border border-brand-lgrey rounded-lg mb-8 flex gap-3 items-start">
+      <div className="p-4 bg-purple-faint border border-purple rounded-lg mb-8 flex gap-3 items-start">
         <input
           type="checkbox"
           className="mt-1 w-4 h-4 cursor-pointer accent-purple"
@@ -81,7 +81,7 @@ export default function DonationStepDetails({ currentStep, donationState, goStep
         />
         <label
           htmlFor="optIn"
-          className="text-[0.875rem] text-brand-grey cursor-pointer font-medium leading-relaxed"
+          className="text-[0.875rem] text-purple-dark cursor-pointer font-medium leading-relaxed"
         >
           {"I'd like to receive updates about Human Relief Mission's work and how my donation is making a difference."}
         </label>

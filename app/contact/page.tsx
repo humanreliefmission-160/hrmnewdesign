@@ -19,10 +19,11 @@ export default function Contact() {
 
   return (
     <div id="page-contact" className="block min-h-screen">
-      <PageHeader 
+      <PageHeader
         title="Get In Touch"
         subtitle={<>Have a question, want to volunteer, or need to reach our team? We'd love to hear from you.</>}
         breadcrumb="Contact Us"
+        display={true}
       />
 
       <section className="py-20 px-4 md:px-8 bg-brand-white">

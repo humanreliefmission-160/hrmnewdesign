@@ -1,6 +1,6 @@
-import React from 'react';
 import { DonationState } from './types';
 import DonationStepFooter from './DonationStepFooter';
+import GiftAidIcon from '@/app/donate/GiftAidIcon';
 
 interface DonationStepGiftAidProps {
   currentStep: number;
@@ -14,22 +14,19 @@ export default function DonationStepGiftAid({ currentStep, donationState, setGif
 
   return (
     <div className="bg-brand-white p-8 md:p-10 rounded-2xl shadow-card border border-brand-lgrey">
+      <GiftAidIcon className="w-50 h-auto text-brand-black mb-5" />
       <h2 className="text-2xl md:text-3xl font-bold text-brand-black mb-2 font-body leading-tight">
-        Boost your donation with Gift Aid
+        Boost your donation
       </h2>
       <p className="text-[0.95rem] text-brand-grey mb-8 font-medium">
         {"If you're a UK taxpayer, Gift Aid lets us reclaim 25p for every £1 you donate at no extra cost to you."}
       </p>
 
-      <div className="bg-purple-faint border border-purple/20 p-6 rounded-xl flex flex-col sm:flex-row gap-6 mb-8">
-        <div className="text-4xl">🎁</div>
+      <div className="bg-purple-faint border border-purple/20 p-6 rounded-sm flex flex-col sm:flex-row gap-6 mb-8">
         <div className="flex-1">
           <div className="font-bold text-brand-black mb-2 leading-tight">Add Gift Aid to your donation</div>
           <p className="text-[0.875rem] text-brand-grey leading-relaxed mb-6 font-medium">
-            By confirming you are a UK taxpayer and understand that if you
-            pay less Income Tax and/or Capital Gains Tax than the amount of
-            Gift Aid claimed on all your donations in that tax year it is your
-            responsibility to pay any difference.
+            By confirming you are a UK taxpayer and understand that if you pay less Income Tax and/or Capital Gains Tax than the amount of Gift Aid claimed on all your donations in that tax year it is your responsibility to pay any difference.
           </p>
           <div className="flex flex-col gap-3">
             <label className="flex items-center gap-3 cursor-pointer group">
@@ -58,8 +55,7 @@ export default function DonationStepGiftAid({ currentStep, donationState, setGif
 
       {donationState.giftAid && (
         <div className="bg-purple-faint border-l-4 border-purple p-4 rounded-r-lg mb-8 text-purple text-sm animate-pulse-2">
-          🎉 <strong>Great!</strong> Your donation will be worth{" "}
-          <strong>25% more</strong> thanks to Gift Aid.
+          🎉 <strong>Great!</strong> Your donation will be worth{" "}<strong>25% more</strong> thanks to Gift Aid.
         </div>
       )}
 

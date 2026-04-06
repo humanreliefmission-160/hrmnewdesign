@@ -19,7 +19,8 @@ export default function Donate() {
     type: "oneoff",
     fund: "Where Most Needed",
     amount: 20 as number | null,
-    giftAid: false,
+    intention: "",
+    giftAid: null,
   });
   const [customAmount, setCustomAmount] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
@@ -29,6 +30,7 @@ export default function Donate() {
 
   const setDonationType = (type: string) => setDonationState({ ...donationState, type });
   const selectFund = (fund: string) => setDonationState({ ...donationState, fund });
+  const selectIntention = (intention: string) => setDonationState({ ...donationState, intention });
   const selectAmount = (val: string) => {
     if (val === "other") {
       setDonationState({ ...donationState, amount: null });
@@ -63,7 +65,8 @@ export default function Donate() {
       type: "oneoff",
       fund: "Where Most Needed",
       amount: 20,
-      giftAid: false,
+      intention: "General",
+      giftAid: null,
     });
     setCustomAmount("");
     setCurrentStep(1);
@@ -72,23 +75,59 @@ export default function Donate() {
   };
 
   return (
-    <div id="page-donate" className="block min-h-screen">
+    <div id="page-donate" className="min-h-screen">
       <PageHeader
         title="Make a Donation"
         subtitle="Be a lifesaver. Your donation reaches those who need it most."
         breadcrumb="Donate"
+        display={false}
       />
 
-      <div className="max-w-[800px] mx-auto px-4 md:px-8 my-12">
+      <div className="max-w-[800px] mx-auto px-4 md:px-8 my-15 sm:my-20">
         {!showSuccess && <DonationProgress currentStep={currentStep} />}
 
         {!showSuccess && (
           <>
-            <DonationStepType currentStep={currentStep} donationState={donationState} setDonationType={setDonationType} goStep={goStep} />
-            <DonationStepFundAmount currentStep={currentStep} donationState={donationState} customAmount={customAmount} selectFund={selectFund} selectAmount={selectAmount} handleCustomAmount={handleCustomAmount} goStep={goStep} />
-            <DonationStepGiftAid currentStep={currentStep} donationState={donationState} setGiftAid={setGiftAid} goStep={goStep} />
-            <DonationStepDetails currentStep={currentStep} donationState={donationState} goStep={goStep} />
-            <DonationStepPayment currentStep={currentStep} donationState={donationState} payMethod={payMethod} setPayMethod={setPayMethod} isProcessing={isProcessing} completeDonation={completeDonation} goStep={goStep} />
+            <DonationStepType
+              currentStep={currentStep}
+              donationState={donationState}
+              setDonationType={setDonationType}
+              goStep={goStep}
+            />
+
+            <DonationStepFundAmount
+              currentStep={currentStep}
+              donationState={donationState}
+              customAmount={customAmount}
+              selectFund={selectFund}
+              selectAmount={selectAmount}
+              selectIntention={selectIntention}
+              handleCustomAmount={handleCustomAmount}
+              goStep={goStep}
+            />
+
+            <DonationStepGiftAid
+              currentStep={currentStep}
+              donationState={donationState}
+              setGiftAid={setGiftAid}
+              goStep={goStep}
+            />
+
+            <DonationStepDetails
+              currentStep={currentStep}
+              donationState={donationState}
+              goStep={goStep}
+            />
+
+            <DonationStepPayment
+              currentStep={currentStep}
+              donationState={donationState}
+              payMethod={payMethod}
+              setPayMethod={setPayMethod}
+              isProcessing={isProcessing}
+              completeDonation={completeDonation}
+              goStep={goStep}
+            />
           </>
         )}
 

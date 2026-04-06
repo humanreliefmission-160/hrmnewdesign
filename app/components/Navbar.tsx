@@ -12,7 +12,7 @@ export default function NavbarThree() {
 
   return (
     <>
-      <nav className="bg-brand-white border-none relative z-1000">
+      <nav className="border-none relative z-1000 bg-purple">
         <div className="max-w-[1140px] mx-auto px-4 md:px-8 flex items-center justify-between h-[70px]">
           <Link href="/" className="flex items-start cursor-pointer no-underline relative w-[90px] h-[70px]" onClick={closeMenu}>
             <img src="/logo.svg" alt="Human Relief Mission" className="absolute top-0 left-0 h-[110px] w-auto z-1050 drop-shadow-[0_4px_6px_rgba(0,0,0,0.1)]" />
@@ -20,19 +20,16 @@ export default function NavbarThree() {
 
           <ul className="hidden md:flex items-center gap-8 list-none">
             <li>
-              <Link href="/about" className="text-[0.875rem] font-semibold text-brand-black no-underline cursor-pointer transition-colors duration-200 tracking-wide hover:text-purple">About Us</Link>
+              <Link href="/about" className="text-[0.875rem] font-semibold text-brand-white no-underline cursor-pointer transition-colors duration-500 tracking-wide hover:font-bold">About Us</Link>
             </li>
             <li>
-              <Link href="/" className="text-[0.875rem] font-semibold text-brand-black no-underline cursor-pointer transition-colors duration-200 tracking-wide hover:text-purple">Projects</Link>
+              <Link href="/" className="text-[0.875rem] font-semibold text-brand-white no-underline cursor-pointer transition-colors duration-500 tracking-wide hover:font-bold">Projects</Link>
             </li>
             <li>
-              <Link href="/" className="text-[0.875rem] font-semibold text-brand-black no-underline cursor-pointer transition-colors duration-200 tracking-wide hover:text-purple">Locations</Link>
+              <Link href="/about" className="text-[0.875rem] font-semibold text-brand-white no-underline cursor-pointer transition-colors duration-500 tracking-wide hover:font-bold">About</Link>
             </li>
             <li>
-              <Link href="/about" className="text-[0.875rem] font-semibold text-brand-black no-underline cursor-pointer transition-colors duration-200 tracking-wide hover:text-purple">About</Link>
-            </li>
-            <li>
-              <Link href="/contact" className="text-[0.875rem] font-semibold text-brand-black no-underline cursor-pointer transition-colors duration-200 tracking-wide hover:text-purple">Contact Us</Link>
+              <Link href="/contact" className="text-[0.875rem] font-semibold text-brand-white no-underline cursor-pointer transition-colors duration-500 tracking-wide hover:font-bold">Contact Us</Link>
             </li>
           </ul>
 
@@ -41,16 +38,16 @@ export default function NavbarThree() {
           </div>
 
           <div className="md:hidden flex flex-col gap-[5px] cursor-pointer p-1" onClick={toggleMobileMenu}>
-            <span className={`block w-6 h-[2px] bg-brand-black transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-[7px]" : ""}`}></span>
-            <span className={`block w-6 h-[2px] bg-brand-black transition-all duration-300 ${mobileOpen ? "opacity-0" : ""}`}></span>
-            <span className={`block w-6 h-[2px] bg-brand-black transition-all duration-300 ${mobileOpen ? "-rotate-45 -translate-y-[7px]" : ""}`}></span>
+            <span className={`block w-6 h-[2px] bg-brand-white transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-[7px]" : ""}`}></span>
+            <span className={`block w-6 h-[2px] bg-brand-white transition-all duration-300 ${mobileOpen ? "opacity-0" : ""}`}></span>
+            <span className={`block w-6 h-[2px] bg-brand-white transition-all duration-300 ${mobileOpen ? "-rotate-45 -translate-y-[7px]" : ""}`}></span>
           </div>
         </div>
       </nav>
 
       {/* MOBILE MENU */}
       <div
-        className={`md:hidden bg-brand-white border-b border-brand-lgrey p-8 transition-all duration-300 ${mobileOpen ? "block" : "hidden"}`}
+        className={`md:hidden bg-purple p-8 transition-all duration-300 ${mobileOpen ? "block" : "hidden"}`}
       >
 
         <ul className="flex flex-col gap-4 list-none pt-7">
@@ -58,7 +55,7 @@ export default function NavbarThree() {
             <Link
               href="/"
               onClick={closeMenu}
-              className="font-semibold cursor-pointer text-brand-black no-underline"
+              className="cursor-pointer text-brand-white no-underline font-medium hover:font-black"
             >
               Home
             </Link>
@@ -67,7 +64,7 @@ export default function NavbarThree() {
             <Link
               href="/about"
               onClick={closeMenu}
-              className="font-semibold cursor-pointer text-brand-black no-underline"
+              className="cursor-pointer text-brand-white no-underline font-medium hover:font-bold"
             >
               About Us
             </Link>
@@ -76,7 +73,7 @@ export default function NavbarThree() {
             <Link
               href="/contact"
               onClick={closeMenu}
-              className="font-semibold cursor-pointer text-brand-black no-underline"
+              className="cursor-pointer text-brand-white no-underline font-medium hover:font-bold"
             >
               Contact Us
             </Link>

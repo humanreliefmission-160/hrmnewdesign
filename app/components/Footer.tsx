@@ -36,7 +36,6 @@ export default function Footer() {
             </a>
             <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
               <BiLogoInstagramAlt fill="#F5F5F5" />
-
             </a>
           </div>
         </div>

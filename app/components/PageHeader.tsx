@@ -6,23 +6,25 @@ interface PageHeaderProps {
   subtitle: React.ReactNode;
   breadcrumb?: string;
   centered?: boolean;
+  display?: boolean;
 }
 
 export default function PageHeader({
   title,
   subtitle,
   breadcrumb,
-  centered = true
+  centered = true,
+  display = true
 }: PageHeaderProps) {
   return (
-    <div className={`bg-purple pt-32 pb-16 px-4 md:px-8 text-brand-white ${centered ? 'text-center' : ''}`}>
+    <div className={`bg-purple pt-32 pb-16 px-4 md:px-8 text-brand-white ${display ? "" : "hidden"} ${centered ? 'text-center' : ''}`}>
       <div className="max-w-[1140px] mx-auto">
-        <div className="text-[0.75rem] font-bold tracking-widest uppercase mb-4 text-brand-white hover:text-brand-lgrey">
+        {display && <div className="text-[0.75rem] font-bold tracking-widest uppercase mb-4 text-brand-white hover:text-brand-lgrey">
           <Link href="/" className="transition-colors ">
             Home
           </Link>
           {breadcrumb && <> / <span className="text-white">{breadcrumb}</span></>}
-        </div>
+        </div>}
         <h1 className="text-4xl md:text-6xl font-bold mb-6 font-body leading-tight">
           {title}
         </h1>
