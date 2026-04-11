@@ -12,7 +12,7 @@ export default function NavbarThree() {
 
   return (
     <>
-      <nav className="border-none relative z-1000 bg-purple">
+      <nav className="border-none relative z-1000 h-full bg-purple">
         <div className="max-w-[1140px] mx-auto px-4 md:px-8 flex items-center justify-between h-[70px]">
           <Link href="/" className="flex items-start cursor-pointer no-underline relative w-[90px] h-[70px]" onClick={closeMenu}>
             <img src="/logo.svg" alt="Human Relief Mission" className="absolute top-0 left-0 h-[110px] w-auto z-1050 drop-shadow-[0_4px_6px_rgba(0,0,0,0.1)]" />
@@ -23,7 +23,7 @@ export default function NavbarThree() {
               <Link href="/about" className="text-[0.875rem] font-semibold text-brand-white no-underline cursor-pointer transition-colors duration-500 tracking-wide hover:font-bold">About Us</Link>
             </li>
             <li>
-              <Link href="/" className="text-[0.875rem] font-semibold text-brand-white no-underline cursor-pointer transition-colors duration-500 tracking-wide hover:font-bold">Projects</Link>
+              <Link href="/projects" className="text-[0.875rem] font-semibold text-brand-white no-underline cursor-pointer transition-colors duration-500 tracking-wide hover:font-bold">Projects</Link>
             </li>
             <li>
               <Link href="/about" className="text-[0.875rem] font-semibold text-brand-white no-underline cursor-pointer transition-colors duration-500 tracking-wide hover:font-bold">About</Link>

@@ -18,17 +18,17 @@ export default function ProjectsGrid() {
           <YellowCTA text="Support a Project" href="/donate" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+
           {/* Card 1 */}
           <div className="bg-brand-white rounded-xl overflow-hidden shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover group">
             <div className="aspect-4/3 relative overflow-hidden">
               <img src="/img-placeholder.JPG" alt="Project" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-              <Link href="/infrastructure" className="absolute bottom-0 left-0 right-0 bg-purple text-brand-white font-bold text-[0.8rem] tracking-widest uppercase py-2.5 px-6 no-underline" >Infrastructure</Link>
+              <Link href="/infrastructure" className="absolute bottom-0 left-0 right-0 bg-purple text-brand-white font-bold text-[0.8rem] tracking-widest uppercase py-2.5 px-6 no-underline">Infrastructure</Link>
             </div>
             <div className="p-6">
               <h3 className="font-bold text-[1.1rem] text-brand-black mb-2.5">Bags for Students</h3>
               <p className="text-[0.875rem] text-brand-grey leading-[1.6]">
-                Providing school bags, stationery, and supplies so children
-                can focus on learning and achieving their dreams.
+                Providing school bags, stationery, and supplies so children can focus on learning and achieving their dreams.
               </p>
               <div className="flex justify-between items-center mt-6 pt-4 border-t border-brand-lgrey">
                 <YellowCTA text="Find out more" />
@@ -43,13 +43,12 @@ export default function ProjectsGrid() {
           <div className="bg-brand-white rounded-xl overflow-hidden shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover group">
             <div className="aspect-4/3 relative overflow-hidden">
               <img src="/img-placeholder.JPG" alt="Project" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-              <Link href="/infrastructure" className="absolute bottom-0 left-0 right-0 bg-purple text-brand-white font-bold text-[0.8rem] tracking-widest uppercase py-2.5 px-6 no-underline" >Infrastructure</Link>
+              <Link href="/infrastructure" className="absolute bottom-0 left-0 right-0 bg-purple text-brand-white font-bold text-[0.8rem] tracking-widest uppercase py-2.5 px-6 no-underline">Infrastructure</Link>
             </div>
             <div className="p-6">
               <h3 className="font-bold text-[1.1rem] text-brand-black mb-2.5">Bags for Students</h3>
               <p className="text-[0.875rem] text-brand-grey leading-[1.6]">
-                Providing school bags, stationery, and supplies so children
-                can focus on learning and achieving their dreams.
+                Providing school bags, stationery, and supplies so children can focus on learning and achieving their dreams.
               </p>
               <div className="flex justify-between items-center mt-6 pt-4 border-t border-brand-lgrey">
                 <YellowCTA text="Find out more" />
@@ -64,13 +63,12 @@ export default function ProjectsGrid() {
           <div className="bg-brand-white rounded-xl overflow-hidden shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover group">
             <div className="aspect-4/3 relative overflow-hidden">
               <img src="/img-placeholder.JPG" alt="Project" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-              <Link href="/infrastructure" className="absolute bottom-0 left-0 right-0 bg-purple text-brand-white font-bold text-[0.8rem] tracking-widest uppercase py-2.5 px-6 no-underline" >Infrastructure</Link>
+              <Link href="/infrastructure" className="absolute bottom-0 left-0 right-0 bg-purple text-brand-white font-bold text-[0.8rem] tracking-widest uppercase py-2.5 px-6 no-underline">Infrastructure</Link>
             </div>
             <div className="p-6">
               <h3 className="font-bold text-[1.1rem] text-brand-black mb-2.5">Bags for Students</h3>
               <p className="text-[0.875rem] text-brand-grey leading-[1.6]">
-                Providing school bags, stationery, and supplies so children
-                can focus on learning and achieving their dreams.
+                Providing school bags, stationery, and supplies so children can focus on learning and achieving their dreams.
               </p>
               <div className="flex justify-between items-center mt-6 pt-4 border-t border-brand-lgrey">
                 <YellowCTA text="Find out more" />
@@ -80,8 +78,9 @@ export default function ProjectsGrid() {
               </div>
             </div>
           </div>
+
         </div>
       </div>
-    </section >
+    </section>
   );
 }
