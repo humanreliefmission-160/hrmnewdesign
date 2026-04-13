@@ -1,4 +1,6 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
 import Link from 'next/link';
 import YellowCTA from './YellowCTA';
 
@@ -17,10 +19,14 @@ export default function ProjectsPageHeader({
   image = "/img-placeholder.JPG", // default placeholder based on screenshot
   display = true
 }: PageHeaderProps) {
+  const [selectedAmount, setSelectedAmount] = useState<string | null>(null);
+  const [isOtherAmount, setIsOtherAmount] = useState(false);
+  const [customAmount, setCustomAmount] = useState("");
+
   if (!display) return null;
 
   return (
-    <div className="w-full flex flex-col md:flex-row bg-purple-dark text-brand-white shadow-xl relative z-10 w-full">
+    <div className="flex flex-col md:flex-row bg-purple-dark text-brand-white lg:shadow-xl relative z-10 w-full sm:shadow-none">
       {/* Left Content Half */}
       <div className="w-full md:w-[50%] flex justify-end">
         {/* Inner container to align with max-w grid, 570px + some padding */}
@@ -40,14 +46,63 @@ export default function ProjectsPageHeader({
           </p>
 
           <div className="flex flex-wrap gap-2 md:gap-3 mb-8">
-            {['£1', '£5', '£10', 'Other Amount'].map((amount, idx) => (
-              <button
-                key={idx}
-                className="border-2 border-purple-light/70 text-brand-white/90 px-4 py-1.5 md:py-2 text-[0.95rem] font-semibold hover:bg-purple hover:border-purple hover:text-white transition-all rounded-[2px]"
-              >
-                {amount}
-              </button>
-            ))}
+            {['£1', '£5', '£10', 'Other Amount'].map((amount, idx) => {
+              if (amount === 'Other Amount') {
+                if (isOtherAmount) {
+                  return (
+                    <div key={idx} className="relative flex items-center">
+                      <span className="absolute left-3 text-brand-white/90">
+                        <strong>£</strong>
+                      </span>
+                      <input
+                        type="number"
+                        autoFocus
+                        value={customAmount}
+                        onChange={(e) => setCustomAmount(e.target.value)}
+                        className="border-2 border-purple-light bg-transparent text-brand-white/90 px-4 py-1.5 md:py-2 pl-7 w-32 text-[0.95rem] font-semibold outline-none rounded-[2px] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        placeholder="Amount"
+                      />
+                      <button
+                        onClick={() => setIsOtherAmount(false)}
+                        className="absolute right-2 text-brand-white/50 hover:text-brand-white text-xs"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  );
+                }
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setIsOtherAmount(true);
+                      setSelectedAmount(null);
+                    }}
+                    className="border-2 border-purple-light/50 text-brand-white/90 px-4 py-1.5 md:py-2 text-[0.95rem] font-semibold hover:bg-purple hover:border-purple hover:text-white transition-all rounded-[2px]"
+                  >
+                    {amount}
+                  </button>
+                );
+              }
+
+              const isSelected = selectedAmount === amount && !isOtherAmount;
+
+              return (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setSelectedAmount(amount);
+                    setIsOtherAmount(false);
+                  }}
+                  className={`border-2 px-4 py-1.5 md:py-2 text-[0.95rem] font-semibold transition-all rounded-[2px] ${isSelected
+                    ? "border-purple text-white bg-purple"
+                    : "border-purple-light/50 text-brand-white/90 hover:bg-purple hover:border-purple hover:text-white"
+                    }`}
+                >
+                  {amount}
+                </button>
+              );
+            })}
           </div>
 
           <YellowCTA
@@ -58,11 +113,11 @@ export default function ProjectsPageHeader({
       </div>
 
       {/* Right Image Half */}
-      <div className="w-full md:w-[50%] relative min-h-[300px] sm:min-h-[400px] md:min-h-auto flex items-stretch">
+      <div className="w-full md:w-[50%] relative min-h-[300px] sm:min-h-[400px] md:min-h-auto flex items-stretch bg-brand-white">
         <img
           src={image}
-          alt="Project header"
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          alt="Human Relief Mission Project header"
+          className="absolute inset-0 w-full h-full object-cover object-center p-5 lg:p-0"
         />
       </div>
     </div>
