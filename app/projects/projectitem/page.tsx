@@ -1,15 +1,16 @@
 "use client";
 
-import PageHeader from "../../components/PageHeader";
+import ProjectsPageHeader from "../../components/ProjectsPageHeader";
 
 export default function ProjectItem() {
   return (
     <>
-      <PageHeader
-        title="Project Item"
+      <ProjectsPageHeader
+        title="Projects Name"
         subtitle={<>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec volutpat semper feugiat. Lorem ipsum dolor.</>}
-        breadcrumb="Projects"
+        breadcrumb="HOME"
         display={true}
+        image="/img-placeholder.JPG"
       />
 
       <h1>CARRY ON FROM HERE</h1>
