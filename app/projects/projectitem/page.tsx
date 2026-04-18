@@ -8,6 +8,7 @@ import Impact from "@/app/components/project/Impact";
 import ImageCarousel from "@/app/components/project/ImageCarousel";
 import Stats from "@/app/components/project/Stats";
 import HowItHelps from "@/app/components/project/HowItHelps";
+import FAQ from "@/app/components/project/faq";
 
 export default function ProjectItem() {
   return (
@@ -28,6 +29,7 @@ export default function ProjectItem() {
           <Impact />
           <Stats />
           <HowItHelps />
+          <FAQ />
           <ImageCarousel />
         </div>
       </section>
