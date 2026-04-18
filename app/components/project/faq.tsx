@@ -52,7 +52,7 @@ export default function FAQ() {
           <h2 className="text-3xl md:text-4xl font-bold text-brand-black mb-3">
             Frequently Asked Questions
           </h2>
-          <p className="text-gray-400 max-w-xl mx-auto text-base">
+          <p className="text-black/75 max-w-xl mx-auto text-base">
             Everything you need to know about our work, your impact, and how to get involved.
           </p>
         </div>
