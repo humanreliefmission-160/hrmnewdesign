@@ -26,7 +26,7 @@ export default function ProjectsPageHeader({
   if (!display) return null;
 
   return (
-    <div className="flex flex-col flex-col-reverse md:flex-row bg-purple-dark text-brand-white lg:shadow-xl relative z-10 w-full sm:shadow-none sm:pt-0">
+    <div className="flex flex-col-reverse md:flex-row bg-purple-dark text-brand-white lg:shadow-xl relative z-10 w-full sm:shadow-none sm:pt-0">
       {/* Left Content Half */}
       <div className="w-full md:w-[50%] flex justify-end">
         {/* Inner container to align with max-w grid, 570px + some padding */}
