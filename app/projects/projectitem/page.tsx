@@ -1,6 +1,13 @@
 "use client";
 
+import Intro from "@/app/components/project/Intro";
 import ProjectsPageHeader from "../../components/ProjectsPageHeader";
+import CaseStudy from "@/app/components/project/CaseStudy";
+import DonationItems from "@/app/components/project/DonationItems";
+import Impact from "@/app/components/project/Impact";
+import ImageCarousel from "@/app/components/project/ImageCarousel";
+import Stats from "@/app/components/project/Stats";
+import HowItHelps from "@/app/components/project/HowItHelps";
 
 export default function ProjectItem() {
   return (
@@ -13,11 +20,15 @@ export default function ProjectItem() {
         image="/img-placeholder.JPG"
       />
 
-      <section className="px-4 md:px-8 py-12">
-        <div className="max-w-[1140px] mx-auto">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 font-body leading-tight">
-            CARRY ON FROM HERE
-          </h1>
+      <section>
+        <div className="mx-auto">
+          <Intro />
+          <CaseStudy />
+          <DonationItems />
+          <Impact />
+          <Stats />
+          <HowItHelps />
+          <ImageCarousel />
         </div>
       </section>
 

@@ -15,7 +15,7 @@ interface PageHeaderProps {
 export default function ProjectsPageHeader({
   title,
   subtitle,
-  breadcrumb = "HOME",
+  breadcrumb = "PROJECTS",
   image = "/img-placeholder.JPG", // default placeholder based on screenshot
   display = true
 }: PageHeaderProps) {
@@ -26,26 +26,26 @@ export default function ProjectsPageHeader({
   if (!display) return null;
 
   return (
-    <div className="flex flex-col md:flex-row bg-purple-dark text-brand-white lg:shadow-xl relative z-10 w-full sm:shadow-none">
+    <div className="flex flex-col flex-col-reverse md:flex-row bg-purple-dark text-brand-white lg:shadow-xl relative z-10 w-full sm:shadow-none sm:pt-0">
       {/* Left Content Half */}
       <div className="w-full md:w-[50%] flex justify-end">
         {/* Inner container to align with max-w grid, 570px + some padding */}
-        <div className="w-full max-w-[600px] px-6 py-12 md:px-8 md:py-24 lg:py-32 xl:pl-0 flex flex-col justify-center items-start text-left">
+        <div className="w-full max-w-[600px] px-6 py-12 md:px-8 md:py-24 lg:py-32 xl:pl-0 flex flex-col items-start text-left">
           <div className="text-[0.75rem] font-bold tracking-widest uppercase mb-2 text-brand-white">
-            <Link href="/" className="hover:text-brand-lgrey/50 transition-colors">
+            <Link href="/projects" className="hover:text-brand-lgrey/50 transition-colors">
               {breadcrumb}
             </Link>
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 font-body leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 font-body leading-tight text-left">
             {title}
           </h1>
 
-          <p className="leading-[1.6] text-brand-white/85 text-[1.1rem] max-w-[500px] mb-8">
+          <p className="leading-[1.6] text-brand-white/85 text-[1.1rem] max-w-[500px] mb-8 text-left">
             {subtitle}
           </p>
 
-          <div className="flex flex-wrap gap-2 md:gap-3 mb-8">
+          <div className="flex flex-wrap gap-2 md:gap-3 mb-8 justify-center sm:justify-start">
             {['£1', '£5', '£10', 'Other Amount'].map((amount, idx) => {
               if (amount === 'Other Amount') {
                 if (isOtherAmount) {
@@ -117,7 +117,7 @@ export default function ProjectsPageHeader({
         <img
           src={image}
           alt="Human Relief Mission Project header"
-          className="absolute inset-0 w-full h-full object-cover object-center p-5 lg:p-0"
+          className="absolute inset-0 w-full h-full object-cover object-center lg:p-0"
         />
       </div>
     </div>
