@@ -4,7 +4,7 @@ export default function CaseStudy() {
       <div className="max-w-6xl mx-auto">
         {/* Section Label */}
         <div className="text-center mb-12">
-          <span className="inline-block bg-purple/10 text-purple text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-3">
+          <span className="inline-block bg-purple/10 text-purple text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-sm mb-3">
             Case Study
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-brand-black">
@@ -23,11 +23,11 @@ export default function CaseStudy() {
                 className="w-full h-[400px] object-cover"
               />
               {/* Overlay badge */}
-              <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-sm px-4 py-3 shadow-lg">
+              <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-sm px-4 py-2 shadow-lg">
                 <p className="text-xs text-purple font-semibold uppercase tracking-wide">Almas Enrolled in Herat Orphanage</p>
               </div>
             </div>
-            <blockquote className="text-xl font-semibold text-purple italic border-l-4 border-purple pl-5 leading-snug mt-4">
+            <blockquote className="text-xl font-semibold text-purple italic border-l-4 border-purple pl-4 mt-4">
               "Before being enrolled in the orphanage, I used to sleep in the park."
             </blockquote>
           </div>

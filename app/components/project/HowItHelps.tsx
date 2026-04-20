@@ -1,37 +1,42 @@
+import { BsGraphUpArrow } from "react-icons/bs";
+import { FaBoxes, FaSearch } from "react-icons/fa";
+import { GiTeacher } from "react-icons/gi";
+import { PiCraneTowerFill, PiPlantFill } from "react-icons/pi";
+
 const steps = [
   {
     step: "01",
-    icon: "🔍",
+    icon: <FaSearch fill="#650199" size={30} />,
     title: "Identifying the Most Vulnerable",
     desc: "Our on-the-ground teams conduct needs assessments in conflict zones, flood-affected areas, and impoverished rural communities to find the children who need help most — those who have never set foot in a classroom.",
   },
   {
     step: "02",
-    icon: "🏗️",
+    icon: <PiCraneTowerFill fill="#650199" size={30} />,
     title: "Setting Up Learning Spaces",
     desc: "We establish temporary learning centres or repair damaged schools, providing safe, secure spaces equipped with basic furniture, teaching materials, and sanitation facilities — creating environments where children can focus on learning.",
   },
   {
     step: "03",
-    icon: "👩‍🏫",
+    icon: <GiTeacher fill="#650199" size={30} />,
     title: "Hiring & Training Local Teachers",
     desc: "We recruit qualified local teachers from the community, provide training in child-friendly teaching methods and trauma-informed practice, and pay fair salaries — ensuring children learn from people who understand their culture and language.",
   },
   {
     step: "04",
-    icon: "📦",
+    icon: <FaBoxes fill="#650199" size={30} />,
     title: "Distributing Educational Kits",
     desc: "Every enrolled child receives a fully-stocked school bag, uniform, and nutritious meals where applicable — removing the practical barriers that keep families from sending their children to school.",
   },
   {
     step: "05",
-    icon: "📊",
+    icon: <BsGraphUpArrow fill="#650199" size={30} />,
     title: "Monitoring Progress & Attainment",
     desc: "Our teams track attendance, literacy, numeracy, and wellbeing for every child. Regular assessments ensure the programme is working and help us adapt our approach where needed to maximise each child's potential.",
   },
   {
     step: "06",
-    icon: "🌱",
+    icon: <PiPlantFill fill="#650199" size={30} />,
     title: "Transitioning to Formal Education",
     desc: "At the end of the programme, we work with government schools and local authorities to transition children into mainstream education — creating lasting change that outlives the project itself.",
   },
@@ -42,7 +47,7 @@ export default function HowItHelps() {
     <section className="bg-brand-white py-16 px-6 md:px-12 lg:px-24">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
-          <span className="inline-block bg-purple/10 text-purple text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-3">
+          <span className="inline-block bg-purple/10 text-purple text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-sm mb-3">
             Our Approach
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-brand-black mb-4">
@@ -64,7 +69,7 @@ export default function HowItHelps() {
                 {s.step}
               </span>
               {/* Icon */}
-              <div className="w-14 h-14 bg-white rounded-full shadow-sm flex items-center justify-center text-3xl mb-5 border border-gray-100">
+              <div className="w-14 h-14 bg-purple-faint/50 rounded-sm flex items-center justify-center text-3xl mb-5 border border-gray-100">
                 {s.icon}
               </div>
               <h3 className="text-lg font-bold text-brand-black mb-3 leading-snug">{s.title}</h3>

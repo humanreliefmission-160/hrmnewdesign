@@ -1,10 +1,13 @@
 import { useState } from "react";
 import YellowCTA from "../YellowCTA";
+import { BiSolidBackpack, BiSolidTShirt } from "react-icons/bi";
+import { ImBooks } from "react-icons/im";
+import { SiBookstack } from "react-icons/si";
 
 const items = [
 	{
 		id: 1,
-		icon: "🎒",
+		icon: <BiSolidBackpack fill="#650199" size={30} />,
 		title: "School Bag & Stationery Pack",
 		description:
 			"Provides one child with a full school bag, exercise books, pens, pencils, a ruler, and an eraser — everything they need to start learning.",
@@ -13,7 +16,7 @@ const items = [
 	},
 	{
 		id: 2,
-		icon: "📚",
+		icon: <SiBookstack fill="#650199" size={30} />,
 		title: "Textbook Bundle",
 		description:
 			"A complete set of curriculum-aligned textbooks in the local language for one student across all core subjects.",
@@ -22,7 +25,7 @@ const items = [
 	},
 	{
 		id: 3,
-		icon: "👕",
+		icon: <BiSolidTShirt fill="#650199" size={30} />,
 		title: "School Uniform",
 		description:
 			"Many children are turned away or feel excluded without a uniform. This donation covers a full uniform set for one child.",
@@ -45,12 +48,14 @@ function DonationCard({ item }: { item: DonationItem }) {
 
 	return (
 		<div className="shadow-md bg-brand-white rounded-sm border border-gray-100 p-7 flex flex-col gap-4 hover:shadow-xl transition-shadow duration-300 justify-between">
-			<div className="flex items-start gap-4">
+			<div className="flex gap-4 items-center">
+				<div className="bg-purple-faint p-3 rounded-sm">
+					<span className="text-4xl">{item.icon}</span>
+				</div>
 				<div>
 					<h3 className="text-lg font-bold text-gray-900 leading-tight">{item.title}</h3>
 					<p className="text-xs text-purple mt-1">{item.impact}</p>
 				</div>
-				<span className="text-4xl">{item.icon}</span>
 			</div>
 			<p className="text-sm text-gray-500 leading-relaxed">{item.description}</p>
 
@@ -101,7 +106,7 @@ export default function DonationItems() {
 		<section className="bg-purple-dark py-16 px-6 md:px-12 lg:px-24">
 			<div className="max-w-6xl mx-auto">
 				<div className="text-center mb-12">
-					<span className="inline-block bg-purple-light/50 text-brand-white text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-3">
+					<span className="inline-block bg-purple-light/50 text-brand-white text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-sm mb-3">
 						Donate Today
 					</span>
 					<h2 className="text-3xl md:text-4xl font-bold text-brand-white mb-4">

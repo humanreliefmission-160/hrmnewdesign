@@ -1,8 +1,8 @@
 export default function Intro() {
   return (
-    <section className="py-4 sm:py-16 px-6 md:px-12 lg:px-24">
+    <section className="pt-16 pb-0 sm:py-16 px-6 md:px-12 lg:px-24">
       <div className="max-w-5xl mx-auto text-center">
-        <span className="inline-block bg-purple/10 text-purple text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-4">
+        <span className="inline-block bg-purple/10 text-purple text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-sm mb-4">
           Education Project
         </span>
         <h2 className="text-3xl md:text-4xl font-bold text-brand-black mb-6 leading-tight">
