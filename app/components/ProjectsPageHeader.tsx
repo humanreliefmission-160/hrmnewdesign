@@ -37,7 +37,7 @@ export default function ProjectsPageHeader({
             </Link>
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 font-body leading-tight text-left">
+          <h1 className="text-5xl font-display md:text-5xl lg:text-6xl font-bold mb-4 tracking-wide text-left">
             {title}
           </h1>
 

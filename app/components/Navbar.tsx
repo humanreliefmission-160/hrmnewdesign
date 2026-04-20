@@ -13,7 +13,7 @@ export default function NavbarThree() {
   return (
     <>
       <nav className="border-none relative z-1000 h-full bg-purple">
-        <div className="max-w-[1140px] mx-auto px-4 md:px-8 flex items-center justify-between h-[70px]">
+        <div className="max-w-[1140px] lg:mx-auto px-4 flex items-center justify-between h-[70px]">
           <Link href="/" className="flex items-start cursor-pointer no-underline relative w-[90px] h-[70px]" onClick={closeMenu}>
             <img src="/logo.svg" alt="Human Relief Mission" className="absolute top-0 left-0 h-[110px] w-auto z-1050 drop-shadow-[0_4px_6px_rgba(0,0,0,0.1)]" />
           </Link>
@@ -115,15 +115,15 @@ export default function NavbarThree() {
             </li>
           </ul>
 
-          <div className="md:block">
+          <div className="block">
             <YellowCTA text="Donate Now" href="/donate" />
           </div>
-        </div>
 
-        <div className="md:hidden flex flex-col gap-[5px] cursor-pointer p-1" onClick={toggleMobileMenu}>
-          <span className={`block w-6 h-[2px] bg-brand-white transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-[7px]" : ""}`}></span>
-          <span className={`block w-6 h-[2px] bg-brand-white transition-all duration-300 ${mobileOpen ? "opacity-0" : ""}`}></span>
-          <span className={`block w-6 h-[2px] bg-brand-white transition-all duration-300 ${mobileOpen ? "-rotate-45 -translate-y-[7px]" : ""}`}></span>
+          <div className="md:hidden flex flex-col gap-[5px] cursor-pointer p-1 z-50" onClick={toggleMobileMenu}>
+            <span className={`block w-6 h-[2px] bg-brand-white transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-[7px]" : ""}`}></span>
+            <span className={`block w-6 h-[2px] bg-brand-white transition-all duration-300 ${mobileOpen ? "opacity-0" : ""}`}></span>
+            <span className={`block w-6 h-[2px] bg-brand-white transition-all duration-300 ${mobileOpen ? "-rotate-45 -translate-y-[7px]" : ""}`}></span>
+          </div>
         </div>
       </nav>
 

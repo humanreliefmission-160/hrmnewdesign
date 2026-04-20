@@ -1,6 +1,6 @@
 export default function CaseStudy() {
   return (
-    <section className="bg-white/50 py-16 px-6 md:px-12 lg:px-24 shadow-lg my-12 max-w-[1140px] mx-auto">
+    <section className="bg-white/50 py-8 sm:py-16 px-6 md:px-12 lg:px-24 shadow-lg my-12 max-w-[1140px] mx-3 sm:mx-auto rounded-sm">
       <div className="max-w-6xl mx-auto">
         {/* Section Label */}
         <div className="text-center mb-12">
