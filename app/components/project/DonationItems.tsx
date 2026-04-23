@@ -61,13 +61,13 @@ function DonationCard({ item }: { item: DonationItem }) {
         </div>
       </div>
 
-      <p className="text-sm text-gray-500 leading-relaxed">{item.description}</p>
-
       <div>
         <span className="text-[10px] font-medium bg-purple mt-1 text-brand-white px-2 py-1 rounded-sm">
           {item.donationFrequency[0]}
         </span>
       </div>
+
+      <p className="text-sm text-gray-500 leading-relaxed">{item.description}</p>
 
       {/* Amount selector */}
       <div className="flex flex-wrap gap-2 mt-1">
