@@ -63,7 +63,7 @@ export default function ImageCarousel() {
 	}, [singleSetWidth]);
 
 	return (
-		<section className="bg-purple-dark w-full select-none py-10 sm:py-18 flex flex-col items-center gap-12">
+		<section className="bg-purple w-full select-none py-10 sm:py-18 flex flex-col items-center gap-12">
 			{/* ── Top black zone with centred motivational text ── */}
 			<div className="flex items-center justify-center px-8">
 				<h2 className="text-brand-white text-3xl md:text-4xl font-bold text-center">
@@ -77,14 +77,14 @@ export default function ImageCarousel() {
 					className="absolute left-0 top-0 bottom-0 z-10 pointer-events-none"
 					style={{
 						width: "60px",
-						background: "linear-gradient(to right, #4a0070 0%, transparent 100%)",
+						background: "linear-gradient(to right, #650199 0%, transparent 100%)",
 					}}
 				/>
 				<div
 					className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none"
 					style={{
 						width: "60px",
-						background: "linear-gradient(to left, #4a0070 0%, transparent 100%)",
+						background: "linear-gradient(to left, #650199 0%, transparent 100%)",
 					}}
 				/>
 

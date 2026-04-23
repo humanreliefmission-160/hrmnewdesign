@@ -46,7 +46,7 @@ export default function FAQ() {
       <section className="w-full bg-brand-white py-20 px-6">
         {/* Heading */}
         <div className="text-center mb-12">
-          <span className="inline-block bg-purple/10 text-purple text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-4">
+          <span className="inline-block bg-purple/10 text-purple text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-sm mb-4">
             FAQ
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-brand-black mb-3">

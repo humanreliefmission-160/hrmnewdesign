@@ -1,7 +1,9 @@
 import { BsGraphUpArrow } from "react-icons/bs";
 import { FaBoxes, FaSearch } from "react-icons/fa";
 import { GiTeacher } from "react-icons/gi";
+import { MdChatBubble } from "react-icons/md";
 import { PiCraneTowerFill, PiPlantFill } from "react-icons/pi";
+import { SlSpeech } from "react-icons/sl";
 
 const steps = [
   {
@@ -80,7 +82,9 @@ export default function HowItHelps() {
 
         {/* Testimonial strip */}
         <div className="mt-16 bg-purple rounded-sm p-10 text-white flex flex-col md:flex-row items-center gap-8">
-          <div className="text-6xl shrink-0">💬</div>
+          <div className="text-6xl shrink-0">
+            <MdChatBubble fill="#f5f5f5" size={70} />
+          </div>
           <div>
             <p className="text-xl font-semibold italic leading-relaxed mb-4">
               "Almas who came to our centre had never been to school. Within a year, they were reading, writing,

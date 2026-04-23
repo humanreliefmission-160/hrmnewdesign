@@ -27,10 +27,10 @@ export default function ProjectItem() {
           <CaseStudy />
           <DonationItems />
           <Impact />
+          <ImageCarousel />
           <Stats />
           <HowItHelps />
           <FAQ />
-          <ImageCarousel />
         </div>
       </section>
 
