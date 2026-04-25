@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
-import Footer from "./components/Footer";
-import ImpactTicker from "./components/ImpactTicker";
-import Navbar from "./components/Navbar";
-import "../globals.css";
+import "@/app/globals.css";
 
 export const metadata: Metadata = {
-  title: "Human Relief Mission",
-  description: "Helping Humanity Through Welfare",
+  title: "Donations | Human Relief Mission",
+  description: "Donations for Human Relief Mission",
 };
 
-export default function RootLayout({
+export default function DatabaseLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -22,10 +19,9 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet" />
       </head>
       <body>
-        <ImpactTicker />
-        <Navbar />
-        {children}
-        <Footer />
+        <div className="donations-layout">
+          {children}
+        </div>
       </body>
     </html>
   );

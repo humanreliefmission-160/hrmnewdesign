@@ -1,14 +1,15 @@
 "use client";
 
-import Intro from "@/app/components/project/Intro";
 import ProjectsPageHeader from "../../components/ProjectsPageHeader";
-import CaseStudy from "@/app/components/project/CaseStudy";
-import DonationItems from "@/app/components/project/DonationItems";
-import Impact from "@/app/components/project/Impact";
-import ImageCarousel from "@/app/components/project/ImageCarousel";
-import Stats from "@/app/components/project/Stats";
-import HowItHelps from "@/app/components/project/HowItHelps";
-import FAQ from "@/app/components/project/faq";
+
+import Intro from "../../components/project/Intro";
+import DonationItems from "../../components/project/DonationItems";
+import Impact from "../../components/project/Impact";
+import ImageCarousel from "../../components/project/ImageCarousel";
+import Stats from "../../components/project/Stats";
+import HowItHelps from "../../components/project/HowItHelps";
+import FAQ from "../../components/project/faq";
+import CaseStudy from "../../components/project/CaseStudy";
 
 export default function ProjectItem() {
   return (

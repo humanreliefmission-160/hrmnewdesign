@@ -1,6 +1,6 @@
 import { DonationState } from './types';
 import DonationStepFooter from './DonationStepFooter';
-import GiftAidIcon from '@/app/donate/GiftAidIcon';
+import GitAidIcon from '../../donate/GiftAidIcon';
 
 interface DonationStepGiftAidProps {
   currentStep: number;
@@ -14,7 +14,7 @@ export default function DonationStepGiftAid({ currentStep, donationState, setGif
 
   return (
     <div className="bg-brand-white p-8 md:p-10 rounded-2xl shadow-card border border-brand-lgrey">
-      <GiftAidIcon className="w-50 h-auto text-brand-black mb-5" />
+      <GitAidIcon className="w-50 h-auto text-brand-black mb-5" />
       <h2 className="text-2xl md:text-3xl font-bold text-brand-black mb-2 font-body leading-tight">
         Boost your donation
       </h2>

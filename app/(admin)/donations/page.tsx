@@ -3,6 +3,9 @@
 import { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import YellowCTA from "@/app/(website)/components/YellowCTA";
+import { FaChevronDown } from "react-icons/fa";
+import { IoIosSearch } from "react-icons/io";
 
 const donations = [
   {
@@ -180,28 +183,26 @@ export default function Donations() {
       >
         <div className="flex items-center gap-3">
           <div>
-            <Image src="/logo-white.svg" alt="Logo" width={50} height={50} />
+            <Link href="/" className="cursor-pointer">
+              <Image src="/logo-white.svg" alt="Logo" width={50} height={50} />
+            </Link>
           </div>
         </div>
-        <button
-          className="flex items-center gap-2 text-sm text-brand-white font-medium px-3 py-1.5 rounded border border-gray-200 hover:bg-gray-50 transition-colors">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f5f5f5" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-            <polyline points="16 17 21 12 16 7" />
-            <line x1="21" y1="12" x2="9" y2="12" />
-          </svg>
-          Logout
-        </button>
+
+        <YellowCTA
+          href="#"
+          text="Logout"
+        />
       </nav>
 
       {/* Main content */}
       <main className="flex-1 px-8 py-8 max-w-screen-2xl mx-auto w-full">
         {/* Page Header */}
         <div className="mb-6">
-          <h1 className="text-3xl sm:text-5xl font-bold mb-1 text-brand-black">
+          <h1 className="text-3xl sm:text-5xl font-bold mb-2 text-brand-black">
             Donor Management
           </h1>
-          <p className="text-sm" style={{ color: "#6b7280" }}>
+          <p className="text-sm text-brand-grey">
             View and manage all donor information and donations
           </p>
         </div>
@@ -210,21 +211,17 @@ export default function Donations() {
         <div className="bg-white rounded border border-gray-200 p-4 mb-5">
           <div className="flex flex-wrap gap-3 items-center">
             {/* Search */}
-            <div className="flex-1 min-w-64 relative">
-              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
+            <div className="flex-1 relative">
+              <div className="flex items-center pointer-events-none gap-2 border-gray-200 px-3 py-2 text-sm border rounded bg-white">
+                <IoIosSearch className="w-4 h-4 text-brand-black/50" />
+                <input
+                  type="text"
+                  placeholder="Search by name, email, or ID..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="focus:outline-none focus:ring-1 focus:border-gray-400 text-brand-black"
+                />
               </div>
-              <input
-                type="text"
-                placeholder="Search by name, email, or ID..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded focus:outline-none focus:ring-1 focus:border-gray-400"
-                style={{ color: "#1a1a1a", backgroundColor: "#fff" }}
-              />
             </div>
 
             {/* Project Filter */}
@@ -232,17 +229,14 @@ export default function Donations() {
               <select
                 value={projectFilter}
                 onChange={(e) => setProjectFilter(e.target.value)}
-                className="appearance-none pl-3 pr-8 py-2 text-sm border border-gray-200 rounded bg-white focus:outline-none focus:ring-1 focus:border-gray-400 cursor-pointer"
-                style={{ color: "#1a1a1a" }}
+                className="appearance-none pl-3 pr-8 py-2 text-sm border border-gray-200 rounded bg-white focus:outline-none focus:ring-1 focus:border-gray-400 cursor-pointer text-brand-black"
               >
                 {allProjects.map((p) => (
                   <option key={p}>{p}</option>
                 ))}
               </select>
               <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
+                <FaChevronDown className="w-2 h-2 text-brand-black/50" />
               </div>
             </div>
 
@@ -251,17 +245,14 @@ export default function Donations() {
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                className="appearance-none pl-3 pr-8 py-2 text-sm border border-gray-200 rounded bg-white focus:outline-none focus:ring-1 focus:border-gray-400 cursor-pointer"
-                style={{ color: "#1a1a1a" }}
+                className="appearance-none pl-3 pr-8 py-2 text-sm border border-gray-200 rounded bg-white focus:outline-none focus:ring-1 focus:border-gray-400 cursor-pointer text-brand-black"
               >
                 {allTypes.map((t) => (
                   <option key={t}>{t}</option>
                 ))}
               </select>
               <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
+                <FaChevronDown className="w-2 h-2 text-brand-black/50" />
               </div>
             </div>
           </div>
@@ -273,17 +264,14 @@ export default function Donations() {
               <select
                 value={giftAidFilter}
                 onChange={(e) => setGiftAidFilter(e.target.value)}
-                className="appearance-none pl-3 pr-8 py-2 text-sm border border-gray-200 rounded bg-white focus:outline-none focus:ring-1 focus:border-gray-400 cursor-pointer"
-                style={{ color: "#1a1a1a" }}
+                className="appearance-none pl-3 pr-8 py-2 text-sm border border-gray-200 rounded bg-white focus:outline-none focus:ring-1 focus:border-gray-400 cursor-pointer text-brand-black"
               >
                 {allGiftAid.map((g) => (
                   <option key={g}>{g}</option>
                 ))}
               </select>
               <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
+                <FaChevronDown className="w-2 h-2 text-brand-black/50" />
               </div>
             </div>
           </div>
@@ -291,13 +279,12 @@ export default function Donations() {
 
         {/* Results bar */}
         <div className="flex items-center justify-between mb-3">
-          <p className="text-sm" style={{ color: "#6b7280" }}>
+          <p className="text-sm text-brand-grey">
             Showing 1 to {filtered.length} of {filtered.length} results
           </p>
           <button
             onClick={handleExportCSV}
-            className="flex items-center gap-2 text-sm font-medium px-4 py-2 border border-brand-white rounded bg-brand-white hover:bg-brand-white transition-colors"
-            style={{ color: "#1a1a1a" }}
+            className="flex items-center gap-2 text-sm font-medium px-4 py-2 border border-brand-white rounded bg-brand-white hover:bg-brand-white transition-colors text-brand-black"
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -341,7 +328,7 @@ export default function Donations() {
               <tbody className="block lg:table-row-group">
                 {filtered.length === 0 ? (
                   <tr className="block lg:table-row">
-                    <td colSpan={13} className="block lg:table-cell text-center py-12 text-sm" style={{ color: "#9ca3af" }}>
+                    <td colSpan={13} className="block lg:table-cell text-center py-12 text-sm text-gray-400">
                       No donations found matching your filters.
                     </td>
                   </tr>
@@ -351,24 +338,32 @@ export default function Donations() {
                       key={donation.id}
                       className="block lg:table-row border border-gray-200 lg:border-b lg:border-x-0 lg:border-t-0 lg:border-gray-100 hover:bg-gray-50 transition-colors mb-4 lg:mb-0 p-4 lg:p-0 bg-white rounded-sm lg:rounded-none shadow-sm lg:shadow-none"
                     >
-                      {/* Donation ID */}
-                      <td className="flex lg:table-cell justify-between items-center lg:px-4 lg:py-3 py-2 border-b lg:border-none font-medium text-xs lg:whitespace-nowrap text-brand-black">
-                        <span className="lg:hidden font-bold text-brand-black text-sm">Donation ID</span>
-                        <span className="text-right lg:text-left">{donation.id}</span>
+                      {/* Mobile Combined: Name, Email, ID */}
+                      <td className="block lg:hidden pb-3 mb-3 border-b border-gray-100">
+                        <div className="flex justify-between items-center align-bottom ">
+                          <div>
+                            <div className="font-bold text-lg text-brand-black leading-tight mb-1">{donation.name}</div>
+                            <div className="text-sm text-brand-grey">
+                              <Link href={`mailto:${donation.email}`} className="text-purple hover:underline">{donation.email}</Link>
+                            </div>
+                          </div>
+                          <div className="text-xs font-bold text-brand-black bg-brand-lgrey px-2 py-1 rounded">{donation.id}</div>
+                        </div>
                       </td>
 
-                      {/* Donor Name */}
-                      <td className="flex lg:table-cell justify-between items-center lg:px-4 lg:py-3 py-2 border-b-[0.5px] lg:border-none font-medium lg:whitespace-nowrap text-brand-black">
-                        <span className="lg:hidden font-bold text-brand-black text-sm">Donor Name</span>
-                        <span className="text-right lg:text-left">{donation.name}</span>
+                      {/* Desktop: Donation ID */}
+                      <td className="hidden lg:table-cell lg:px-4 lg:py-3 font-medium text-xs lg:whitespace-nowrap text-brand-black border-b border-gray-100 lg:border-none">
+                        {donation.id}
                       </td>
 
-                      {/* Email */}
-                      <td className="flex lg:table-cell justify-between items-center lg:px-4 lg:py-3 py-2 border-b-[0.5px] lg:border-none lg:whitespace-nowrap" style={{ color: "#6b7280" }}>
-                        <span className="lg:hidden font-bold text-brand-black text-sm">Email</span>
-                        <span className="text-right lg:text-left truncate max-w-[150px] sm:max-w-none">
-                          <Link href={`mailto:${donation.email}`} className="text-purple font-semibold hover:underline">{donation.email}</Link>
-                        </span>
+                      {/* Desktop: Donor Name */}
+                      <td className="hidden lg:table-cell lg:px-4 lg:py-3 font-medium lg:whitespace-nowrap text-brand-black border-b border-gray-100 lg:border-none">
+                        {donation.name}
+                      </td>
+
+                      {/* Desktop: Email */}
+                      <td className="hidden lg:table-cell lg:px-4 lg:py-3 lg:whitespace-nowrap text-brand-grey border-b border-gray-100 lg:border-none">
+                        <Link href={`mailto:${donation.email}`} className="text-purple font-semibold hover:underline">{donation.email}</Link>
                       </td>
 
                       {/* Amount */}
@@ -392,15 +387,13 @@ export default function Donations() {
                         <span className="text-right lg:text-left">
                           {donation.type === "Monthly" ? (
                             <span
-                              className="inline-block px-2.5 py-1 rounded text-xs font-semibold bg-purple-dark"
-                              style={{ color: "#f5f5f5" }}
+                              className="inline-block px-2.5 py-1 rounded text-xs font-semibold bg-purple-dark text-brand-white"
                             >
                               Monthly
                             </span>
                           ) : (
                             <span
-                              className="inline-block px-2.5 py-1 rounded text-xs font-medium border"
-                              style={{ backgroundColor: "#fff", color: "#374151", borderColor: "#d1d5db" }}
+                              className="inline-block px-2.5 py-1 rounded text-xs font-medium border bg-white text-gray-700 border-gray-300"
                             >
                               One-Off
                             </span>
@@ -488,7 +481,7 @@ export default function Donations() {
               £{filtered.reduce((sum, d) => sum + d.amount, 0).toLocaleString("en-GB", { minimumFractionDigits: 2 })}
             </span>
           </span>
-          <span>Human Relief Mission | Donor Management &copy; {new Date().getFullYear()}</span>
+          <span className="text-right">Human Relief Mission | Donor Management &copy; {new Date().getFullYear()}</span>
         </div>
       </main>
     </div>

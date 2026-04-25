@@ -19,7 +19,7 @@ export default function CaseStudy() {
             <div className="relative overflow-hidden shadow-md">
               <img
                 src="/almas.jpg"
-                alt="Case study – Orphan receiving support"
+                alt="Case study - Orphan receiving support"
                 className="w-full h-[400px] object-cover"
               />
               {/* Overlay badge */}

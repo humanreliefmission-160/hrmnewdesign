@@ -17,7 +17,7 @@ export default function Impact() {
           </h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="bg-purple-light/5 border border-purple/20 p-8 rounded-sm text-center shadow-card flex flex-col backdrop-blur-sm">
+          <div className="bg-purple-light/5 border border-purple-faint/75 p-8 rounded-sm text-center shadow-card flex flex-col backdrop-blur-sm">
             <div className="text-4xl mb-4 mx-auto">
               <FaGlobe fill="#650199" size={30} />
             </div>
@@ -27,7 +27,7 @@ export default function Impact() {
               <div className="text-lg sm:text-md text-brand-black font-medium">Countries</div>
             </div>
           </div>
-          <div className="bg-purple-light/5 border border-purple/20 p-8 rounded-sm text-center shadow-card flex flex-col backdrop-blur-sm">
+          <div className="bg-purple-light/5 border border-purple-faint/75 p-8 rounded-sm text-center shadow-card flex flex-col backdrop-blur-sm">
             <div className="text-4xl mb-4 mx-auto">
               <FaPeopleGroup fill="#650199" size={30} />
             </div>
@@ -37,7 +37,7 @@ export default function Impact() {
               <div className="text-lg sm:text-md text-brand-black font-medium">Beneficiaries</div>
             </div>
           </div>
-          <div className="bg-purple-light/5 border border-purple/20 p-8 rounded-sm text-center shadow-card flex flex-col backdrop-blur-sm">
+          <div className="bg-purple-light/5 border border-purple-faint/75 p-8 rounded-sm text-center shadow-card flex flex-col backdrop-blur-sm">
             <div className="text-4xl mb-4 mx-auto">
               <FaCheckCircle fill="#650199" size={30} />
             </div>
@@ -47,7 +47,7 @@ export default function Impact() {
               <div className="text-lg sm:text-md text-brand-black font-medium">Projects Completed</div>
             </div>
           </div>
-          <div className="bg-purple-light/5 border border-purple/20 p-8 rounded-sm text-center shadow-card flex flex-col backdrop-blur-sm">
+          <div className="bg-purple-light/5 border border-purple-faint/75 p-8 rounded-sm text-center shadow-card flex flex-col backdrop-blur-sm">
             <div className="text-4xl mb-4 mx-auto">
               <IoTime fill="#650199" size={30} />
             </div>
