@@ -4,7 +4,7 @@ import { DonationState } from './types';
 import DonationStepFooter from './DonationStepFooter';
 import { IoCardSharp, IoShieldCheckmark } from 'react-icons/io5';
 import { BsBank2 } from 'react-icons/bs';
-import { FaCcApplePay } from 'react-icons/fa';
+import { FaCcApplePay, FaGooglePay } from 'react-icons/fa';
 import { GrPaypal } from 'react-icons/gr';
 import { AiFillLock } from 'react-icons/ai';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
@@ -38,7 +38,7 @@ export default function DonationStepPayment({
     <div className="bg-brand-white p-8 md:p-10 rounded-2xl shadow-card border border-brand-lgrey">
       <h2 className="text-2xl md:text-3xl font-bold text-brand-black mb-8 font-body leading-tight">Complete your donation</h2>
 
-      <div className="bg-brand-lgrey/30 p-6 rounded-xl mb-8">
+      <div className="bg-brand-black/5 p-6 rounded-sm mb-8">
         <div className="flex justify-between items-center mb-3">
           <span className="text-[0.85rem] font-bold text-brand-grey uppercase tracking-widest">Fund</span>
           <span className="font-bold text-brand-black">{donationState.fund}</span>
@@ -81,6 +81,10 @@ export default function DonationStepPayment({
           {
             name: "Apple Pay",
             icon: <FaCcApplePay fill='#650199' className='sm:w-7 w-7 h-auto' />
+          },
+          {
+            name: "Google Pay",
+            icon: <FaGooglePay fill='#650199' className='sm:w-9 w-9 h-auto' />
           },
           {
             name: "PayPal",
