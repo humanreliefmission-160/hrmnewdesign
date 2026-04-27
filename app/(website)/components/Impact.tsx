@@ -10,7 +10,11 @@ export default function Impact() {
     <section className="py-20 px-4 md:px-8 bg-brand-white">
       <div className="max-w-[1140px] mx-auto">
         <div className="inline-block bg-purple-faint text-purple font-bold text-[0.75rem] tracking-widest uppercase px-4 py-1.5 mb-4">Our Track Record</div>
-        <h2 className="text-4xl md:text-5xl font-bold text-brand-black mb-[1.2rem]">{`Last Year's Impact`}</h2>
+        <div className="mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-brand-black capitalize">This is how we&apos;ve made a difference{" "}
+            <span className="font-medium italic text-2xl text-brand-grey">so far.</span>
+          </h2>
+        </div>
         <p className="text-[1.05rem] text-brand-grey leading-[1.7] max-w-[600px]">
           Every pound donated creates real, measurable change in the lives of
           people who need it most.

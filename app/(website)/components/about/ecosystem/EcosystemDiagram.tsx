@@ -2,21 +2,29 @@
 
 import { useState } from "react";
 import {
-  Heart,
-  Utensils,
   Droplets,
   Building2,
   GraduationCap,
   TrendingUp,
   X,
+  Utensils,
 } from "lucide-react";
 import YellowCTA from "../../YellowCTA";
+import { FaAmbulance, FaChevronRight, FaClinicMedical } from "react-icons/fa";
+import { PiSprayBottleFill } from "react-icons/pi";
+import { BiSolidDonateBlood } from "react-icons/bi";
+import { TbBreadFilled } from "react-icons/tb";
+import { FaBottleWater } from "react-icons/fa6";
+import { GiWaterTank } from "react-icons/gi";
 
 
 interface Project {
   icon: React.ReactNode;
   name: string;
+  category: string;
   desc: string;
+  link: string;
+  projectType: "normal" | "emergency";
 }
 
 interface Phase {
@@ -30,14 +38,23 @@ interface Phase {
 
 const phases: Phase[] = [
   {
+    /*
+    Water tankers
+    */
     id: 1,
     label: "Essentials",
     subtitle: "Stage 1",
     badge: "Urgency",
     description: "Provide the bare necessities to keep people alive and safe — immediate relief before anything else can begin.",
     projects: [
-      { icon: <Heart size={13} />, name: "Healthcare", desc: "Emergency medical care & clinics" },
-      { icon: <Utensils size={13} />, name: "Food Aid", desc: "Nutritious meals & food baskets" },
+      { icon: <FaAmbulance size={13} />, name: "Ambulance Service", desc: "Providing immediate emergency medical care & transport", link: "/projects/projectitem", projectType: "emergency", category: "Healthcare" },
+      { icon: <PiSprayBottleFill size={13} />, name: "Hygiene Kits", desc: "Preventing disease & restoring dignity", link: "/projects/projectitem", projectType: "normal", category: "Healthcare" },
+      { icon: <FaClinicMedical size={13} />, name: "Medical Camps", desc: "Providing accessible healthcare, diagnosis and essential treatment", link: "/projects/projectitem", projectType: "normal", category: "Healthcare" },
+      { icon: <BiSolidDonateBlood size={13} />, name: "Blood Donation Awareness", desc: "Saving lives by tackling blood shortages", link: "/projects/projectitem", projectType: "normal", category: "Healthcare" },
+      { icon: <Utensils size={13} />, name: "Hot Meals", desc: "Providing essential nourishment for families", link: "/projects/projectitem", projectType: "normal", category: "Food Aid" },
+      { icon: <TbBreadFilled size={13} />, name: "Fresh Bread", desc: "Providing bread for families facing hunger", link: "/projects/projectitem", projectType: "normal", category: "Food Aid" },
+      { icon: <FaBottleWater size={13} />, name: "Water Bottles", desc: "Providing safe Hydration for Families", link: "/projects/projectitem", projectType: "normal", category: "Water Aid" },
+      { icon: <GiWaterTank size={13} />, name: "Water Tankers", desc: "Providing immediate water For Families", link: "/projects/projectitem", projectType: "normal", category: "Water Aid" },
     ],
   },
   {
@@ -47,8 +64,8 @@ const phases: Phase[] = [
     badge: "Stabilise",
     description: "Build stable foundations so families can live safely with clean water and proper infrastructure in place.",
     projects: [
-      { icon: <Droplets size={13} />, name: "Water Aid", desc: "Clean water access & sanitation" },
-      { icon: <Building2 size={13} />, name: "Infrastructure", desc: "Housing, roads & community assets" },
+      { icon: <Droplets size={13} />, name: "Water Aid", desc: "Clean water access & sanitation", link: "/projects/projectitem", projectType: "normal", category: "" },
+      { icon: <Building2 size={13} />, name: "Infrastructure", desc: "Housing, roads & community assets", link: "/projects/projectitem", projectType: "normal", category: "" },
     ],
   },
   {
@@ -58,7 +75,7 @@ const phases: Phase[] = [
     badge: "Grow",
     description: "Invest in people through education and sponsorships to unlock their potential, skills, and capabilities.",
     projects: [
-      { icon: <GraduationCap size={13} />, name: "Sponsorships", desc: "Education & vocational training" },
+      { icon: <GraduationCap size={13} />, name: "Sponsorships", desc: "Education & vocational training", link: "/projects/projectitem", projectType: "normal", category: "" },
     ],
   },
   {
@@ -68,7 +85,7 @@ const phases: Phase[] = [
     badge: "Thrive",
     description: "Generate sustainable income so individuals become self-sufficient — and eventually Zakat payers themselves.",
     projects: [
-      { icon: <TrendingUp size={13} />, name: "Income Generation", desc: "Businesses, jobs & financial growth" },
+      { icon: <TrendingUp size={13} />, name: "Income Generation", desc: "Businesses, jobs & financial growth", link: "/projects/projectitem", projectType: "normal", category: "" },
     ],
   },
 ];
@@ -257,8 +274,8 @@ function PhaseDetailPanel({ phase, onClose }: any) {
       <div className="relative flex items-start gap-4">
         <div className="flex-1">
           <div className="flex items-center flex-wrap gap-2 mb-3">
-            <span className={`px-3 py-1 rounded-sm text-xs font-black uppercase tracking-widest ${bgClass} ${textClass}`}>
-              {phase.subtitle} · {phase.label}
+            <span className={`px-3 py-1 rounded-sm text-xs font-bold uppercase tracking-widest ${bgClass} ${textClass}`}>
+              {phase.subtitle} - {phase.label}
             </span>
             <span className={`px-2.5 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wider ${lightBgClass} ${badgeTextClass}`}>
               {phase.badge}
@@ -279,8 +296,18 @@ function PhaseDetailPanel({ phase, onClose }: any) {
                   {p.icon}
                 </span>
                 <div>
-                  <div className={`text-xs font-bold ${badgeTextClass}`}>
-                    {p.name}
+                  <div className="flex flex-row justify-between items-center">
+                    <div className={`text-xs font-bold ${badgeTextClass}`}>
+                      {p.name}
+                    </div>
+                    <div>
+                      <FaChevronRight className="opacity-0 hover:opacity-100" size={10} color="#650199" />
+                    </div>
+                  </div>
+                  <div className="font-normal text-purple-dark text-[0.55em]">
+                    <div>
+                      {p.category}
+                    </div>
                   </div>
                   <div className="text-[10px] mt-0.5 text-brand-black/70">
                     {p.desc}
@@ -294,7 +321,7 @@ function PhaseDetailPanel({ phase, onClose }: any) {
           <div className="mt-4">
             <YellowCTA
               text="Support Phase"
-              href="/projects"
+              href="/donate"
             />
           </div>
         </div>

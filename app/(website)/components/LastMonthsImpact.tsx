@@ -49,7 +49,7 @@ export default function LastMonthImpact() {
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
           <div>
             {/* Section tag */}
-            <span className="inline-flex items-center gap-2 text-xs font-bold text-purple bg-purple-faint px-3 py-1.5 rounded-sm mb-3 ">
+            <span className="inline-flex items-center gap-2 text-xs font-bold text-purple tracking-widest uppercase bg-purple-faint px-3 py-1.5 rounded-sm mb-3 ">
               Our Impact
             </span>
 

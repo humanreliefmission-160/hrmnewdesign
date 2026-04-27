@@ -1,11 +1,9 @@
-"use client";
-
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FaFacebookF, FaLinkedinIn, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { BiLogoInstagramAlt } from "react-icons/bi";
+import { ImWhatsapp } from "react-icons/im";
 
 export default function Footer() {
   return (
@@ -22,21 +20,24 @@ export default function Footer() {
             </div>
           </div>
           <div className="flex gap-3">
-            <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
-              <FaFacebookF fill="#f5f5f5" />
-            </a>
-            <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
-              <FaLinkedinIn fill="#F5F5F5" />
-            </a>
-            <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
-              <FaYoutube fill="#F5F5F5" />
-            </a>
-            <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
-              <FaXTwitter fill="#F5F5F5" />
-            </a>
-            <a className="w-9 h-9 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
-              <BiLogoInstagramAlt fill="#F5F5F5" />
-            </a>
+            <Link href={`${process.env.FACEBOOK_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+              <FaFacebookF fill="#f5f5f5" size={18} />
+            </Link>
+            <Link href={`${process.env.LINKEDIN_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+              <FaLinkedinIn fill="#F5F5F5" size={18} />
+            </Link>
+            <Link href={`${process.env.YOUTUBE_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+              <FaYoutube fill="#F5F5F5" size={18} />
+            </Link>
+            <Link href={`${process.env.X_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+              <FaXTwitter fill="#F5F5F5" size={18} />
+            </Link>
+            <Link href={`${process.env.INSTAGRAM_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+              <BiLogoInstagramAlt fill="#F5F5F5" size={18} />
+            </Link>
+            <Link href={`${process.env.WHATSAPP_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+              <ImWhatsapp fill="#F5F5F5" size={18} />
+            </Link>
           </div>
         </div>
         <div>
