@@ -7,7 +7,7 @@ export default function Values() {
   return (
     <section className="py-20 px-4 md:px-8 bg-purple-faint">
       <div className="max-w-[1140px] mx-auto">
-        <div className="inline-block bg-purple/75 text-brand-white font-bold text-[0.75rem] tracking-widest uppercase px-4 py-1.5 mb-4">What Drives Us</div>
+        <div className="bg-purple inline-block text-brand-white font-bold text-[0.75rem] tracking-widest uppercase px-4 py-1.5 mb-4">What Drives Us</div>
         <h2 className="text-3xl md:text-5xl font-bold text-brand-black mb-4 leading-tight">Our Core Values</h2>
         <p className="text-[1.05rem] text-brand-black leading-[1.7] max-w-[600px] mb-12">
           Every action we take is guided by these principles.

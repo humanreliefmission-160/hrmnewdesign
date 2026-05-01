@@ -10,8 +10,8 @@ import PoliciesReports from "../components/about/PoliciesReports";
 export default function About() {
   return (
     <div id="page-about" className="block mt-8 sm:mt-24">
-      <Hero />
       <WhoWeAre />
+      <Hero />
       <Impact />
       <Values />
       <PoliciesReports />

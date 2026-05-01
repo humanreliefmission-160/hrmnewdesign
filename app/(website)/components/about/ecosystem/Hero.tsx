@@ -20,7 +20,7 @@ const projects = [
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-brand-white">
+    <section className="relative overflow-hidden bg-purple-faint/50 my-12">
       {/* Content */}
       <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 lg:px-4 py-12 md:py-12 lg:py-12 flex items-center">
         <div className="flex flex-col lg:flex-row items-center gap-10 xl:gap-20 w-full">
@@ -29,7 +29,7 @@ export default function Hero() {
           <div className="flex-1 w-full max-w-xl lg:max-w-[500px]">
 
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-sm mb-8 cursor-pointer bg-purple/5 border border-purple/20 transition-transform hover:scale-105 active:scale-95">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-sm mb-8 bg-purple/5 border border-purple/20">
               <span className="text-[11px] font-bold tracking-widest uppercase text-purple">
                 Zakat Transformation Ecosystem
               </span>

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import YellowCTA from "../YellowCTA";
 import { BiSolidBackpack, BiSolidTShirt } from "react-icons/bi";
-import { ImBooks } from "react-icons/im";
 import { SiBookstack } from "react-icons/si";
+import Link from "next/link";
 
 const items = [
   {
@@ -11,6 +11,7 @@ const items = [
     title: "School Bag & Stationery Pack",
     description:
       "Provides one child with a full school bag, exercise books, pens, pencils, a ruler, and an eraser — everything they need to start learning.",
+    price: 20,
     amounts: [5, 10, 20],
     impact: "Equips 1 child for a full school term",
     donationFrequency: ["One Off"]
@@ -21,6 +22,7 @@ const items = [
     title: "Textbook Bundle",
     description:
       "A complete set of curriculum-aligned textbooks in the local language for one student across all core subjects.",
+    price: 5,
     amounts: [10, 20, 40],
     impact: "Supports 1 child's full academic year",
     donationFrequency: ["One Off"]
@@ -31,6 +33,7 @@ const items = [
     title: "School Uniform",
     description:
       "Many children are turned away or feel excluded without a uniform. This donation covers a full uniform set for one child.",
+    price: 10,
     amounts: [15, 30, 50],
     impact: "Keeps 1 child in school with dignity",
     donationFrequency: ["Monthly"]
@@ -61,13 +64,18 @@ function DonationCard({ item }: { item: DonationItem }) {
         </div>
       </div>
 
-      <div>
-        <span className="text-[10px] font-medium bg-purple mt-1 text-brand-white px-2 py-1 rounded-sm">
-          {item.donationFrequency[0]}
-        </span>
+      <div className="flex">
+        <div className="flex flex-row items-end gap-1 bg-purple-dark px-4 py-2 text-brand-white rounded-sm">
+          <h2 className="text-2xl font-bold">
+            £{item.price}
+          </h2>
+          <span className="text-[10px] text-brand-white rounded-sm">
+            {item.donationFrequency[0]}
+          </span>
+        </div>
       </div>
 
-      <p className="text-sm text-gray-500 leading-relaxed">{item.description}</p>
+      <p className="text-sm text-brand-black/75 leading-relaxed">{item.description}</p>
 
       {/* Amount selector */}
       <div className="flex flex-wrap gap-2 mt-1">
@@ -104,8 +112,9 @@ function DonationCard({ item }: { item: DonationItem }) {
 				{added ? "Added to Basket!" : "Add to Donation Basket"}
 			</button> */}
 
-      <div>
+      <div className="flex justify-between items-center">
         <YellowCTA text="Donate Now" href="/donate" />
+        <Link className="underline text-sm font-semibold text-purple" href="/projects/projectitem/donationitem">Find out more</Link>
       </div>
     </div>
   );

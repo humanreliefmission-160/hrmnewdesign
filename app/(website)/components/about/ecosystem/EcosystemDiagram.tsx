@@ -2,20 +2,20 @@
 
 import { useState } from "react";
 import {
-  Droplets,
-  Building2,
-  GraduationCap,
   TrendingUp,
   X,
   Utensils,
 } from "lucide-react";
 import YellowCTA from "../../YellowCTA";
-import { FaAmbulance, FaChevronRight, FaClinicMedical } from "react-icons/fa";
+import { FaAmbulance, FaBuilding, FaChevronRight, FaChild, FaClinicMedical, FaGraduationCap, FaHome, FaMosque, FaQuran, FaTree } from "react-icons/fa";
 import { PiSprayBottleFill } from "react-icons/pi";
-import { BiSolidDonateBlood } from "react-icons/bi";
+import { BiSolidDonateBlood, BiSolidPackage } from "react-icons/bi";
 import { TbBreadFilled } from "react-icons/tb";
-import { FaBottleWater } from "react-icons/fa6";
-import { GiWaterTank } from "react-icons/gi";
+import { FaArrowTrendUp, FaBottleWater } from "react-icons/fa6";
+import { GiSewingMachine, GiWaterTank, GiWell } from "react-icons/gi";
+import { RiCashFill } from "react-icons/ri";
+import { MdBakeryDining, } from "react-icons/md";
+import { IoWomanSharp } from "react-icons/io5";
 
 
 interface Project {
@@ -38,9 +38,6 @@ interface Phase {
 
 const phases: Phase[] = [
   {
-    /*
-    Water tankers
-    */
     id: 1,
     label: "Essentials",
     subtitle: "Stage 1",
@@ -48,11 +45,11 @@ const phases: Phase[] = [
     description: "Provide the bare necessities to keep people alive and safe — immediate relief before anything else can begin.",
     projects: [
       { icon: <FaAmbulance size={13} />, name: "Ambulance Service", desc: "Providing immediate emergency medical care & transport", link: "/projects/projectitem", projectType: "emergency", category: "Healthcare" },
+      { icon: <BiSolidDonateBlood size={13} />, name: "Blood Donation Awareness", desc: "Saving lives by tackling blood shortages", link: "/projects/projectitem", projectType: "normal", category: "Healthcare" },
+      { icon: <TbBreadFilled size={13} />, name: "Fresh Bread", desc: "Providing bread for families facing hunger", link: "/projects/projectitem", projectType: "normal", category: "Food Aid" },
+      { icon: <Utensils size={13} />, name: "Hot Meals", desc: "Providing essential nourishment for families", link: "/projects/projectitem", projectType: "normal", category: "Food Aid" },
       { icon: <PiSprayBottleFill size={13} />, name: "Hygiene Kits", desc: "Preventing disease & restoring dignity", link: "/projects/projectitem", projectType: "normal", category: "Healthcare" },
       { icon: <FaClinicMedical size={13} />, name: "Medical Camps", desc: "Providing accessible healthcare, diagnosis and essential treatment", link: "/projects/projectitem", projectType: "normal", category: "Healthcare" },
-      { icon: <BiSolidDonateBlood size={13} />, name: "Blood Donation Awareness", desc: "Saving lives by tackling blood shortages", link: "/projects/projectitem", projectType: "normal", category: "Healthcare" },
-      { icon: <Utensils size={13} />, name: "Hot Meals", desc: "Providing essential nourishment for families", link: "/projects/projectitem", projectType: "normal", category: "Food Aid" },
-      { icon: <TbBreadFilled size={13} />, name: "Fresh Bread", desc: "Providing bread for families facing hunger", link: "/projects/projectitem", projectType: "normal", category: "Food Aid" },
       { icon: <FaBottleWater size={13} />, name: "Water Bottles", desc: "Providing safe Hydration for Families", link: "/projects/projectitem", projectType: "normal", category: "Water Aid" },
       { icon: <GiWaterTank size={13} />, name: "Water Tankers", desc: "Providing immediate water For Families", link: "/projects/projectitem", projectType: "normal", category: "Water Aid" },
     ],
@@ -64,8 +61,11 @@ const phases: Phase[] = [
     badge: "Stabilise",
     description: "Build stable foundations so families can live safely with clean water and proper infrastructure in place.",
     projects: [
-      { icon: <Droplets size={13} />, name: "Water Aid", desc: "Clean water access & sanitation", link: "/projects/projectitem", projectType: "normal", category: "" },
-      { icon: <Building2 size={13} />, name: "Infrastructure", desc: "Housing, roads & community assets", link: "/projects/projectitem", projectType: "normal", category: "" },
+      { icon: <RiCashFill size={13} />, name: "Cash Assistance", desc: "Providing cash to families to meet their basic needs", link: "/projects/projectitem", projectType: "normal", category: "Infrastructure" },
+      { icon: <IoWomanSharp size={13} />, name: "Family Sponorship", desc: "Empowering families with monthly support", link: "/projects/projectitem", projectType: "normal", category: "Stability" },
+      { icon: <BiSolidPackage size={13} />, name: "Food Packages", desc: "Providing  vital nutrition to families every month", link: "/projects/projectitem", projectType: "normal", category: "Food Aid" },
+      { icon: <FaHome size={13} />, name: "Home Construction", desc: "Providing shelter to families in need", link: "/projects/projectitem", projectType: "normal", category: "Infrastructure" },
+      { icon: <FaChild size={13} />, name: "Orphan Sponorship", desc: "Empowering orphans with monthly support", link: "/projects/projectitem", projectType: "normal", category: "Stability" },
     ],
   },
   {
@@ -75,17 +75,37 @@ const phases: Phase[] = [
     badge: "Grow",
     description: "Invest in people through education and sponsorships to unlock their potential, skills, and capabilities.",
     projects: [
-      { icon: <GraduationCap size={13} />, name: "Sponsorships", desc: "Education & vocational training", link: "/projects/projectitem", projectType: "normal", category: "" },
+      { icon: <GiWell size={13} />, name: "Water Wells | Handpump", desc: "Providing clean drinking water to communities", link: "/projects/projectitem", projectType: "normal", category: "Development" },
+      { icon: <MdBakeryDining size={13} />, name: "Bakery", desc: "Providing freshly baked bread to families on a daily basis", link: "/projects/projectitem", projectType: "normal", category: "Development" },
+      { icon: <FaTree size={13} />, name: "Green Afghanistan", desc: "Planting trees to combat climate change and provide sustanance", link: "/projects/projectitem", projectType: "normal", category: "Development" },
+      { icon: <FaMosque size={13} />, name: "Masjid Construction", desc: "Building places of worship and community gathering", link: "/projects/projectitem", projectType: "normal", category: "Development" },
+      { icon: <FaBuilding size={13} />, name: "Orphanage", desc: "Providing shelter, care and education to orphans", link: "/projects/projectitem", projectType: "normal", category: "Development" },
+      { icon: <FaQuran size={13} />, name: "Hifz Sponsorship", desc: "Providing Quranic education to orphans", link: "/projects/projectitem", projectType: "normal", category: "Development" },
+      { icon: <FaGraduationCap size={13} />, name: "Student Sponsorship", desc: "Providing education to children", link: "/projects/projectitem", projectType: "normal", category: "Development" },
+      { icon: <GiSewingMachine size={13} />, name: "Sewing Course", desc: "Providing the tools needed for women to make a living", link: "/projects/projectitem", projectType: "normal", category: "Development" },
+
     ],
   },
   {
+    /*
+    Chicken carts
+    Juice carts
+    Sugar cane carts
+    Cargo tricycle
+    Taxis
+    Sewing course (exit stage)
+    Orphan sponsorship (long-term outcome)
+    */
     id: 4,
     label: "Sustainability",
     subtitle: "Stage 4",
     badge: "Thrive",
     description: "Generate sustainable income so individuals become self-sufficient — and eventually Zakat payers themselves.",
     projects: [
-      { icon: <TrendingUp size={13} />, name: "Income Generation", desc: "Businesses, jobs & financial growth", link: "/projects/projectitem", projectType: "normal", category: "" },
+      { icon: <FaArrowTrendUp size={13} />, name: "Income Generation", desc: "Providing the means to make bread winners with various means", link: "/projects/projectitem", projectType: "normal", category: "Sustainability" },
+      { icon: <GiSewingMachine size={13} />, name: "Sewing Course", desc: "Providing the tools needed for women to make a living", link: "/projects/projectitem", projectType: "normal", category: "Development" },
+      { icon: <FaChild size={13} />, name: "Orphan Sponorship", desc: "Providing the orphans the ability to achieving their dreams", link: "/projects/projectitem", projectType: "normal", category: "Stability" },
+
     ],
   },
 ];
@@ -172,10 +192,15 @@ export default function EcosystemDiagram() {
           onClose={() => setActivePhase(null)}
         />
       )}
+      <div className="flex flex-col items-center mt-4">
+        <span className="font-medium italic text-xs items-center text-brand-grey">
+          Click on the cards above to see more detail
+        </span>
+      </div>
 
       {/* Journey progression bar */}
       <div className="flex items-center justify-between mt-4 px-2">
-        <span className="text-[11px] font-semibold text-brand-black/60">
+        <span className="text-[11px] font-medium text-brand-black/60">
           Zakat Receiver
         </span>
         <div className="flex items-center gap-2 mx-3 flex-1">
@@ -191,14 +216,11 @@ export default function EcosystemDiagram() {
                   className={`h-2 rounded-sm flex-1 cursor-pointer transition-transform hover:scale-y-150 ${bgClass}`}
                   title={ph.label}
                 />
-                {i < 3 && (
-                  <div className="w-2 h-2 rounded-sm mx-1 shrink-0 bg-brand-black/20" />
-                )}
               </div>
             );
           })}
         </div>
-        <span className="text-[11px] font-extrabold whitespace-nowrap text-purple">
+        <span className="text-[11px] font-bold whitespace-nowrap text-purple">
           Zakat Payer
         </span>
       </div>
@@ -240,7 +262,7 @@ function PhaseCard({ phase, idx, isActive, isHovered, anyActive, onHover, onClic
         <div className={`font-extrabold text-lg`}>
           {phase.subtitle}
         </div>
-        {/* Phase Desscription */}
+        {/* Phase Description */}
         <div className={`text-[0.75em]`}>
           {phase.description}
         </div>
@@ -262,7 +284,7 @@ function PhaseCard({ phase, idx, isActive, isHovered, anyActive, onHover, onClic
 }
 
 function PhaseDetailPanel({ phase, onClose }: any) {
-  const bgClass = phase.id === 1 ? "bg-purple" : phase.id === 2 ? "bg-purple-light" : phase.id === 3 ? "bg-purple-dark" : "bg-brand-black";
+  const bgClass = phase.id === 1 ? "bg-purple-light" : phase.id === 2 ? "bg-purple-light" : phase.id === 3 ? "bg-purple-dark" : "bg-brand-black";
   const textClass = "text-brand-white";
   const borderClass = phase.id === 1 ? "border-purple-light" : phase.id === 2 ? "border-purple" : phase.id === 3 ? "border-purple-dark" : "border-brand-black";
   const lightBgClass = phase.id === 1 ? "bg-purple/10" : phase.id === 2 ? "bg-purple-light/10" : phase.id === 3 ? "bg-purple-dark/10" : "bg-brand-black/10";
@@ -277,12 +299,12 @@ function PhaseDetailPanel({ phase, onClose }: any) {
             <span className={`px-3 py-1 rounded-sm text-xs font-bold uppercase tracking-widest ${bgClass} ${textClass}`}>
               {phase.subtitle} - {phase.label}
             </span>
-            <span className={`px-2.5 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wider ${lightBgClass} ${badgeTextClass}`}>
+            {/* <span className={`px-2.5 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wider ${lightBgClass} ${badgeTextClass}`}>
               {phase.badge}
-            </span>
+            </span> */}
           </div>
 
-          <p className="text-sm leading-relaxed mb-4 text-brand-black/80">
+          <p className="text-sm leading-relaxed mb-4 text-brand-black">
             {phase.description}
           </p>
 
@@ -304,12 +326,12 @@ function PhaseDetailPanel({ phase, onClose }: any) {
                       <FaChevronRight className="opacity-0 hover:opacity-100" size={10} color="#650199" />
                     </div>
                   </div>
-                  <div className="font-normal text-purple-dark text-[0.55em]">
+                  {/* <div className="font-normal text-purple-dark text-[0.55em]">
                     <div>
                       {p.category}
                     </div>
-                  </div>
-                  <div className="text-[10px] mt-0.5 text-brand-black/70">
+                  </div> */}
+                  <div className="text-[10px] mt-0.5">
                     {p.desc}
                   </div>
                 </div>
