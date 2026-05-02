@@ -53,11 +53,10 @@ export default function DonationOptions() {
             <button
               key={val}
               onClick={() => handleAmountSelect(val)}
-              className={`p-3 rounded-sm border font-bold text-center text-sm transition-all ${
-                amount === parseFloat(val) && customAmount === ""
+              className={`p-3 rounded-sm border font-bold text-center text-sm transition-all ${amount === parseFloat(val) && customAmount === ""
                   ? "bg-purple text-brand-white border-purple"
                   : "border-brand-lgrey bg-brand-white text-brand-black hover:bg-brand-lgrey/30"
-              }`}
+                }`}
             >
               £{val}
             </button>
@@ -106,11 +105,10 @@ export default function DonationOptions() {
             <button
               key={item}
               onClick={() => setIntention(item)}
-              className={`p-3 rounded-sm border text-sm font-bold text-center transition-all ${
-                intention === item
+              className={`p-3 rounded-sm border text-sm font-bold text-center transition-all ${intention === item
                   ? "bg-purple text-brand-white border-purple"
                   : "border-brand-lgrey bg-brand-white text-brand-black hover:bg-brand-lgrey/30"
-              }`}
+                }`}
             >
               {item}
             </button>
@@ -120,7 +118,7 @@ export default function DonationOptions() {
 
       {/* CTA */}
       <YellowCTA
-        text="Donate Now"
+        text="Add to Donation Basket"
         href={isValid ? "/donate" : undefined}
         disabled={!isValid}
       />

@@ -9,8 +9,7 @@ const items = [
     id: 1,
     icon: <BiSolidBackpack fill="#650199" size={30} />,
     title: "School Bag & Stationery Pack",
-    description:
-      "Provides one child with a full school bag, exercise books, pens, pencils, a ruler, and an eraser — everything they need to start learning.",
+    description: "Provides one child with a full school bag, exercise books, pens, pencils, a ruler, and an eraser — everything they need to start learning.",
     price: 20,
     amounts: [5, 10, 20],
     impact: "Equips 1 child for a full school term",
@@ -103,17 +102,19 @@ function DonationCard({ item }: { item: DonationItem }) {
 
       {/* CTA */}
       {/* <button
-				onClick={handleAdd}
-				className={`mt-2 w-full py-3 rounded-full font-bold text-sm transition-all duration-300 ${added
-					? "bg-green-500 text-white"
-					: "bg-yellow-400 hover:bg-yellow-500 text-gray-900"
-					}`}
-			>
-				{added ? "Added to Basket!" : "Add to Donation Basket"}
-			</button> */}
+        onClick={handleAdd}
+        className={`mt-2 w-full py-3 rounded-full font-bold text-sm transition-all duration-300 ${added
+          ? "bg-green-500 text-white"
+          : "bg-yellow-400 hover:bg-yellow-500 text-gray-900"
+          }`}
+      >
+        {added ? "Added to Basket!" : "Add to Donation Basket"}
+      </button> */}
 
-      <div className="flex justify-between items-center">
-        <YellowCTA text="Donate Now" href="/donate" />
+      <div className="flex flex-col gap-4 justify-between items-left sm:flex sm:justify-between sm:gap-2">
+        <div>
+          <YellowCTA text="Add to Donation Basket" href="/donate" />
+        </div>
         <Link className="underline text-sm font-semibold text-purple" href="/projects/projectitem/donationitem">Find out more</Link>
       </div>
     </div>
