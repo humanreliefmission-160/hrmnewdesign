@@ -5,7 +5,7 @@ import { MdRecycling } from "react-icons/md";
 const SOURCES = [
 	{
 		id: "admin",
-		label: "Donations specified for administration",
+		label: "Funds specified for administration",
 		icon: <RiAdminFill size={45} fill="#650199" />,
 		isGiftAid: false,
 	},
