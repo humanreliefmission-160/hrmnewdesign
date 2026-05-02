@@ -102,6 +102,10 @@ export default function Footer() {
         <div>
           <p className="text-[0.8rem] text-brand-white">Copyright &copy; Human Relief Mission 2026.<br />All Rights Reserved</p>
           <p className="text-[0.8rem] text-brand-white opacity-80">Charity No. 1160380</p>
+          <div className="max-w-[1140px] mx-auto pt-2 text-[0.6rem] text-brand-white/40 italic">
+            Developed by {""}
+            <Link href="http://buildingblocks.digital" className="hover:underline cursor-pointer">Building Blocks</Link>
+          </div>
         </div>
         <Image src="/donation-policy-icon.svg" alt="Helping Box" width={75} height={75} />
       </div>

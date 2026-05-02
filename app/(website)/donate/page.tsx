@@ -17,8 +17,9 @@ export default function Donate() {
 
   const [donationState, setDonationState] = useState<DonationState>({
     type: "oneoff",
-    fund: "Where Most Needed",
-    amount: 20 as number | null,
+    fund: "",
+    label: "",
+    amount: null as number | null,
     intention: "",
     giftAid: null,
   });
@@ -63,9 +64,10 @@ export default function Donate() {
   const resetDonation = () => {
     setDonationState({
       type: "oneoff",
-      fund: "Where Most Needed",
-      amount: 20,
-      intention: "General",
+      fund: "",
+      label: "",
+      amount: null,
+      intention: "",
       giftAid: null,
     });
     setCustomAmount("");

@@ -20,7 +20,7 @@ export default function ProjectsGrid() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
 
           {/* Card 1 */}
-          <div className="bg-brand-white rounded-xl overflow-hidden shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover group">
+          <div className="bg-brand-white rounded-sm overflow-hidden shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover group">
             <div className="aspect-4/3 relative overflow-hidden">
               <img src="/img-placeholder.JPG" alt="Project" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
               <Link href="/infrastructure" className="absolute bottom-0 left-0 right-0 bg-purple text-brand-white font-bold text-[0.8rem] tracking-widest uppercase py-2.5 px-6 no-underline">Infrastructure</Link>
@@ -32,7 +32,7 @@ export default function ProjectsGrid() {
               </p>
               <div className="flex justify-between items-center mt-6 pt-4 border-t border-brand-lgrey">
                 <YellowCTA text="Find out more" />
-                <Link href="/donate" className="text-brand-black font-bold text-sm underline hover:text-brand-grey">
+                <Link href="/donate" className="text-purple font-bold text-sm underline hover:text-purple-dark">
                   Donate Now
                 </Link>
               </div>
@@ -40,7 +40,7 @@ export default function ProjectsGrid() {
           </div>
 
           {/* Card 2 */}
-          <div className="bg-brand-white rounded-xl overflow-hidden shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover group">
+          <div className="bg-brand-white rounded-sm overflow-hidden shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover group">
             <div className="aspect-4/3 relative overflow-hidden">
               <img src="/img-placeholder.JPG" alt="Project" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
               <Link href="/infrastructure" className="absolute bottom-0 left-0 right-0 bg-purple text-brand-white font-bold text-[0.8rem] tracking-widest uppercase py-2.5 px-6 no-underline">Infrastructure</Link>
@@ -52,7 +52,7 @@ export default function ProjectsGrid() {
               </p>
               <div className="flex justify-between items-center mt-6 pt-4 border-t border-brand-lgrey">
                 <YellowCTA text="Find out more" />
-                <Link href="/donate" className="text-brand-black font-bold text-sm underline hover:text-brand-grey">
+                <Link href="/donate" className="text-purple font-bold text-sm underline hover:text-purple-dark">
                   Donate Now
                 </Link>
               </div>
@@ -60,7 +60,7 @@ export default function ProjectsGrid() {
           </div>
 
           {/* Card 3 */}
-          <div className="bg-brand-white rounded-xl overflow-hidden shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover group">
+          <div className="bg-brand-white rounded-sm overflow-hidden shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover group">
             <div className="aspect-4/3 relative overflow-hidden">
               <img src="/img-placeholder.JPG" alt="Project" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
               <Link href="/infrastructure" className="absolute bottom-0 left-0 right-0 bg-purple text-brand-white font-bold text-[0.8rem] tracking-widest uppercase py-2.5 px-6 no-underline">Infrastructure</Link>
@@ -72,7 +72,7 @@ export default function ProjectsGrid() {
               </p>
               <div className="flex justify-between items-center mt-6 pt-4 border-t border-brand-lgrey">
                 <YellowCTA text="Find out more" />
-                <Link href="/donate" className="text-brand-black font-bold text-sm underline hover:text-brand-grey">
+                <Link href="/donate" className="text-purple font-bold text-sm underline hover:text-purple-dark">
                   Donate Now
                 </Link>
               </div>

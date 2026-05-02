@@ -41,7 +41,7 @@ export default function WhoWeAre() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-24 items-center">
           <div>
             <div className="inline-block bg-purple text-white font-bold text-[0.75rem] tracking-widest uppercase px-4 py-1.5 mb-4 rounded-sm">Our Story</div>
-            <h2 className="text-3xl md:text-5xl font-bold text-brand-black mb-6 leading-tight">Who We Are</h2>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-brand-black mb-6 leading-tight">Who We Are</h2>
             <p className="text-[1.05rem] text-brand-black leading-[1.8] mb-6">
               Founded in 2003, Human Relief Mission has grown into a trusted international charity operating in over 45 countries. We respond to emergencies with speed and care, while also investing in long term development programmes that build sustainable futures.
             </p>
