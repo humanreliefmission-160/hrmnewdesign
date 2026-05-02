@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import YellowCTA from "../YellowCTA";
+import { FaInfoCircle } from "react-icons/fa";
 
 export default function DonationOptions() {
   const [amount, setAmount] = useState<number | null>(null);
@@ -30,11 +31,11 @@ export default function DonationOptions() {
 
   const isValid = amount !== null && amount > 0 && intention !== "";
   return (
-    <div className="p-8 md:p-10">
+    <div className="">
 
       {/* Title */}
-      <div className="mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-brand-black mb-2 font-body leading-tight">
+      <div className="mb-4">
+        <h2 className="text-3xl sm:text-6xl font-bold text-brand-black mb-2 font-body leading-tight">
           Support this project
         </h2>
         <p className="text-[0.95rem] text-brand-grey font-medium">
@@ -42,8 +43,19 @@ export default function DonationOptions() {
         </p>
       </div>
 
+      <div className="flex">
+        <div className="flex flex-row items-end gap-1 bg-purple-dark px-4 py-2 text-brand-white rounded-sm">
+          <h2 className="text-xl font-bold">
+            £20
+          </h2>
+          <span className="text-[10px] text-brand-white rounded-sm">
+            One Off
+          </span>
+        </div>
+      </div>
+
       {/* Amount Selection */}
-      <div className="mb-10">
+      <div className="mt-10">
         <h3 className="text-lg font-bold text-brand-black mb-3">
           Choose an amount
         </h3>
@@ -53,10 +65,11 @@ export default function DonationOptions() {
             <button
               key={val}
               onClick={() => handleAmountSelect(val)}
-              className={`p-3 rounded-sm border font-bold text-center text-sm transition-all ${amount === parseFloat(val) && customAmount === ""
-                  ? "bg-purple text-brand-white border-purple"
-                  : "border-brand-lgrey bg-brand-white text-brand-black hover:bg-brand-lgrey/30"
+              className={`px-4 py-2 rounded-sm text-sm font-bold border transition-all duration-200 ${amount === parseFloat(val) && customAmount === ""
+                ? "bg-purple text-white"
+                : "bg-white/50 text-brand-black border-brand-lgrey hover:border-purple/50"
                 }`}
+
             >
               £{val}
             </button>
@@ -76,14 +89,14 @@ export default function DonationOptions() {
 
         {amount && amount > 0 && (
           <div className="mb-5 bg-purple/5 border border-purple/20 p-3 rounded-sm flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+            <FaInfoCircle className="text-purple text-md" />
             <p className="text-purple font-medium text-sm">
               {getImpactMessage(amount)}
             </p>
           </div>
         )}
 
-        <div>
+        <div className="my-10">
           {/* Additional Options */}
           <input
             type="String"
@@ -95,7 +108,7 @@ export default function DonationOptions() {
       </div>
 
       {/* Intention */}
-      <div className="mb-10">
+      <div className="my-10">
         <h3 className="text-lg font-bold text-brand-black mb-3">
           Select intention
         </h3>
@@ -105,9 +118,9 @@ export default function DonationOptions() {
             <button
               key={item}
               onClick={() => setIntention(item)}
-              className={`p-3 rounded-sm border text-sm font-bold text-center transition-all ${intention === item
-                  ? "bg-purple text-brand-white border-purple"
-                  : "border-brand-lgrey bg-brand-white text-brand-black hover:bg-brand-lgrey/30"
+              className={`px-4 py-2 rounded-sm text-sm font-bold border transition-all duration-200 ${intention === item
+                ? "bg-purple text-brand-white border-purple"
+                : "bg-white/50 text-brand-black border-brand-lgrey hover:border-purple/50"
                 }`}
             >
               {item}

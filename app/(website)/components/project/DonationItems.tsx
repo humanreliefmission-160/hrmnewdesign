@@ -83,8 +83,8 @@ function DonationCard({ item }: { item: DonationItem }) {
             key={amt}
             onClick={() => { setSelected(amt); setCustom(""); }}
             className={`px-4 py-2 rounded-sm text-sm font-semibold border transition-all duration-200 ${selected === amt && !custom
-              ? "bg-purple text-white border-purple-700"
-              : "bg-white text-gray-700 border-gray-300 hover:border-purple/50"
+              ? "bg-purple text-white"
+              : "bg-white/50 text-brand-black/80 border-brand-lgrey hover:border-purple/50"
               }`}
           >
             £{amt}
@@ -96,8 +96,19 @@ function DonationCard({ item }: { item: DonationItem }) {
           placeholder="£ Other"
           value={custom}
           onChange={(e) => { setCustom(e.target.value); setSelected(0); }}
-          className="px-3 py-2 rounded-sm text-sm border border-gray-300 w-24 focus:outline-none focus:border-purple/50 focus:ring-1 focus:ring-purple-300"
+          className="px-3 py-2 rounded-sm text-sm border border-gray-300 w-24 focus:outline-none focus:border-purple/50 focus:ring-2 focus:ring-purple/50"
         />
+      </div>
+
+      {/* Zakat Donation Option */}
+      <div className="flex gap-2">
+        <input
+          id="di-zakat-checkbox"
+          name="zakat"
+          type="checkbox"
+          value="Is this a zakat donation"
+          className="accent-purple cursor-pointer" />
+        <label htmlFor="di-zakat-checkbox" className="italic text-xs font-medium text-brand-grey">I want this to be treat as Zakat</label>
       </div>
 
       {/* CTA */}

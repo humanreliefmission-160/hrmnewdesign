@@ -34,7 +34,7 @@ export default function FundingDiagram() {
 	return (
 		<div className="flex flex-col items-center gap-0 select-none w-full">
 
-			{/* ── Source circles row ─────────────────────────────────────── */}
+			{/* Source circles row */}
 			<div className="w-full grid grid-cols-1 sm:grid-cols-3 text-center">
 				{SOURCES.map((src) => (
 					<div key={src.id} className="flex flex-col items-center">
