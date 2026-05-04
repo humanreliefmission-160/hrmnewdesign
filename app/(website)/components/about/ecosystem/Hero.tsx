@@ -20,7 +20,7 @@ const projects = [
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-purple-faint/50 my-12">
+    <section className="relative overflow-hidden bg-purple-faint/50 py-12">
       {/* Content */}
       <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 lg:px-4 py-12 md:py-12 lg:py-12 flex items-center">
         <div className="flex flex-col lg:flex-row items-center gap-10 xl:gap-20 w-full">

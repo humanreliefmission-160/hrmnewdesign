@@ -12,7 +12,7 @@ export default function Footer() {
         <div>
           <div>
             <Link href="/" >
-              <Image src="/hhtw.svg" alt="Helping Humanity Through Welfare" width={200} height={200} />
+              <Image src="/hhtw.svg" alt="Helping Humanity Through Welfare" className="w-auto h-auto" width={200} height={200} />
             </Link>
             <div className="text-[0.875rem] leading-[1.7] my-6">
               Delivering emergency relief, education, and sustainable development
@@ -107,7 +107,7 @@ export default function Footer() {
             <Link href="http://buildingblocks.digital" className="hover:underline cursor-pointer">Building Blocks</Link>
           </div>
         </div>
-        <Image src="/donation-policy-icon.svg" alt="Helping Box" width={75} height={75} />
+        <Image src="/donation-policy-icon.svg" alt="Helping Box" width={75} height={75} loading="eager" />
       </div>
     </footer>
   );

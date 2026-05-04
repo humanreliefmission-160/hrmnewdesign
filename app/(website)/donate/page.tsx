@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import PageHeader from "../components/PageHeader";
 import DonationProgress from "../components/donation/DonationProgress";
@@ -16,7 +16,7 @@ export default function Donate() {
   const router = useRouter();
 
   const [donationState, setDonationState] = useState<DonationState>({
-    type: "oneoff",
+    type: "monthly",
     fund: "",
     label: "",
     amount: null as number | null,
@@ -63,7 +63,7 @@ export default function Donate() {
 
   const resetDonation = () => {
     setDonationState({
-      type: "oneoff",
+      type: "monthly",
       fund: "",
       label: "",
       amount: null,

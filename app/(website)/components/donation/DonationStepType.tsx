@@ -1,7 +1,11 @@
-import React from 'react';
+"use client"
+
+import { useState } from 'react';
 import { DonationState } from './types';
 import DonationStepFooter from './DonationStepFooter';
 import { BsCalendar2DayFill } from 'react-icons/bs';
+import { FaClock } from 'react-icons/fa';
+import { MdEventRepeat } from 'react-icons/md';
 
 interface DonationStepTypeProps {
   currentStep: number;
@@ -24,32 +28,15 @@ export default function DonationStepType({ currentStep, donationState, setDonati
           className={`flex items-center justify-center gap-3 p-4 rounded-sm border-2 font-bold transition-all hover:border-purple-faint ${donationState.type === "oneoff" ? "border-purple bg-purple-faint text-purple" : "border-brand-lgrey bg-brand-white text-brand-grey"}`}
           onClick={() => setDonationType("oneoff")}
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="w-5 h-5"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 6v6l4 2" />
-          </svg>
+          <FaClock size={20} />
           One Off
         </button>
         <button
           className={`flex items-center justify-center gap-3 p-4 rounded-sm border-2 font-bold transition-all hover:border-purple-faint ${donationState.type === "monthly" ? "border-purple bg-purple-faint text-purple" : "border-brand-lgrey bg-brand-white text-brand-grey"}`}
           onClick={() => setDonationType("monthly")}
+
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="w-5 h-5"
-          >
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-            <path d="M3 3v5h5" />
-          </svg>
+          <MdEventRepeat size={20} />
           Monthly
         </button>
       </div>

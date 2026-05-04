@@ -1,4 +1,4 @@
-Sanity CMS Structure
+-------------------------------- SANITY CMS STRUCTURE --------------------------------
 
 - Files
   > Type: ["Annual Report", "Policies"] - Can add more on
@@ -27,6 +27,7 @@ Sanity CMS Structure
     - Card
     - Line
   > Downloadable (Get from files)
+
 - Project Category --------------
   > Name
   > Description
@@ -38,11 +39,19 @@ Sanity CMS Structure
     - Amounts [list of prices]
     - Intention (Get from intentions)
 
+- Location --------------
+  > Name
+  > Description
+  > Co ordinates [for map]
+    - Longitude
+    - Latitude
+
 - Project ------------
   > Name
   > Tagline
   > Project Category
   > Project Card Summary
+  > Location (Get from Locations)
   > Slug
   > Hero amounts [3 amounts] (most needy for project)
     - Impact Labels
@@ -120,3 +129,64 @@ Sanity CMS Structure
     - Card
       > Question
       > Answer text
+
+
+-------------------------------- DATABASE STRUCTURE --------------------------------
+Donation
+  - ID [Primary Key]
+  - Donation ID (auto generated)
+  - Donation Type [Monthly, One Off]
+  - Donation [Donation Id]
+  - Amount [Amount]
+  - Intention [Intention]
+  - Gift Aid [Gift Aid - Yes/No]
+  - Donation status [Pending, Completed, Failed]
+
+Donor
+  - ID [Primary Key]
+  - Name
+  - Email [Unique]
+  - Phone
+  - Address
+  - Foreign Key(Donation.Donation Id)
+  - Newsletter Subscribe [Yes/No] (Marketing Subscription Foreign key)
+
+Location
+  - ID [Primary Key]
+  - Name
+  - Description
+  - Co ordinates [for map]
+    > Longitude
+    > Latitude
+  - Projects (Foreign Key(Project.Location.Id))
+  - Created At [Date]
+  - Created Time [Time]
+
+Project
+  - Project Id
+  - Project [project name]
+  - Project Category [project category name]
+  - Ecosystem Stage
+  - Location (Foreign Key(Location.Location.Id))
+
+Payment
+  - Payment ID [Primary Key]
+  - Amount [Amount]
+  - Payment method [Card, Paypal, Google Pay]
+  - Frequency [Monthly, One Off]
+  - Payment status [Pending, Completed, Failed]
+  - Payment date [Date]
+  - Payment time [Time]
+  - Payment currency [Currency]
+  - Donation [Donation Id, Foreign Key(Donation.Donation Id)]
+
+  Marketing Subscription
+  - ID [Primary Key]
+  - Name
+  - Email
+  - Phone
+  - Subscription [Active, Unsubscribed]
+  - Unsubscribe Date [Date]
+  - Unsubscribe Time [Time]
+  - Created Date [Date]
+  - Created Time [Time]
