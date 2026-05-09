@@ -194,11 +194,11 @@ Payment
 
 -------------------------------- FILE STRUCTURE --------------------------------
 / (project root)
-├── sanity/                        # Sanity Studio (v3 embedded)
+├── sanity/                                         # Sanity Studio (v3 embedded)
 │   ├── sanity.cli.ts
 │   ├── sanity.config.ts
 │   ├── schemas/
-│   │   ├── index.ts               # aggregates all schemas
+│   │   ├── index.ts                                # aggregates all schemas
 │   │   ├── intention.ts
 │   │   ├── file.ts
 │   │   ├── ecosystemStage.ts
@@ -212,32 +212,32 @@ Payment
 │   │       ├── altImage.ts
 │   │       ├── stat.ts
 │   │       └── donationItem.ts
-│   └── structure/                 # optional desk structure
+│   └── structure/                                  # optional desk structure
 │
 ├── app/
-│   ├── [locale]/                  # i18n dynamic segment
-│   │   ├── layout.tsx             # wraps all route groups; loads next-intl messages
+│   ├── [locale]/                                   # i18n dynamic segment
+│   │   ├── layout.tsx                              # wraps all route groups; loads next-intl messages
 │   │   │
-│   │   ├── (website)/             # Public marketing & donation site
-│   │   │   ├── layout.tsx         # public header, footer, branding
-│   │   │   ├── page.tsx           # homepage
+│   │   ├── (website)/                              # Public marketing & donation site
+│   │   │   ├── layout.tsx                          # public header, footer, branding
+│   │   │   ├── page.tsx                            # homepage
 │   │   │   ├── about/page.tsx
 │   │   │   ├── projects/
-│   │   │   │   ├── page.tsx       # projects listing
-│   │   │   │   └── [slug]/page.tsx # project detail
+│   │   │   │   ├── page.tsx                        # projects listing
+│   │   │   │   └── [slug]/page.tsx                 # project detail
 │   │   │   ├── campaigns/
-│   │   │   │   ├── page.tsx       # active/upcoming campaigns
+│   │   │   │   ├── page.tsx                        # active/upcoming campaigns
 │   │   │   │   └── [slug]/page.tsx
-│   │   │   ├── donate/page.tsx    # donation checkout flow
+│   │   │   ├── donate/page.tsx                     # donation checkout flow
 │   │   │   ├── faq/page.tsx
-│   │   │   └── ...               # privacy, contact, etc.
+│   │   │   └── ...                                 # privacy, contact, etc.
 │   │   │
-│   │   ├── (admin)/               # admin.humanreliefmission.com
-│   │   │   ├── layout.tsx         # auth-gated, sidebar nav
+│   │   ├── (admin)/                                # admin.humanreliefmission.com
+│   │   │   ├── layout.tsx                          # auth-gated, sidebar nav
 │   │   │   ├── dashboard/page.tsx
 │   │   │   ├── donations/
-│   │   │   │   ├── page.tsx       # list / search
-│   │   │   │   └── [reference]/page.tsx # donation details
+│   │   │   │   ├── page.tsx                        # list / search
+│   │   │   │   └── [reference]/page.tsx            # donation details
 │   │   │   ├── donors/
 │   │   │   ├── payments/
 │   │   │   ├── exports/
@@ -245,8 +245,8 @@ Payment
 │   │   │   ├── analytics/
 │   │   │   └── settings/
 │   │   │
-│   │   └── (operations)/          # ops.humanreliefmission.com
-│   │       ├── layout.tsx         # internal role-based access
+│   │   └── (operations)/                           # ops.humanreliefmission.com
+│   │       ├── layout.tsx                          # internal role-based access
 │   │       ├── governance/
 │   │       ├── field-reporting/
 │   │       ├── procurement/
@@ -254,44 +254,44 @@ Payment
 │   │       ├── impact/
 │   │       └── ...
 │   │
-│   ├── studio/                    # Optional: Sanity Studio at /studio (can be on own domain)
-│   │   └── [[...index]]/page.tsx  # Embeds <Studio /> from sanity.config
+│   ├── studio/                                     # Optional: Sanity Studio at /studio (can be on own domain)
+│   │   └── [[...index]]/page.tsx                   # Embeds <Studio /> from sanity.config
 │   │
 │   └── api/
 │       ├── sanity/
-│       │   └── sync/route.ts      # POST webhook from Sanity for DB sync
-│       ├── donate/route.ts        # donation & payment processing
+│       │   └── sync/route.ts                       # POST webhook from Sanity for DB sync
+│       ├── donate/route.ts                         # donation & payment processing
 │       ├── newsletter/
-│       │   └── route.ts           # subscribe / unsubscribe
+│       │   └── route.ts                            # subscribe / unsubscribe
 │       ├── push/
 │       │   ├── subscribe/route.ts
-│       │   └── send/route.ts      # trigger a push campaign
+│       │   └── send/route.ts                       # trigger a push campaign
 │       └── accounting/
-│           └── export/route.ts    # CSV/PDF exports for finance
+│           └── export/route.ts                     # CSV/PDF exports for finance
 │
-├── lib/                           # shared business logic
+├── lib/                                            # shared business logic
 │   ├── supabase/
-│   │   ├── server.ts              # service_role client (API routes)
-│   │   ├── admin.ts               # read-only client for admin pages
-│   │   └── public.ts              # anon client for public reads
+│   │   ├── server.ts                               # service_role client (API routes)
+│   │   ├── admin.ts                                # read-only client for admin pages
+│   │   └── public.ts                               # anon client for public reads
 │   ├── sanity/
-│   │   └── client.ts              # Sanity JS client (GROQ queries)
+│   │   └── client.ts                               # Sanity JS client (GROQ queries)
 │   ├── i18n/
-│   │   └── request.ts             # next-intl config (routing, messages)
+│   │   └── request.ts                              # next-intl config (routing, messages)
 │   ├── constants.ts
 │   ├── utils.ts
 │   └── validations.ts
 │
-├── components/                    # shared UI components
-│   ├── (website)/                 # marketing components (hero, card, donate form)
-│   ├── (admin)/                   # dashboard components (tables, stats)
-│   └── ui/                        # generic primitives (Button, Modal, etc.)
+├── components/                                     # shared UI components
+│   ├── (website)/                                  # marketing components (hero, card, donate form)
+│   ├── (admin)/                                    # dashboard components (tables, stats)
+│   └── ui/                                         # generic primitives (Button, Modal, etc.)
 │
-├── messages/                      # next-intl translations
+├── messages/                                       # next-intl translations
 │   ├── en.json
 │   ├── ar.json
 │   └── ...
 │
-├── middleware.ts                  # locale detection + subdomain routing
+├── middleware.ts                                   # locale detection + subdomain routing
 ├── next.config.js
 └── tailwind.config.ts
