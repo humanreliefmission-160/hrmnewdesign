@@ -199,19 +199,19 @@ Payment
 │   ├── sanity.config.ts
 │   ├── schemas/
 │   │   ├── index.ts                                # aggregates all schemas
-│   │   ├── intention.ts
-│   │   ├── file.ts
-│   │   ├── ecosystemStage.ts
-│   │   ├── homepageHero.ts
-│   │   ├── aboutUs.ts
-│   │   ├── location.ts
-│   │   ├── projectCategory.ts
-│   │   ├── project.ts
-│   │   ├── campaign.ts
+│   │   ├── intention.ts                            # intention for donations i.e zakat, sadaqah etc
+│   │   ├── file.ts                                 # for downloading files
+│   │   ├── ecosystemStage.ts                       # stages of ecosystem
+│   │   ├── homepageHero.ts                         # homepagehero images and text
+│   │   ├── aboutUs.ts                              # about us section (company overview)
+│   │   ├── location.ts                             # location of the projects
+│   │   ├── projectCategory.ts                      # category of projects
+│   │   ├── project.ts                              # individual projects
+│   │   ├── campaign.ts                             # campaigns
 │   │   └── objects/
-│   │       ├── altImage.ts
-│   │       ├── stat.ts
-│   │       └── donationItem.ts
+│   │       ├── altImage.ts                         # for images with alt text
+│   │       ├── stat.ts                             # for stats on projects
+│   │       └── donationItem.ts                     # for donation items on projects
 │   └── structure/                                  # optional desk structure
 │
 ├── app/
