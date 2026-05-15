@@ -4,174 +4,277 @@ export const project = defineType({
   name: 'project',
   title: 'Project',
   type: 'document',
+  icon: () => '📋',
+  groups: [
+    { name: 'overview', title: '📌 Overview', default: true },
+    { name: 'intro', title: '📖 Intro' },
+    { name: 'caseStudies', title: '📰 Case Studies' },
+    { name: 'donations', title: '💰 Donations' },
+    { name: 'benefits', title: '✅ Benefits' },
+    { name: 'impact', title: '📊 Impact' },
+    { name: 'ecosystem', title: '🌱 Ecosystem' },
+    { name: 'faq', title: '❓ FAQ' },
+  ],
   fields: [
-    // Core
-    defineField({ name: 'name', title: 'Project Name', type: 'string', validation: r => r.required() }),
-    defineField({ name: 'tagline', title: 'Tagline', type: 'string' }),
-    defineField({ name: 'slug', title: 'Slug', type: 'slug', options: { source: 'name' }, validation: r => r.required() }),
-    defineField({ name: 'category', title: 'Category', type: 'reference', to: [{ type: 'projectCategory' }], validation: r => r.required() }),
-    defineField({ name: 'location', title: 'Primary Location', type: 'reference', to: [{ type: 'location' }] }),
-    defineField({ name: 'cardSummary', title: 'Card Summary', type: 'text' }),
-
-    // Hero Amounts
+    // ── Overview ────────────────────────────────────────────────
+    defineField({
+      name: 'name',
+      title: 'Project Name',
+      type: 'string',
+      group: 'overview',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'tagline',
+      title: 'Tagline',
+      type: 'string',
+      group: 'overview',
+    }),
+    defineField({
+      name: 'projectCategory',
+      title: 'Project Category',
+      type: 'reference',
+      to: [{ type: 'projectCategory' }],
+      group: 'overview',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'cardSummary',
+      title: 'Project Card Summary',
+      description: 'Short summary shown on the project listing card',
+      type: 'text',
+      rows: 3,
+      group: 'overview',
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      group: 'overview',
+      options: {
+        source: 'name',
+        maxLength: 96,
+      },
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({
       name: 'heroAmounts',
-      title: 'Hero Donation Amounts',
+      title: 'Hero Amounts',
+      description: 'Exactly 3 amounts for the most urgent needs',
       type: 'array',
-      of: [{
-        type: 'object',
-        name: 'heroAmount',
-        fields: [
-          { name: 'amount', title: 'Amount (GBP)', type: 'number', validation: r => r.required() },
-          { name: 'impactLabel', title: 'Impact Label', type: 'string' },
-        ],
-      }],
-      validation: r => r.max(3),
+      group: 'overview',
+      of: [{ type: 'heroAmount' }],
+      validation: (Rule) => Rule.required().min(3).max(3),
     }),
 
-    // Intro
+    // ── Intro ───────────────────────────────────────────────────
     defineField({
-      name: 'intro',
+      name: 'introSection',
       title: 'Intro Section',
       type: 'object',
+      group: 'intro',
       fields: [
-        defineField({ name: 'sectionTag', title: 'Section Tag', type: 'string' }),
-        defineField({ name: 'title', title: 'Title', type: 'string', validation: r => r.required() }),
-        defineField({ name: 'body', title: 'Body', type: 'blockContent' }),
-        defineField({ name: 'stats', title: 'Stats', type: 'array', of: [{ type: 'stat' }] }),
+        defineField({
+          name: 'sectionTag',
+          title: 'Section Tag',
+          description: 'Label above the title e.g. "Our Mission"',
+          type: 'string',
+        }),
+        defineField({
+          name: 'title',
+          title: 'Title',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'bodyText',
+          title: 'Body Text',
+          type: 'array',
+          of: [{ type: 'block' }],
+        }),
+        defineField({
+          name: 'stats',
+          title: 'Stats',
+          type: 'array',
+          of: [{ type: 'stat' }],
+        }),
       ],
     }),
 
-    // Case Studies
+    // ── Case Studies ────────────────────────────────────────────
     defineField({
       name: 'caseStudies',
       title: 'Case Studies',
+      description: 'Up to 3 per project',
       type: 'array',
-      of: [{
-        type: 'object',
-        name: 'caseStudy',
-        fields: [
-          defineField({ name: 'title', title: 'Title', type: 'string', validation: r => r.required() }),
-          defineField({ name: 'image', title: 'Image', type: 'altImage' }),
-          defineField({ name: 'quote', title: 'Quote', type: 'string' }),
-          defineField({ name: 'body', title: 'Body', type: 'blockContent' }),
-          defineField({ name: 'refDate', title: 'Reference Date', type: 'date' }),
-          defineField({ name: 'refLocation', title: 'Reference Location', type: 'string' }),
-        ],
-      }],
-      validation: r => r.max(3),
+      group: 'caseStudies',
+      of: [{ type: 'caseStudy' }],
+      validation: (Rule) => Rule.max(3),
     }),
 
-    // Donation Section
+    // ── Donations ───────────────────────────────────────────────
     defineField({
-      name: 'donation',
+      name: 'donationSection',
       title: 'Donation Section',
       type: 'object',
+      group: 'donations',
       fields: [
-        defineField({ name: 'sectionTag', title: 'Section Tag', type: 'string' }),
-        defineField({ name: 'title', title: 'Title', type: 'string', validation: r => r.required() }),
-        defineField({ name: 'subtext', title: 'Subtext', type: 'text' }),
-        defineField({ name: 'items', title: 'Donation Items', type: 'array', of: [{ type: 'donationItem' }] }),
+        defineField({
+          name: 'sectionTag',
+          title: 'Section Tag',
+          type: 'string',
+        }),
+        defineField({
+          name: 'donationTitle',
+          title: 'Donation Title',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'donationSubtext',
+          title: 'Donation Subtext',
+          type: 'text',
+          rows: 3,
+        }),
+        defineField({
+          name: 'donationItems',
+          title: 'Donation Items',
+          type: 'array',
+          of: [{ type: 'donationItem' }],
+        }),
       ],
     }),
 
-    // Benefits
+    // ── Benefits ────────────────────────────────────────────────
     defineField({
       name: 'benefits',
-      title: 'Benefits Section',
+      title: 'Benefits',
       type: 'object',
+      group: 'benefits',
       fields: [
-        defineField({ name: 'title', title: 'Title', type: 'string' }),
-        defineField({ name: 'subtext', title: 'Subtext', type: 'text' }),
+        defineField({
+          name: 'title',
+          title: 'Title',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'subtext',
+          title: 'Subtext',
+          type: 'text',
+          rows: 2,
+        }),
         defineField({
           name: 'cards',
           title: 'Benefit Cards',
           type: 'array',
-          of: [{
-            type: 'object',
-            name: 'benefitCard',
-            fields: [
-              { name: 'title', title: 'Title', type: 'string' },
-              { name: 'subtext', title: 'Subtext', type: 'string' },
-            ],
-          }],
+          of: [{ type: 'benefitCard' }],
         }),
-        defineField({ name: 'gallery', title: 'Image Gallery', type: 'array', of: [{ type: 'altImage' }] }),
+        defineField({
+          name: 'imageGallery',
+          title: 'Image Gallery',
+          type: 'array',
+          of: [{ type: 'imageGalleryItem' }],
+        }),
       ],
     }),
 
-    // Impact
+    // ── Impact ──────────────────────────────────────────────────
     defineField({
-      name: 'impact',
+      name: 'impactSection',
       title: 'Impact Section',
       type: 'object',
+      group: 'impact',
       fields: [
-        defineField({ name: 'title', title: 'Title', type: 'string' }),
-        defineField({ name: 'body', title: 'Body', type: 'blockContent' }),
         defineField({
-          name: 'cards',
+          name: 'title',
+          title: 'Title',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'bodyText',
+          title: 'Body Text',
+          type: 'array',
+          of: [{ type: 'block' }],
+        }),
+        defineField({
+          name: 'impactCards',
           title: 'Impact Cards',
           type: 'array',
-          of: [{
-            type: 'object',
-            name: 'impactCard',
-            fields: [
-              { name: 'stat', title: 'Stat', type: 'string' },
-              { name: 'bodyText', title: 'Body Text', type: 'string' },
-            ],
-          }],
+          of: [{ type: 'impactCard' }],
         }),
       ],
     }),
 
-    // Ecosystem
+    // ── Ecosystem ───────────────────────────────────────────────
     defineField({
-      name: 'ecosystem',
+      name: 'ecosystemSection',
       title: 'Ecosystem Section',
       type: 'object',
+      group: 'ecosystem',
+      description: 'Connect this project to the 4-stage ecosystem model',
       fields: [
-        defineField({ name: 'title', title: 'Title', type: 'string' }),
-        defineField({ name: 'body', title: 'Body', type: 'blockContent' }),
         defineField({
-          name: 'cards',
-          title: 'Ecosystem Cards',
-          type: 'array',
-          of: [{
-            type: 'object',
-            name: 'ecoCard',
-            fields: [
-              { name: 'icon', title: 'Icon', type: 'string' },
-              { name: 'title', title: 'Title', type: 'string' },
-              { name: 'bodyText', title: 'Body Text', type: 'string' },
-            ],
-          }],
+          name: 'title',
+          title: 'Title',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
         }),
         defineField({
-          name: 'quote',
-          title: 'Quote',
-          type: 'object',
-          fields: [
-            { name: 'icon', title: 'Icon', type: 'string' },
-            { name: 'quote', title: 'Quote', type: 'string' },
-            { name: 'reference', title: 'Reference', type: 'string' },
-          ],
+          name: 'bodyText',
+          title: 'Body Text',
+          type: 'array',
+          of: [{ type: 'block' }],
+        }),
+        defineField({
+          name: 'ecosystemCards',
+          title: 'Ecosystem Cards',
+          description: 'Reference existing ecosystem stages',
+          type: 'array',
+          of: [{ type: 'ecosystemCardRef' }],
+        }),
+        defineField({
+          name: 'quoteCard',
+          title: 'Quote Card',
+          type: 'ecosystemQuoteCard',
         }),
       ],
     }),
 
-    // FAQ
+    // ── FAQ ─────────────────────────────────────────────────────
     defineField({
-      name: 'faqs',
-      title: 'FAQs',
-      type: 'array',
-      of: [{
-        type: 'object',
-        name: 'faq',
-        fields: [
-          { name: 'question', title: 'Question', type: 'string', validation: r => r.required() },
-          { name: 'answer', title: 'Answer', type: 'blockContent' },
-        ],
-      }],
+      name: 'faq',
+      title: 'FAQ',
+      type: 'object',
+      group: 'faq',
+      fields: [
+        defineField({
+          name: 'title',
+          title: 'Section Title',
+          type: 'string',
+          initialValue: 'Frequently Asked Questions',
+        }),
+        defineField({
+          name: 'cards',
+          title: 'FAQ Cards',
+          type: 'array',
+          of: [{ type: 'faqCard' }],
+        }),
+      ],
     }),
   ],
+  preview: {
+    select: {
+      title: 'name',
+      subtitle: 'tagline',
+      category: 'projectCategory.name',
+    },
+    prepare({ title, subtitle, category }) {
+      return {
+        title,
+        subtitle: `${category ? `[${category}] ` : ''}${subtitle || ''}`,
+      }
+    },
+  },
 })

@@ -213,6 +213,37 @@ Payment
 │   │       ├── stat.ts                             # for stats on projects
 │   │       └── donationItem.ts                     # for donation items on projects
 │   └── structure/                                  # optional desk structure
+-----------------------------------------------  OLD ONE ABOVE --------------------------------------
+sanity/
+├── schemaTypes/
+│   ├── index.ts
+│   ├── documents/
+│   │   ├── sliderHero.ts                           # ← was homepageHero
+│   │   ├── ecosystemStage.ts         - Done  
+│   │   ├── aboutUs.ts                - Done: TODO experimental actions              
+│   │   ├── projectCategory.ts        - Done
+│   │   ├── project.ts                - Done 
+│   │   ├── donationIntention.ts      - Done
+│   │   └── fileCard.ts               - Done
+│   │   └── homepageHero.ts           - Done: TODO experimental actions
+│   └── objects/
+│       ├── imageWithAlt.ts           - Done
+│       ├── heroAmount.ts             - Done
+│       ├── stat.ts                   - Done
+│       ├── caseStudy.ts              - Done
+│       ├── donationItem.ts           - Done
+│       ├── donationAmount.ts         - Done  
+│       ├── additionalField.ts        - Done
+│       ├── keyFeature.ts             - Done
+│       ├── howItHelps.ts             - Done
+│       ├── benefitCard.ts            - Done
+│       ├── imageGalleryItem.ts       - Done
+│       ├── impactCard.ts             - Done
+│       ├── aboutImpactItem.ts        - Done        # ← simplified — icon + figure + line
+│       ├── ecosystemCardRef.ts       - Done        # ← references ecosystemStage doc
+│       ├── ecosystemQuoteCard.ts     - Done
+│       └── faqCard.ts                - Done  
+
 │
 ├── app/
 │   ├── [locale]/                                   # i18n dynamic segment
@@ -295,3 +326,32 @@ Payment
 ├── middleware.ts                                   # locale detection + subdomain routing
 ├── next.config.js
 └── tailwind.config.ts
+
+
+┌─────────────────────────────────────────────────────────────┐
+│                    SLIDER HERO                              │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐                      │
+│  │ Slide 1 │  │ Slide 2 │  │ Slide 3 │  ⋯ (drag to order)   │
+│  └─────────┘  └─────────┘  └─────────┘                      │
+├─────────────────────────────────────────────────────────────┤
+│                     ABOUT US                                │
+│  Who We Are ── slideshow images                             │
+│  Impact ── icon + figure + line  ← mirrors homepage stats   │
+│  File Cards ── references fileCard documents                │
+├─────────────────────────────────────────────────────────────┤
+│                     PROJECT                                 │
+│  ┌─ Ecosystem Cards ─────────────> ecosystemStage (ref) ──┐ │
+│  │  Stage 1: Essentials                                   │ │
+│  │  Stage 2: Stability                                    │ │
+│  │  Stage 3: Development                                  │ │
+│  │  Stage 4: Self Sustainability                          │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                                                             │
+│  Donation Items                                             │
+│  ┌────────────────────────────┐                             │
+│  │ Full Price: £500           │                             │
+│  │ Quick-select: £50, £100... │                             │
+│  │ Custom: always available   │  ← automatically            │
+│  │ Intentions → donationIntention (ref)                     │
+│  └────────────────────────────┘                             │
+└─────────────────────────────────────────────────────────────┘

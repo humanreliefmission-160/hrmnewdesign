@@ -4,29 +4,31 @@ export const projectCategory = defineType({
   name: 'projectCategory',
   title: 'Project Category',
   type: 'document',
+  icon: () => '🗂️',
   fields: [
     defineField({
       name: 'name',
       title: 'Name',
       type: 'string',
-      validation: (r) => r.required()
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'description',
       title: 'Description',
-      type: 'text'
+      type: 'text',
+      rows: 3,
     }),
     defineField({
       name: 'images',
       title: 'Images',
       type: 'array',
-      of: [{ type: 'altImage' }]
-    }),
-    defineField({
-      name: 'donationItems',
-      title: 'Default Donation Items',
-      type: 'array',
-      of: [{ type: 'donationItem' }]
+      of: [{ type: 'imageWithAlt' }],
     }),
   ],
+  preview: {
+    select: {
+      title: 'name',
+      media: 'images.0.image',
+    },
+  },
 })

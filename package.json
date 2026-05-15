@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@sanity/image-url": "^2.1.1",
+    "@sanity/locale-nb-no": "^1.1.33",
     "@sanity/vision": "^5.24.0",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.4",

@@ -8,73 +8,63 @@ export default function CaseStudySection({ stage }: Props) {
   const { caseStudy } = stage;
 
   return (
-    <section className="bg-white py-20 px-4">
+    <section className="bg-brand-white/50 py-8 sm:py-16 px-6 md:px-12 lg:px-24 shadow-lg my-12 max-w-[1140px] mx-3 sm:mx-auto rounded-sm">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <span className="inline-block bg-purple-100 text-purple-700 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5">
+          <span className="inline-block bg-purple/10 text-purple text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-sm mb-3">
             Case Study
           </span>
-          <h2 className="text-3xl lg:text-4xl font-black text-gray-900 leading-tight max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-brand-black leading-tight max-w-3xl mx-auto">
             {caseStudy.title}
           </h2>
         </div>
 
         {/* Content */}
-        <div className="bg-gray-50 rounded-2xl overflow-hidden border border-gray-100">
-          <div className="grid lg:grid-cols-2 gap-0">
+        <div className="bg-transparent rounded-sm overflow-hidden border-none">
+          <div className="flex flex-col lg:flex-row gap-10 items-center">
             {/* Image column */}
-            <div className="relative">
-              <img
-                src={caseStudy.image}
-                alt={caseStudy.subjectName}
-                className="w-full h-80 lg:h-full object-cover object-top"
-              />
-              {/* Label over image */}
-              <div className="bg-white/90 backdrop-blur px-3 py-1.5 inline-flex items-center gap-2 m-4 rounded">
-                <span className="text-purple-700 font-bold text-xs uppercase tracking-widest">
-                  {caseStudy.subjectLabel}
-                </span>
+            <div className="w-full lg:w-1/2 shrink-0">
+              <div className="relative overflow-hidden shadow-md">
+                <img
+                  src={caseStudy.image}
+                  alt={caseStudy.subjectName}
+                  className="w-full h-[400px] object-cover"
+                />
+                {/* Label over image */}
+                <div className="absolute bottom-4 left-4 bg-brand-white/90 backdrop-blur-sm px-4 py-2 rounded-sm shadow-lg">
+                  <span className="text-purple font-semibold text-xs uppercase tracking-wide">
+                    {caseStudy.subjectLabel}
+                  </span>
+                </div>
               </div>
 
               {/* Quote below image on mobile */}
-              <div className="lg:hidden bg-purple-50 border-l-4 border-purple-700 mx-4 mb-4 p-4 rounded-r">
-                <p className="text-purple-900 font-semibold italic text-base leading-relaxed">
-                  "{caseStudy.quote}"
-                </p>
-              </div>
+              <blockquote className="lg:hidden text-xl font-semibold text-purple italic border-l-4 border-purple pl-4 mt-4">
+                "{caseStudy.quote}"
+              </blockquote>
             </div>
 
             {/* Text column */}
-            <div className="p-8 lg:p-10 flex flex-col justify-center">
+            <div className="w-full lg:w-1/2 space-y-5">
               <div className="space-y-4 mb-6">
                 {caseStudy.story.map((paragraph, i) => (
-                  <p key={i} className="text-gray-700 leading-relaxed text-[15px]">
+                  <p key={i} className="text-brand-black leading-relaxed">
                     {paragraph}
                   </p>
                 ))}
               </div>
 
-              <hr className="border-gray-200 mb-5" />
+              <hr className="h-px border-0.5 border-purple opacity-25" />
 
               <div>
-                <p className="font-bold text-gray-900 text-sm">
+                <p className="font-bold text-gray-800 text-sm">
                   Interview with {caseStudy.subjectName}
                 </p>
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500 text-xs">
                   {caseStudy.interviewSource}, {caseStudy.interviewDate}
                 </p>
               </div>
-            </div>
-          </div>
-
-          {/* Quote — desktop, shown below the grid as a full-width banner */}
-          <div className="hidden lg:block border-t border-gray-200 px-10 py-6 bg-purple-50">
-            <div className="flex items-start gap-4">
-              <div className="w-1 h-full bg-purple-700 rounded-full shrink-0 self-stretch min-h-[40px]" />
-              <p className="text-purple-900 font-semibold italic text-lg leading-relaxed">
-                "{caseStudy.quote}"
-              </p>
             </div>
           </div>
         </div>

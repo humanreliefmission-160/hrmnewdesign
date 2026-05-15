@@ -1,32 +1,24 @@
 import { defineField, defineType } from 'sanity'
 
-export const homepageHero = defineType({
+export default defineType({
   name: 'homepageHero',
-  title: 'Homepage Hero',
+  title: 'Homepage Hero Slider',
   type: 'document',
+  // __experimental_actions: ['update', 'publish'],
   fields: [
     defineField({
-      name: 'image',
-      title: 'Hero Image',
-      type: 'altImage',
-      validation: (r) => r.required()
-    }),
-    defineField({
-      name: 'title',
-      title: 'Headline',
-      type: 'string',
-      validation: (r) => r.required()
-    }),
-    defineField({
-      name: 'subtext',
-      title: 'Subtitle',
-      type: 'string'
-    }),
-    defineField({
-      name: 'link',
-      title: 'CTA Link',
-      type: 'url',
-      validation: (r) => r.required()
+      name: 'slides',
+      title: 'Hero Slides',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'heroSlide' }] }],
+      options: {
+        sortable: true, // Enables drag and drop ordering
+      },
     }),
   ],
+  preview: {
+    prepare() {
+      return { title: 'Homepage Hero Slider' }
+    },
+  },
 })

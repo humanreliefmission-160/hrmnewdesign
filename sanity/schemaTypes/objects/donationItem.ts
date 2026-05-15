@@ -5,116 +5,165 @@ export const donationItem = defineType({
   title: 'Donation Item',
   type: 'object',
   fields: [
+    // ── Identity ──────────────────────────────────────────────
     defineField({
       name: 'icon',
-      title: 'Icon (react-icons name)',
+      title: 'Icon',
       type: 'string',
-      description: 'e.g. FaHandHoldingHeart',
+      description: 'React Icons name e.g. "FaHeart"',
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'title',
-      title: 'Title',
+      name: 'itemTitle',
+      title: 'Item Title',
       type: 'string',
-      validation: (rule) => rule.required(),
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'subtext',
-      title: 'Subtext',
-      type: 'string',
+      name: 'itemSubtext',
+      title: 'Item Subtext',
+      description: 'Short tagline for the donation card',
+      type: 'text',
+      rows: 2,
     }),
+
+    // ── Price ─────────────────────────────────────────────────
     defineField({
       name: 'price',
-      title: 'Base Price (GBP)',
+      title: 'Full Price',
+      description: 'The complete cost shown on the detail page',
       type: 'number',
-      validation: (rule) => rule.required().min(0),
+      validation: (Rule) => Rule.required().positive(),
     }),
-    defineField({
-      name: 'frequency',
-      title: 'Payment Frequency',
-      type: 'string',
-      options: { list: ['one_off', 'monthly'] },
-      initialValue: 'one_off',
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: 'bodyText',
-      title: 'Body Text',
-      type: 'blockContent', // requires a blockContent type, or use 'array' of block
-    }),
+
+    // ── Quick-Select Amounts ──────────────────────────────────
     defineField({
       name: 'amounts',
-      title: 'Pre-set Amounts',
+      title: 'Quick-Select Amounts',
+      description: 'Fixed amounts donors can quickly choose. Custom amount is always available automatically.',
       type: 'array',
-      of: [
-        {
-          type: 'object',
-          name: 'amountOption',
-          fields: [
-            { name: 'value', title: 'Amount (GBP)', type: 'number', validation: (r) => r.required() },
-            { name: 'isFixed', title: 'Fixed amount only?', type: 'boolean', initialValue: false },
-          ],
-        },
-      ],
+      of: [{ type: 'donationAmount' }],
     }),
+
+    // ── Content ───────────────────────────────────────────────
+    defineField({
+      name: 'donationItemBody',
+      title: 'Donation Item Body',
+      type: 'array',
+      of: [{ type: 'block' }],
+    }),
+
+    // ── Intentions ────────────────────────────────────────────
     defineField({
       name: 'intentions',
-      title: 'Applicable Giving Intentions',
+      title: 'Donation Intentions',
+      description: 'Which intentions apply to this item (Zakat, Sadaqah, etc.)',
       type: 'array',
-      of: [{ type: 'reference', to: [{ type: 'intention' }] }],
+      of: [{ type: 'reference', to: [{ type: 'donationIntention' }] }],
     }),
+
+    // ── Images ────────────────────────────────────────────────
     defineField({
       name: 'images',
       title: 'Images',
       type: 'array',
-      of: [{ type: 'altImage' }],
-    }),
-    defineField({
-      name: 'additionalFields',
-      title: 'Additional Form Fields',
-      type: 'array',
       of: [
         {
           type: 'object',
-          name: 'field',
-          fields: [{ name: 'label', title: 'Field Label', type: 'string' }],
+          name: 'donationItemImage',
+          title: 'Image',
+          fields: [
+            defineField({
+              name: 'asset',
+              title: 'Image',
+              type: 'image',
+              options: { hotspot: true },
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'altText',
+              title: 'Alt Text',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'caption',
+              title: 'Caption',
+              type: 'string',
+            }),
+            defineField({
+              name: 'link',
+              title: 'Link',
+              type: 'url',
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'altText',
+              media: 'asset',
+            },
+          },
         },
       ],
     }),
+
+    // ── Additional Fields ─────────────────────────────────────
+    defineField({
+      name: 'additionalFields',
+      title: 'Additional Fields',
+      description: 'Extra inputs to collect from donors',
+      type: 'array',
+      of: [{ type: 'additionalField' }],
+    }),
+
+    // ── Info ──────────────────────────────────────────────────
     defineField({
       name: 'info',
-      title: 'Info Note',
+      title: 'Info',
       type: 'text',
+      rows: 3,
     }),
+
+    // ── Key Features ──────────────────────────────────────────
     defineField({
       name: 'keyFeatures',
       title: 'Key Features',
       type: 'array',
-      of: [
-        {
-          type: 'object',
-          name: 'feature',
-          fields: [
-            { name: 'title', title: 'Title', type: 'string' },
-            { name: 'text', title: 'Text', type: 'string' },
-          ],
-        },
-      ],
+      of: [{ type: 'keyFeature' }],
     }),
+
+    // ── How It Helps ──────────────────────────────────────────
     defineField({
       name: 'howItHelps',
       title: 'How It Helps',
       type: 'array',
-      of: [{ type: 'object', name: 'help', fields: [{ name: 'text', title: 'Text', type: 'string' }] }],
+      of: [{ type: 'howItHelps' }],
     }),
+
+    // ── End Goal & Summary ────────────────────────────────────
     defineField({
       name: 'endGoal',
-      title: 'End Goal / Outcome',
+      title: 'End Goal',
       type: 'text',
+      rows: 3,
     }),
     defineField({
       name: 'summarise',
-      title: 'Summary for Receipt',
+      title: 'Summarise',
       type: 'text',
+      rows: 3,
     }),
   ],
+  preview: {
+    select: {
+      title: 'itemTitle',
+      subtitle: 'price',
+    },
+    prepare({ title, subtitle }) {
+      return {
+        title,
+        subtitle: `£${subtitle} (full price)`,
+      }
+    },
+  },
 })

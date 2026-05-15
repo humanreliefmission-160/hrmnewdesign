@@ -4,29 +4,53 @@ export const ecosystemStage = defineType({
   name: 'ecosystemStage',
   title: 'Ecosystem Stage',
   type: 'document',
+  icon: () => '🌱',
   fields: [
     defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
-      validation: (r) => r.required()
+      description: 'e.g. "Essentials", "Stability", "Development", "Self Sustainability"',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'order',
+      title: 'Stage Order',
+      type: 'number',
+      description: '1 = first stage, 4 = final stage',
+      validation: (Rule) => Rule.required().min(1).max(4).integer(),
     }),
     defineField({
       name: 'description',
       title: 'Description',
-      type: 'text'
+      type: 'array',
+      of: [{ type: 'block' }],
     }),
     defineField({
       name: 'images',
       title: 'Images',
       type: 'array',
-      of: [{ type: 'altImage' }]
-    }),
-    defineField({
-      name: 'sort_order',
-      title: 'Sort Order',
-      type: 'number',
-      initialValue: 0
+      of: [{ type: 'imageWithAlt' }],
     }),
   ],
+  orderings: [
+    {
+      title: 'Stage Order',
+      name: 'orderAsc',
+      by: [{ field: 'order', direction: 'asc' }],
+    },
+  ],
+  preview: {
+    select: {
+      title: 'title',
+      order: 'order',
+      media: 'images.0.image',
+    },
+    prepare({ title, order, media }) {
+      return {
+        title: `Stage ${order}: ${title}`,
+        media,
+      }
+    },
+  },
 })

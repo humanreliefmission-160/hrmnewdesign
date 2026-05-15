@@ -1,35 +1,58 @@
-import { type SchemaTypeDefinition } from 'sanity'
-import { blockContent } from './objects/blockContent'
-import { altImage } from './objects/altImage'
-import { stat } from './objects/stat'
-import { donationItem } from './objects/donationItem'
-import { homepageHero } from './homepageHero'
+// ── Documents ─────────────────────────────────────────────────
+import { sliderHero } from './sliderHero'
+import { ecosystemStage } from './ecosystemStage'
 import { aboutUs } from './aboutUs'
-import { location } from './location'
 import { projectCategory } from './projectCategory'
 import { project } from './project'
-import { campaign } from './campaign'
-import { downloadableFile } from './file'
-import { ecosystemStage } from './ecosystemStage'
-import { intention } from './intention'
+import { donationIntention } from './donationIntention'
+import { fileCard } from './fileCard'
+
+// ── Objects ───────────────────────────────────────────────────
+import { imageWithAlt } from './objects/imageWithAlt'
+import { heroAmount } from './objects/heroAmount'
+import { stat } from './objects/stat'
+import { caseStudy } from './objects/caseStudy'
+import { donationItem } from './objects/donationItem'
+import { donationAmount } from './objects/donationAmount'
+import { additionalField } from './objects/additionalField'
+import { keyFeature } from './objects/keyFeature'
+import { howItHelps } from './objects/howItHelps'
+import { benefitCard } from './objects/benefitCard'
+import { imageGalleryItem } from './objects/imageGalleryItem'
+import { impactCard } from './objects/impactCard'
+import { aboutImpactItem } from './objects/aboutImpactItem'
+import { ecosystemCardRef } from './objects/ecosystemCardRef'
+import { ecosystemQuoteCard } from './objects/ecosystemQuoteCard'
+import { faqCard } from './objects/faqCard'
+import { SchemaTypeDefinition } from 'sanity'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
-    // objects
-    blockContent,
-    altImage,
-    stat,
-    donationItem,
-
-    // documents
-    intention,
-    downloadableFile,
+    // Documents
+    sliderHero,
     ecosystemStage,
-    homepageHero,
     aboutUs,
-    location,
     projectCategory,
     project,
-    campaign,
-  ],
+    donationIntention,
+    fileCard,
+
+    // Objects
+    imageWithAlt,
+    heroAmount,
+    stat,
+    caseStudy,
+    donationItem,
+    donationAmount,
+    additionalField,
+    keyFeature,
+    howItHelps,
+    benefitCard,
+    imageGalleryItem,
+    impactCard,
+    aboutImpactItem,
+    ecosystemCardRef,
+    ecosystemQuoteCard,
+    faqCard,
+  ]
 }
