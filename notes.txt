@@ -224,7 +224,8 @@ sanity/
 │   │   ├── projectCategory.ts        - Done
 │   │   ├── project.ts                - Done 
 │   │   ├── donationIntention.ts      - Done
-│   │   └── fileCard.ts               - Done
+│   │   ├── fileCard.ts               - Done
+│   │   ├── navigation.ts             - Done
 │   │   └── homepageHero.ts           - Done: TODO experimental actions
 │   └── objects/
 │       ├── imageWithAlt.ts           - Done
@@ -243,6 +244,8 @@ sanity/
 │       ├── ecosystemCardRef.ts       - Done        # ← references ecosystemStage doc
 │       ├── ecosystemQuoteCard.ts     - Done
 │       └── faqCard.ts                - Done  
+│       ├── navItem.ts                - Done
+│       ├── navSubItem.ts             - Done
 
 │
 ├── app/

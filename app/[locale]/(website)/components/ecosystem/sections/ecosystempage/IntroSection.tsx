@@ -1,3 +1,4 @@
+import YellowCTA from "../../../YellowCTA";
 import { EcosystemStage } from "../../data/ecosystemData";
 
 type Props = {
@@ -21,7 +22,7 @@ export default function IntroSection({ stage }: Props) {
 				</div>
 
 				{/* Stats Row */}
-				<div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16 max-w-5xl mx-auto align-middle">
+				<div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-16 max-w-5xl mx-auto align-middle">
 					{intro.stats.map((stat, i) => (
 						<div
 							key={i}
@@ -34,11 +35,11 @@ export default function IntroSection({ stage }: Props) {
 				</div>
 
 				{/* Content Grid */}
-				<div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
+				<div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 					{/* Left column */}
 					<div className="space-y-8">
 						{/* Why */}
-						<div>
+						<div className="shadow-xl shadow-brand-black/10 rounded-sm p-6">
 							<div className="flex items-center gap-3 mb-3">
 								<div className="w-8 h-8 rounded-sm bg-purple/10 flex items-center justify-center shrink-0">
 									<svg className="w-4 h-4 text-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -51,7 +52,7 @@ export default function IntroSection({ stage }: Props) {
 						</div>
 
 						{/* How */}
-						<div>
+						<div className="shadow-xl shadow-brand-black/10 rounded-sm p-6">
 							<div className="flex items-center gap-3 mb-3">
 								<div className="w-8 h-8 rounded-sm bg-purple/10 flex items-center justify-center shrink-0">
 									<svg className="w-4 h-4 text-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -67,7 +68,7 @@ export default function IntroSection({ stage }: Props) {
 					{/* Right column */}
 					<div className="space-y-8">
 						{/* Vision */}
-						<div>
+						<div className="shadow-xl shadow-brand-black/10 rounded-sm p-6">
 							<div className="flex items-center gap-3 mb-3">
 								<div className="w-8 h-8 rounded-sm bg-purple/10 flex items-center justify-center shrink-0">
 									<svg className="w-4 h-4 text-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -75,7 +76,7 @@ export default function IntroSection({ stage }: Props) {
 										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
 									</svg>
 								</div>
-								<h3 className="text-lg font-bold text-brand-black">Long-Term Vision</h3>
+								<h3 className="text-lg font-bold text-brand-black">Long Term Vision</h3>
 							</div>
 							<p className="text-brand-black text-base leading-relaxed pl-11">{intro.vision}</p>
 						</div>
@@ -92,9 +93,13 @@ export default function IntroSection({ stage }: Props) {
 							</div>
 							<p className="text-brand-white/85 leading-relaxed pl-11">{intro.donorCta}</p>
 							<div className="pl-11 mt-4">
-								<button className="bg-brand-yellow hover:bg-yellow-500 text-brand-black font-bold uppercase tracking-widest text-sm px-5 py-2.5 rounded-sm transition-colors">
+								<YellowCTA
+									text={`Donate to ${stage.name}`}
+									href={`/donate`}
+								/>
+								{/* <button className="bg-brand-yellow hover:bg-yellow-500 text-brand-black font-bold uppercase tracking-widest text-sm px-5 py-2.5 rounded-sm transition-colors">
 									Donate to {stage.name}
-								</button>
+								</button> */}
 							</div>
 						</div>
 					</div>

@@ -1,13 +1,15 @@
 // ── Documents ─────────────────────────────────────────────────
-import { sliderHero } from './sliderHero'
-import { ecosystemStage } from './ecosystemStage'
-import { aboutUs } from './aboutUs'
-import { projectCategory } from './projectCategory'
-import { project } from './project'
-import { donationIntention } from './donationIntention'
-import { fileCard } from './fileCard'
+import { sliderHero } from './documents/sliderHero'
+import { ecosystemStage } from './documents/ecosystemStage'
+import { aboutUs } from './documents/aboutUs'
+import { projectCategory } from './documents/projectCategory'
+import { project } from './documents/project'
+import { donationIntention } from './documents/donationIntention'
+import { fileCard } from './documents/fileCard'
 
 // ── Objects ───────────────────────────────────────────────────
+
+
 import { imageWithAlt } from './objects/imageWithAlt'
 import { heroAmount } from './objects/heroAmount'
 import { stat } from './objects/stat'
@@ -24,7 +26,10 @@ import { aboutImpactItem } from './objects/aboutImpactItem'
 import { ecosystemCardRef } from './objects/ecosystemCardRef'
 import { ecosystemQuoteCard } from './objects/ecosystemQuoteCard'
 import { faqCard } from './objects/faqCard'
+import { navItem } from './objects/navItem'
+import { navSubItem } from './objects/navSubItem'
 import { SchemaTypeDefinition } from 'sanity'
+import { navigation } from './documents/navigation'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -36,6 +41,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     project,
     donationIntention,
     fileCard,
+    navigation,
 
     // Objects
     imageWithAlt,
@@ -54,5 +60,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     ecosystemCardRef,
     ecosystemQuoteCard,
     faqCard,
+    navItem,
+    navSubItem
   ]
 }

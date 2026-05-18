@@ -21,7 +21,7 @@ export default function BottomCTA() {
             <Link
               key={stage.slug}
               href={`/ecosystem/${stage.slug}`}
-              className="border border-brand-white/50 text-brand-white hover:bg-brand-white hover:text-purple-dark font-bold text-sm px-5 py-2.5 rounded-sm transition-all"
+              className="border border-brand-white/50 text-brand-white hover:bg-brand-white hover:text-purple-dark font-bold text-sm px-5 py-2.5 rounded-sm transition-all self-center"
             >
               {stage.name}
             </Link>

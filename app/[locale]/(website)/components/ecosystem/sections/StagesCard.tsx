@@ -3,6 +3,7 @@
 import { ecosystemStages } from "../data/ecosystemData";
 import Link from "next/link";
 import { FaChevronRight } from "react-icons/fa";
+import YellowCTA from "../../YellowCTA";
 
 export default function StagesCard() {
 
@@ -14,7 +15,7 @@ export default function StagesCard() {
           <span className="inline-block bg-purple-faint text-purple text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-sm mb-4">
             Explore All Stages
           </span>
-          <h2 className="text-3xl font-black text-gray-900">
+          <h2 className="text-3xl font-bold text-brand-black">
             Four Stages. One Transformation.
           </h2>
         </div>
@@ -37,9 +38,6 @@ export default function StagesCard() {
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs text-brand-grey font-semibold uppercase tracking-wider">
                     Stage {stage.stageNumber}
-                  </span>
-                  <span className="text-xs bg-purple-100 text-purple font-bold px-2 py-0.5 rounded-sm uppercase tracking-wide">
-                    {stage.badge}
                   </span>
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{stage.name}</h3>
