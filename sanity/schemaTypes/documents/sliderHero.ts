@@ -15,7 +15,8 @@ export const sliderHero = defineType({
     }),
     defineField({
       name: 'image',
-      title: 'Slide Image',
+      title: 'Desktop Image',
+      description: 'Image for desktop and tablet screens (Landscape).',
       type: 'object',
       fields: [
         defineField({
@@ -32,6 +33,13 @@ export const sliderHero = defineType({
           validation: (Rule) => Rule.required(),
         }),
       ],
+    }),
+    defineField({
+      name: 'mobileImage',
+      title: 'Mobile Image (Optional)',
+      description: 'Image specifically for mobile screens (Portrait). If not provided, the Desktop Image will be cropped to fit.',
+      type: 'image',
+      options: { hotspot: true },
     }),
     defineField({
       name: 'title',

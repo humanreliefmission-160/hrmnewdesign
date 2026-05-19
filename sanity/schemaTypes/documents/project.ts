@@ -58,6 +58,15 @@ export const project = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'headerImage',
+      title: 'Header Image',
+      type: 'image',
+      group: 'overview',
+      options: {
+        hotspot: true,
+      },
+    }),
+    defineField({
       name: 'heroAmounts',
       title: 'Hero Amounts',
       description: 'Exactly 3 amounts for the most urgent needs',

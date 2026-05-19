@@ -36,6 +36,24 @@ export const donationItem = defineType({
       validation: (Rule) => Rule.required().positive(),
     }),
 
+    // ── Donation Type ─────────────────────────────────────────
+    defineField({
+      name: 'donationType',
+      title: 'Donation Type',
+      description: 'Whether this donation level supports a one-off payment, monthly giving, or both',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'One Off', value: 'one-off' },
+          { title: 'Monthly', value: 'monthly' },
+        ],
+        layout: 'radio',
+        direction: 'horizontal',
+      },
+      initialValue: 'monthly',
+      validation: (Rule) => Rule.required(),
+    }),
+
     // ── Quick-Select Amounts ──────────────────────────────────
     defineField({
       name: 'amounts',

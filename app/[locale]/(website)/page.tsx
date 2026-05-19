@@ -1,5 +1,3 @@
-"use client";
-
 import ProjectsGrid from "./components/ProjectsGrid";
 import NewsletterForm from "./components/NewsletterForm";
 import Impact from "./components/Impact";
@@ -16,7 +14,6 @@ export default function Home() {
       <Impact />
       <LastMonthImpact />
       <FinalCTA />
-
     </div>
   );
 }
