@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import YellowCTA from "./YellowCTA";
+import DonationBasketButton from "./DonationBasketButton";
 
 export default function NavbarThree() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -114,6 +115,10 @@ export default function NavbarThree() {
               <Link href="/contact" className="text-[0.875rem] font-semibold text-brand-white no-underline cursor-pointer transition-colors duration-500 tracking-wide hover:font-bold">Contact Us</Link>
             </li>
           </ul>
+
+          <div className="flex items-center">
+            <DonationBasketButton />
+          </div>
 
           <div className="block">
             <YellowCTA text="Donate Now" href="/donate" />

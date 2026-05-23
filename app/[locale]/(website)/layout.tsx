@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import "../globals.css";
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
+import Providers from "./components/Providers";
 
 
 export const metadata: Metadata = {
@@ -30,10 +31,12 @@ export default async function LocaleLayout({
       </head>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <ImpactTicker />
-          <Navbar />
-          {children}
-          <Footer />
+          <Providers>
+            <ImpactTicker />
+            <Navbar />
+            {children}
+            <Footer />
+          </Providers>
         </NextIntlClientProvider>
       </body>
     </html>

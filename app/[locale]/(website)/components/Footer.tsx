@@ -12,7 +12,7 @@ export default function Footer() {
         <div>
           <div>
             <Link href="/" >
-              <Image src="/hhtw.svg" alt="Helping Humanity Through Welfare" width={200} height={200} />
+              <Image src="/hhtw.svg" alt="Helping Humanity Through Welfare" width={200} height={200} className="w-48 h-auto " />
             </Link>
             <div className="text-[0.875rem] leading-[1.7] my-6">
               Delivering emergency relief, education, and sustainable development

@@ -4,6 +4,7 @@ import { ecosystemStages } from "../data/ecosystemData";
 import Link from "next/link";
 import { FaChevronRight } from "react-icons/fa";
 import YellowCTA from "../../YellowCTA";
+import Image from "next/image";
 
 export default function StagesCard() {
 
@@ -28,10 +29,12 @@ export default function StagesCard() {
               className="group rounded-sm overflow-hidden border border-brand-lgrey shadow-sm hover:shadow-lg transition-all bg-brand-white/50"
             >
               <div className="h-40 overflow-hidden">
-                <img
+                <Image
                   src={stage.heroImage}
                   alt={stage.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  width={400}
+                  height={400}
                 />
               </div>
               <div className="p-5">
@@ -42,7 +45,7 @@ export default function StagesCard() {
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{stage.name}</h3>
                 <p className="text-brand-black/75 text-sm leading-snug mb-4">{stage.tagline}</p>
-                <div className="flex items-center gap-1 text-purple-light text-sm font-semibold group-hover:gap-2 transition-all">
+                <div className="flex items-center gap-1 text-purple text-sm font-semibold group-hover:gap-2 transition-all">
                   <span>Explore stage</span>
                   <FaChevronRight />
                 </div>

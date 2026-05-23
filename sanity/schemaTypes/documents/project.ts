@@ -237,9 +237,17 @@ export const project = defineType({
           of: [{ type: 'block' }],
         }),
         defineField({
+          name: 'stage',
+          title: 'Ecosystem Stage',
+          description: 'Select which stage this project is currently in',
+          type: 'reference',
+          to: [{ type: 'ecosystemStage' }],
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
           name: 'ecosystemCards',
           title: 'Ecosystem Cards',
-          description: 'Reference existing ecosystem stages',
+          description: 'Cards shown within this stage for this project',
           type: 'array',
           of: [{ type: 'ecosystemCardRef' }],
         }),
@@ -248,8 +256,33 @@ export const project = defineType({
           title: 'Quote Card',
           type: 'ecosystemQuoteCard',
         }),
+        defineField({
+          name: 'callToAction',
+          title: 'Call to Action',
+          description: 'A CTA block shown at the bottom of the ecosystem section',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'title',
+              title: 'Title',
+              type: 'string',
+            }),
+            defineField({
+              name: 'body',
+              title: 'Body',
+              type: 'text',
+              rows: 3,
+            }),
+            defineField({
+              name: 'text',
+              title: 'Button Text',
+              type: 'string',
+            }),
+          ],
+        }),
       ],
     }),
+
 
     // ── FAQ ─────────────────────────────────────────────────────
     defineField({

@@ -3,7 +3,9 @@ import { FaBoxes, FaSearch } from "react-icons/fa";
 import { GiTeacher } from "react-icons/gi";
 import { MdChatBubble } from "react-icons/md";
 import { PiCraneTowerFill, PiPlantFill } from "react-icons/pi";
-import { SlSpeech } from "react-icons/sl";
+import { ecosystemStages } from "../ecosystem/data/ecosystemData";
+import Link from "next/link";
+import YellowCTA from "../YellowCTA";
 
 const steps = [
   {
@@ -58,6 +60,10 @@ export default function HowItHelps() {
           <p className="text-brand-black max-w-2xl mx-auto text-base">
             From identification to long-term integration, here's exactly how your donation creates real, sustained change in the lives of children who need it most.
           </p>
+
+          <div className="flex justify-center mt-4">
+            <Link href="/ecosystem/essentials" className="text-brand-white bg-purple px-6 py-2 hover:bg-purple-dark font-bold text-sm rounded-sm transition-all self-center">Stage 1 - Essentials</Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -91,6 +97,35 @@ export default function HowItHelps() {
               and asking questions I had never expected from children so young. Education changes everything."
             </p>
             <p className="text-brand-white text-sm">— Muhammad Ali, Head Teacher</p>
+          </div>
+        </div>
+      </div>
+
+
+      {/* Ecosystem CTA */}
+      <div className="max-w-3xl mx-auto text-center my-10">
+        <h2 className="text-3xl lg:text-4xl font-bold text-brand-black mb-4 leading-tight">
+          Hot Meals are part of a Larger Ecosystem that creates sustainable change
+        </h2>
+        <p className="text-brand-black/75 text-lg mb-8 leading-relaxed">
+          By donating a hot meal, you are helping families with the essential meals needed everyday. This is allowing families to start & become self reliant. Every donation moves someone one step closer to becoming a Zakat payer themselves.
+        </p>
+        <YellowCTA
+          href="/ecosystem/essentials"
+          text="Donate a Hot Meal"
+        />
+        <div className="mt-20">
+          <small><em>Explore the stages of our Ecosystem</em></small>
+          <div className="flex flex-wrap gap-10 justify-center mt-4">
+            {ecosystemStages.map((stage) => (
+              <Link
+                key={stage.slug}
+                href={`/ecosystem/${stage.slug}`}
+                className="text-brand-white bg-purple px-6 py-2 hover:bg-purple-dark font-bold text-sm rounded-sm transition-all self-center"
+              >
+                {stage.name}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

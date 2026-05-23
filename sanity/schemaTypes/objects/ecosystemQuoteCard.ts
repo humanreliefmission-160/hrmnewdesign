@@ -6,12 +6,6 @@ export const ecosystemQuoteCard = defineType({
   type: 'object',
   fields: [
     defineField({
-      name: 'icon',
-      title: 'Icon',
-      type: 'string',
-      description: 'React Icons name e.g. "FaQuoteLeft"',
-    }),
-    defineField({
       name: 'quote',
       title: 'Quote',
       type: 'text',

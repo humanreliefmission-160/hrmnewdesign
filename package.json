@@ -3,14 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" next dev",
+    "dev:studio": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" sanity dev",
+    "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" next build",
+    "build:studio": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" sanity build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
     "@sanity/image-url": "^2.1.1",
     "@sanity/locale-nb-no": "^1.1.33",
+    "@sanity/ui": "^3.2.0",
     "@sanity/vision": "^5.24.0",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.4",

@@ -1,5 +1,21 @@
+"use client";
+
 import { useRef, useEffect } from "react";
 import YellowCTA from "../YellowCTA";
+import { Image } from "sanity";
+
+interface ImageCarousel {
+	_key: string;
+	image?: Image;
+	altText?: string;
+	link?: string;
+}
+
+interface ImageCarouselData {
+	title?: string;
+	bodyText?: any[];
+	impactCards?: Image[];
+}
 
 const slides = [
 	{
@@ -20,6 +36,8 @@ const slides = [
 	},
 ];
 
+
+
 // Triple slides for seamless infinite scroll
 const allSlides = [...slides, ...slides, ...slides];
 
@@ -29,7 +47,9 @@ const STEP = SLIDE_WIDTH + GAP;
 const SLIDE_HEIGHT = 280;
 const SPEED = 0.65; // px per frame — smooth, never stopping
 
-export default function ImageCarousel() {
+export default function ImageCarousel({ data }: { data?: ImageCarouselData }) {
+	if (!data) return null;
+
 	const trackRef = useRef<HTMLDivElement>(null);
 	const animRef = useRef<number | null>(null);
 	const posRef = useRef(0);
@@ -121,8 +141,6 @@ export default function ImageCarousel() {
 				text="Start making an impact today"
 				href="/donate"
 			/>
-
-
 		</section>
 	);
 }
