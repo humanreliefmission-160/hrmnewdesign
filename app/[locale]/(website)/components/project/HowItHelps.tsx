@@ -7,6 +7,19 @@ import { ecosystemStages } from "../ecosystem/data/ecosystemData";
 import Link from "next/link";
 import YellowCTA from "../YellowCTA";
 
+interface ImageCarousel {
+  _key: string;
+  image?: Image;
+  altText?: string;
+  link?: string;
+}
+
+interface ImageCarouselData {
+  title?: string;
+  bodyText?: any[];
+  impactCards?: Image[];
+}
+
 const steps = [
   {
     step: "01",

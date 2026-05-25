@@ -62,7 +62,7 @@ export default async function ProjectItem({
           <DonationItems data={project.donationSection} />
           <Impact data={project.impactSection} />
           {/* Need to do */}
-          <ImageCarousel data={project.imageGallery} />
+          <ImageCarousel images={project.imageGallery} />
           <HowItHelps data={project.benefits} />
           <FAQ data={project.faq} />
         </div>
