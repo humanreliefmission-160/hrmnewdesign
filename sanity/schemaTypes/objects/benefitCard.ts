@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import IconSelector from '../../components/IconSelector'
 
 export const benefitCard = defineType({
   name: 'benefitCard',
@@ -9,6 +10,9 @@ export const benefitCard = defineType({
       name: 'icon',
       title: 'Icon',
       type: 'string',
+      components: {
+        input: IconSelector,
+      },
       description: 'React Icons name e.g. "FaHandHoldingHeart". Find the icon name from this link https://react-icons.github.io/react-icons/search',
       validation: (Rule) => Rule.required(),
     }),

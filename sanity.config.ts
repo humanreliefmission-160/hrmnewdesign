@@ -12,8 +12,6 @@ import { structureTool } from 'sanity/structure'
 import { apiVersion, dataset, projectId } from './sanity/env'
 import { schema } from './sanity/schemaTypes'
 import { structure } from './sanity/structure'
-import { createElement } from 'react'
-import IconSelector from '@/app/[locale]/(website)/components/IconSelector'
 
 export default defineConfig({
   basePath: '/studio',
@@ -28,16 +26,4 @@ export default defineConfig({
     // https://www.sanity.io/docs/the-vision-plugin
     visionTool({ defaultApiVersion: apiVersion }),
   ],
-  form: {
-    components: {
-      // Map a custom input name 'iconSelector' to our component
-      input: (props) => {
-        if (props.schemaType?.options?.customInput === 'icon') {
-          // return <IconSelector { ...props } />
-          return createElement(IconSelector, props as any)
-        }
-        return props.renderDefault(props)
-      }
-    }
-  }
 })

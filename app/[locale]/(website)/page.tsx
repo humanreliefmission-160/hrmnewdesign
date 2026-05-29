@@ -4,12 +4,26 @@ import Impact from "./components/Impact";
 import FinalCTA from "./components/FinalCTA";
 import Hero from "./components/Hero";
 import LastMonthImpact from "./components/LastMonthsImpact";
+import { sanityFetch } from "@/app/[locale]/lib/sanity/client";
 
-export default function Home() {
+const ALL_PROJECTS_QUERY = `
+  *[_type == "project"] | order(_createdAt desc) {
+    _id,
+    name,
+    "slug": slug.current,
+    cardSummary,
+    headerImage,
+    "category": projectCategory->name
+  }
+`;
+
+export default async function Home() {
+  const projects = await sanityFetch(ALL_PROJECTS_QUERY);
+
   return (
     <div id="page-home" className="page active">
       <Hero />
-      <ProjectsGrid />
+      <ProjectsGrid projects={projects} />
       <NewsletterForm />
       <Impact />
       <LastMonthImpact />

@@ -2,44 +2,29 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { PortableText } from "next-sanity";
 
-const items = [
-  {
-    question: "What is the mission of this project?",
-    answer:
-      "Our mission is to provide access to quality education, clean water, and essential resources to underprivileged communities across the globe. We believe every child deserves the opportunity to learn, grow, and thrive regardless of where they are born.",
-  },
-  {
-    question: "How are donations used?",
-    answer:
-      "100% of your donation goes directly towards on-the-ground programs. This includes building classrooms, distributing school kits, funding teacher training, and supporting clean water infrastructure. We publish full financial reports annually for complete transparency.",
-  },
-  {
-    question: "Which countries do you currently operate in?",
-    answer:
-      "We currently operate in over 30 countries across South Asia, Sub-Saharan Africa, and the Middle East. Key regions include Pakistan, Syria, Kenya, Somalia, and Bangladesh — with new programmes launching every quarter.",
-  },
-  {
-    question: "How can I get involved beyond donating?",
-    answer:
-      "There are many ways to contribute — you can volunteer on field trips, sponsor a child's education, partner your business with our initiatives, or help spread awareness on social media. Reach out to our team to explore what works best for you.",
-  },
-  {
-    question: "Are my donations tax-deductible?",
-    answer:
-      "Yes. We are a registered non-profit organisation and all donations are fully tax-deductible where applicable. You will receive an official receipt after every contribution that can be used for tax filing purposes.",
-  },
-  {
-    question: "How do I track the impact of my donation?",
-    answer:
-      "After donating, you'll receive regular impact updates via email including photos, stories, and data from the communities you've helped. You can also access your personalised impact dashboard through your donor account on our website.",
-  },
-];
+// ── Types ────────────────────────────────────────────────────────────────────
 
-export default function FAQ() {
+interface FaqCard {
+  _key: string;
+  question: string;
+  answerText: any[];
+}
+
+interface FaqData {
+  title?: string;
+  cards?: FaqCard[];
+}
+
+// ── Component ────────────────────────────────────────────────────────────────
+
+export default function FAQ({ data }: { data?: FaqData }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggle = (i: number) => setOpenIndex(openIndex === i ? null : i);
+
+  const items = data?.cards ?? [];
 
   return (
     <>
@@ -52,7 +37,7 @@ export default function FAQ() {
             FAQ
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-brand-black mb-3">
-            Frequently Asked Questions
+            {data?.title ?? "Frequently Asked Questions"}
           </h2>
           <p className="text-black/75 max-w-xl mx-auto text-base">
             Everything you need to know about our work, your impact, and how to get involved.
@@ -65,11 +50,12 @@ export default function FAQ() {
             const isOpen = openIndex === i;
             return (
               <div
-                key={i}
-                className={`rounded-sm border transition-all duration-300 bg-white/50 ${isOpen
-                  ? "border-purple bg-white/5"
-                  : "border-purple/10 bg-white/50 hover:border-purple/25"
-                  }`}
+                key={item._key}
+                className={`rounded-sm border transition-all duration-300 bg-white/50 ${
+                  isOpen
+                    ? "border-purple bg-white/5"
+                    : "border-purple/10 bg-white/50 hover:border-purple/25"
+                }`}
               >
                 {/* Question row */}
                 <button
@@ -78,22 +64,21 @@ export default function FAQ() {
                   aria-expanded={isOpen}
                 >
                   <span
-                    className={`text-base font-semibold transition-colors duration-200 ${isOpen ? "text-purple" : "text-black group-hover:text-purple"
-                      }`}
+                    className={`text-base font-semibold transition-colors duration-200 ${
+                      isOpen ? "text-purple" : "text-black group-hover:text-purple"
+                    }`}
                   >
                     {item.question}
                   </span>
 
-                  {/* Icon */}
+                  {/* Toggle icon */}
                   <span
-                    className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 bg-purple ${isOpen
-                      ? "bg-purple rotate-45"
-                      : "bg-brand-white group-hover:bg-purple"
-                      }`}
+                    className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+                      isOpen ? "bg-purple rotate-45" : "bg-brand-white group-hover:bg-purple"
+                    }`}
                   >
                     <svg
-                      className={`w-4 h-4 transition-colors duration-200 ${isOpen ? "text-brand-white" : "text-brand-white"
-                        }`}
+                      className="w-4 h-4 text-brand-white"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth={2.5}
@@ -106,16 +91,19 @@ export default function FAQ() {
 
                 {/* Answer — animated height */}
                 <div
-                  className={`overflow-hidden transition-all duration-400 ease-in-out ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                    }`}
+                  className={`overflow-hidden transition-all duration-400 ease-in-out ${
+                    isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                  }`}
                   style={{
                     transitionProperty: "max-height, opacity",
                     transitionDuration: "350ms",
                     transitionTimingFunction: "ease-in-out",
                   }}
                 >
-                  <div className="px-6 pb-6 text-brand-black text-sm leading-relaxed border-t border-white/5">
-                    {item.answer}
+                  <div className="px-6 pb-6 text-brand-black text-sm leading-relaxed border-t border-white/5 prose prose-sm max-w-none">
+                    {item.answerText?.length > 0 && (
+                      <PortableText value={item.answerText} />
+                    )}
                   </div>
                 </div>
               </div>
@@ -128,7 +116,7 @@ export default function FAQ() {
           <p className="text-brand-black text-sm">
             Still have questions?
             <br />
-            Get in touch with our team: {" "}
+            Get in touch with our team:{" "}
             <Link
               href="mailto:info@humanreliefmission.com"
               className="text-purple-light hover:text-purple-dark underline underline-offset-2 transition-colors"

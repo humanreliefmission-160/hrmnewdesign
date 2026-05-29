@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import IconSelector from '../../components/IconSelector'
 
 export const ecosystemCardRef = defineType({
   name: 'ecosystemCardRef',
@@ -11,6 +12,9 @@ export const ecosystemCardRef = defineType({
       title: 'Icon',
       description: 'React Icons name e.g. "FaHandHoldingHeart". Find the icon name from this link https://react-icons.github.io/react-icons/search',
       type: 'string',
+      components: {
+        input: IconSelector,
+      },
     }),
     defineField({
       name: 'cardTitle',

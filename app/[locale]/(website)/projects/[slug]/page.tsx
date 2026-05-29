@@ -20,18 +20,54 @@ const PROJECT_QUERY = `
     introSection,
     caseStudies,
     donationSection,
-    benefits,
+    benefits {
+      title,
+      subtext,
+      cards[] {
+        _key,
+        icon,
+        title,
+        subtext
+      },
+      "imageGallery": imageGallery[] {
+        "_type": image._type,
+        "asset": image.asset,
+        "alt": altText
+      }
+    },
     impactSection,
-    imageGallery,
-    faq,
+
+    faq {
+      title,
+      cards[] {
+        _key,
+        question,
+        answerText
+      }
+    },
+    heroAmounts[] {
+      amount,
+      impactLabel
+    }
   }
 `;
+
+interface HeroAmount {
+  amount: number;
+  impactLabel: string;
+}
+
+interface HeroAmountProps {
+  heroAmounts: HeroAmount[];
+}
+
 
 export default async function ProjectItem({
   params,
 }: {
   params: Promise<{ slug: string }>
 }) {
+  // export default async function ProjectItem({ params }: { params: Promise<{ slug: string }>, heroAmounts: HeroAmount[] }) {
   const resolvedParams = await params;
   const { slug } = resolvedParams;
 
@@ -53,6 +89,7 @@ export default async function ProjectItem({
         breadcrumb="PROJECTS"
         display={true}
         image={headerImageUrl}
+      // heroAmounts={project.heroAmounts}
       />
 
       <section>
@@ -61,8 +98,7 @@ export default async function ProjectItem({
           <CaseStudy data={project.caseStudies} />
           <DonationItems data={project.donationSection} />
           <Impact data={project.impactSection} />
-          {/* Need to do */}
-          <ImageCarousel images={project.imageGallery} />
+          <ImageCarousel images={project.benefits?.imageGallery} />
           <HowItHelps data={project.benefits} />
           <FAQ data={project.faq} />
         </div>

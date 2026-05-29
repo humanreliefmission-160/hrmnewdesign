@@ -49,7 +49,7 @@ interface Props {
 const SLIDE_WIDTH = 320;  // px — width of each image card
 const SLIDE_HEIGHT = 220;  // px — height of each image card
 const GAP = 16;   // px — gap between cards
-const SPEED = 0.5;  // px per frame-unit (frame-rate-independent via delta)
+const SPEED = 0.75;  // px per frame-unit (frame-rate-independent via delta)
 const STEP = SLIDE_WIDTH + GAP; // total horizontal space one slide occupies
 
 // ─────────────────────────────────────────────────────────────────────────────

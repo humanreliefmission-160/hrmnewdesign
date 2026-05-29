@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import IconSelector from '../../components/IconSelector'
 
 export const donationItem = defineType({
   name: 'donationItem',
@@ -10,6 +11,9 @@ export const donationItem = defineType({
       name: 'icon',
       title: 'Icon',
       type: 'string',
+      components: {
+        input: IconSelector,
+      },
       description: 'React Icons name e.g. "FaHeart"',
       validation: (Rule) => Rule.required(),
     }),

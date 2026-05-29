@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 import YellowCTA from "../YellowCTA";
-import { BiSolidBackpack, BiSolidTShirt } from "react-icons/bi";
-import { SiBookstack } from "react-icons/si";
-import { FaHeart } from "react-icons/fa";
 import Link from "next/link";
 import { PortableText } from "next-sanity";
+import DynamicIcon from "../DynamicIcon";
 
 interface DonationAmount {
   _key: string;
@@ -39,12 +37,6 @@ function DonationCard({ item }: { item: DonationItemData }) {
   const [selected, setSelected] = useState<number>(defaultAmount);
   const [custom, setCustom] = useState("");
   const [added, setAdded] = useState(false);
-
-  // Map string icon to a component or fallback to FaHeart
-  const IconComponent = item.icon === "BiSolidBackpack" ? BiSolidBackpack : 
-                        item.icon === "SiBookstack" ? SiBookstack :
-                        item.icon === "BiSolidTShirt" ? BiSolidTShirt : FaHeart;
-
   const handleAdd = () => {
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
@@ -56,7 +48,9 @@ function DonationCard({ item }: { item: DonationItemData }) {
     <div className="shadow-md bg-brand-white rounded-sm border border-gray-100 p-7 flex flex-col gap-4 hover:shadow-xl transition-shadow duration-300 justify-between">
       <div className="flex gap-4 items-center">
         <div className="bg-purple-faint p-3 rounded-sm">
-          <span className="text-4xl"><IconComponent fill="#650199" size={30} /></span>
+          <span className="text-4xl">
+            <DynamicIcon name={item.icon || ''} size={30} color="#650199" />
+          </span>
         </div>
         <div>
           <h3 className="text-lg font-bold text-gray-900 leading-tight">{item.itemTitle}</h3>
