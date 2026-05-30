@@ -13,7 +13,7 @@ import { sanityFetch } from "../../../lib/sanity/client";
 import { urlFor } from "@/sanity/lib/image";
 
 const PROJECT_QUERY = `
-  *[_type == "project" && slug.current == $slug][0] {
+  *[_type == "project" && slug.current == $projectSlug][0] {
     name,
     tagline,
     headerImage,
@@ -27,7 +27,8 @@ const PROJECT_QUERY = `
         _key,
         icon,
         title,
-        subtext
+        subtext,
+        slug,
       },
       "imageGallery": imageGallery[] {
         "_type": image._type,
@@ -65,13 +66,11 @@ interface HeroAmountProps {
 export default async function ProjectItem({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ projectSlug: string }>
 }) {
   // export default async function ProjectItem({ params }: { params: Promise<{ slug: string }>, heroAmounts: HeroAmount[] }) {
-  const resolvedParams = await params;
-  const { slug } = resolvedParams;
-
-  const project = await sanityFetch(PROJECT_QUERY, { slug });
+  const { projectSlug } = await params;
+  const project = await sanityFetch(PROJECT_QUERY, { projectSlug });
 
   if (!project) {
     notFound();
@@ -96,13 +95,16 @@ export default async function ProjectItem({
         <div className="mx-auto">
           <Intro data={project.introSection} />
           <CaseStudy data={project.caseStudies} />
-          <DonationItems data={project.donationSection} />
+          <DonationItems
+            data={project.donationSection}
+            projectSlug={projectSlug}
+          />
           <Impact data={project.impactSection} />
           <ImageCarousel images={project.benefits?.imageGallery} />
           <HowItHelps data={project.benefits} />
           <FAQ data={project.faq} />
         </div>
-      </section>
+      </section >
 
     </>
   );

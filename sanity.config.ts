@@ -16,8 +16,8 @@ import { structure } from './sanity/structure'
 export default defineConfig({
   basePath: '/studio',
   title: 'HRM CMS',
-  projectId,
-  dataset,
+  projectId: process.env.SANITY_STUDIO_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+  dataset: process.env.SANITY_STUDIO_DATASET || process.env.NEXT_PUBLIC_SANITY_DATASET!,
   // Add and edit the content schema in the './sanity/schemaTypes' folder
   schema,
   plugins: [
