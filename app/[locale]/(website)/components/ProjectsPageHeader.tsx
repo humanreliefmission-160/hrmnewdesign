@@ -3,25 +3,80 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import YellowCTA from './YellowCTA';
+import { useBasket } from '../context/BasketContext';
+import {
+  intentionFromZakat,
+  resolveSelectedAmount,
+} from '../lib/donation/basketHelpers';
+
+export type HeroAmount = {
+  amount: number;
+  impactLabel: string;
+};
+
+const FALLBACK_HERO_AMOUNTS: HeroAmount[] = [
+  { amount: 1, impactLabel: "" },
+  { amount: 5, impactLabel: "" },
+  { amount: 10, impactLabel: "" },
+];
 
 interface PageHeaderProps {
   title: React.ReactNode;
   subtitle: React.ReactNode;
+  /** Resolved from Sanity `projectCategory` reference (e.g. "Food Aid") */
+  projectCategory?: string;
   breadcrumb?: string;
   image?: string;
   display?: boolean;
+  heroAmounts?: HeroAmount[];
+  projectName?: string;
+  projectSlug?: string;
 }
 
 export default function ProjectsPageHeader({
   title,
   subtitle,
+  projectCategory,
   breadcrumb = "PROJECTS",
   image = "/img-placeholder.JPG", // default placeholder based on screenshot
-  display = true
+  display = true,
+  heroAmounts,
+  projectName,
+  projectSlug,
 }: PageHeaderProps) {
-  const [selectedAmount, setSelectedAmount] = useState<string | null>(null);
+  const { addItem } = useBasket();
+  const categoryLabel = projectCategory ?? breadcrumb;
+  const amounts =
+    heroAmounts?.length === 3 ? heroAmounts : FALLBACK_HERO_AMOUNTS;
+
+  const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
   const [isOtherAmount, setIsOtherAmount] = useState(false);
   const [customAmount, setCustomAmount] = useState("");
+  const [isZakat, setIsZakat] = useState(false);
+  const [added, setAdded] = useState(false);
+
+  const selectedHero = amounts.find((a) => a.amount === selectedAmount);
+  const effectiveAmount = resolveSelectedAmount(
+    selectedAmount ?? 0,
+    isOtherAmount ? customAmount : ""
+  );
+
+  const handleAddToBasket = () => {
+    if (!effectiveAmount || !projectName) return;
+
+    addItem({
+      projectName,
+      projectSlug,
+      projectItem: "",
+      amount: effectiveAmount,
+      intention: intentionFromZakat(isZakat),
+      isZakat,
+    });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+  };
+  const showImpactMessage =
+    !isOtherAmount && selectedAmount !== null && Boolean(selectedHero?.impactLabel);
 
   if (!display) return null;
 
@@ -33,7 +88,7 @@ export default function ProjectsPageHeader({
         <div className="w-full max-w-[600px] px-6 py-12 md:px-8 md:py-24 lg:py-32 xl:pl-0 flex flex-col items-start text-left">
           <div className="text-[0.75rem] font-bold tracking-widest uppercase mb-2 text-brand-white">
             <Link href="/projects" className="hover:text-brand-lgrey/50 transition-colors">
-              {breadcrumb}
+              {categoryLabel}
             </Link>
           </div>
 
@@ -45,53 +100,16 @@ export default function ProjectsPageHeader({
             {subtitle}
           </p>
 
-          <div className="flex flex-wrap gap-2 md:gap-3 mb-8 justify-center sm:justify-start">
-            {['£1', '£5', '£10', 'Other Amount'].map((amount, idx) => {
-              if (amount === 'Other Amount') {
-                if (isOtherAmount) {
-                  return (
-                    <div key={idx} className="relative flex items-center">
-                      <span className="absolute left-3 text-brand-white/90">
-                        <strong>£</strong>
-                      </span>
-                      <input
-                        type="number"
-                        autoFocus
-                        value={customAmount}
-                        onChange={(e) => setCustomAmount(e.target.value)}
-                        className="border-2 border-purple-light bg-transparent text-brand-white/90 px-4 py-1.5 md:py-2 pl-7 w-32 text-[0.95rem] font-semibold outline-none rounded-[2px] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        placeholder="Amount"
-                      />
-                      <button
-                        onClick={() => setIsOtherAmount(false)}
-                        className="absolute right-2 text-brand-white/50 hover:text-brand-white text-xs"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  );
-                }
-                return (
-                  <button
-                    key={idx}
-                    onClick={() => {
-                      setIsOtherAmount(true);
-                      setSelectedAmount(null);
-                    }}
-                    className="border-2 border-purple-light/50 text-brand-white/90 px-4 py-1.5 md:py-2 text-[0.95rem] font-semibold hover:bg-purple hover:border-purple hover:text-white transition-all rounded-[2px]"
-                  >
-                    {amount}
-                  </button>
-                );
-              }
-
-              const isSelected = selectedAmount === amount && !isOtherAmount;
+          <div className="flex flex-wrap gap-2 md:gap-3 mb-4 justify-center sm:justify-start">
+            {amounts.map((hero) => {
+              const isSelected = selectedAmount === hero.amount && !isOtherAmount;
 
               return (
                 <button
-                  key={idx}
+                  key={hero.amount}
+                  type="button"
                   onClick={() => {
-                    setSelectedAmount(amount);
+                    setSelectedAmount(hero.amount);
                     setIsOtherAmount(false);
                   }}
                   className={`border-2 px-4 py-1.5 md:py-2 text-[0.95rem] font-semibold transition-all rounded-[2px] ${isSelected
@@ -99,15 +117,76 @@ export default function ProjectsPageHeader({
                     : "border-purple-light/50 text-brand-white/90 hover:bg-purple hover:border-purple hover:text-white"
                     }`}
                 >
-                  {amount}
+                  £{hero.amount}
                 </button>
               );
             })}
+
+            {isOtherAmount ? (
+              <div className="relative flex items-center">
+                <span className="absolute left-3 text-brand-white/90">
+                  <strong>£</strong>
+                </span>
+                <input
+                  type="number"
+                  autoFocus
+                  value={customAmount}
+                  onChange={(e) => setCustomAmount(e.target.value)}
+                  className="border-2 border-purple-light bg-transparent text-brand-white/90 px-4 py-1.5 md:py-2 pl-7 w-32 text-[0.95rem] font-semibold outline-none rounded-[2px] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  placeholder="Amount"
+                />
+                <button
+                  type="button"
+                  onClick={() => setIsOtherAmount(false)}
+                  className="absolute right-2 text-brand-white/50 hover:text-brand-white text-xs"
+                >
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsOtherAmount(true);
+                  setSelectedAmount(null);
+                }}
+                className="border-2 border-purple-light/50 text-brand-white/90 px-4 py-1.5 md:py-2 text-[0.95rem] font-semibold hover:bg-purple hover:border-purple hover:text-white transition-all rounded-[2px]"
+              >
+                Other Amount
+              </button>
+            )}
+          </div>
+
+          {showImpactMessage && selectedHero && (
+            <div className="mb-4 w-full max-w-[500px] flex items-start gap-2">
+              <p className="text-brand-white bg-purple-light/50 font-medium text-xs leading-relaxed px-2.5 py-0.5 rounded-sm">
+                {selectedHero.impactLabel}
+              </p>
+            </div>
+          )}
+
+          {/* Zakat checkbox */}
+          <div className="flex gap-2 mb-6">
+            <input
+              id="hero-zakat-checkbox"
+              name="zakat"
+              type="checkbox"
+              checked={isZakat}
+              onChange={(e) => setIsZakat(e.target.checked)}
+              className="accent-purple cursor-pointer mt-0.5 outline-purple-light"
+            />
+            <label
+              htmlFor="hero-zakat-checkbox"
+              className="italic text-xs font-medium text-brand-white cursor-pointer"
+            >
+              I want this to be treated as Zakat
+            </label>
           </div>
 
           <YellowCTA
-            href='/donate'
-            text='Add to Donation Basket'
+            text={added ? "Added to basket!" : "Add to Donation Basket"}
+            onClick={handleAddToBasket}
+            disabled={!effectiveAmount || !projectName}
           />
         </div>
       </div>

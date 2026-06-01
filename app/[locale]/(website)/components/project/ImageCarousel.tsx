@@ -38,9 +38,9 @@ type GalleryImage = SanityImageSource & {
 };
 
 interface Props {
-	// `images` is the resolved array from Sanity — e.g. data.benefitsGallery
-	// or data.impactImages, depending on which Sanity field feeds this component.
 	images: GalleryImage[];
+	/** Links CTA to donate flow with this project pre-selected (one-off) */
+	projectSlug?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -66,7 +66,7 @@ const STEP = SLIDE_WIDTH + GAP; // total horizontal space one slide occupies
 //    for retina displays, using Sanity's image pipeline
 //  - slide.alt provides the alt text from Studio — never derived from index
 // ─────────────────────────────────────────────────────────────────────────────
-export default function ProjectGalleryStrip({ images }: Props) {
+export default function ProjectGalleryStrip({ images, projectSlug }: Props) {
 	const trackRef = useRef<HTMLDivElement>(null);
 	const animRef = useRef<number | null>(null);
 	const posRef = useRef(0);
@@ -210,7 +210,11 @@ export default function ProjectGalleryStrip({ images }: Props) {
 
 			<YellowCTA
 				text="Start making an impact today"
-				href="/donate"
+				href={
+					projectSlug
+						? `/donate?project=${encodeURIComponent(projectSlug)}`
+						: "/donate"
+				}
 			/>
 		</section>
 	);

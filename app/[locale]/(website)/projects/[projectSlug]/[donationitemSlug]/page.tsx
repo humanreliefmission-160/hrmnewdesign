@@ -5,36 +5,41 @@ import ImageGallery from "../../../components/projectdonationitem/ImageGallary";
 
 import { notFound } from 'next/navigation'
 import { urlFor } from '@/sanity/lib/image'
-import { sanityFetch } from "@/sanity/lib/live";
-// import PageHeader from "../../../components/PageHeader";
+import { sanityFetch } from "@/app/[locale]/lib/sanity/client";
+import PageHeader from "../../../components/PageHeader";
+import type { DonationItemData, GalleryImage } from "../../../types/donationItem";
 
 const ITEM_QUERY = `
   *[_type == "project" && slug.current == $projectSlug][0] {
     name,
-    "item": donationSection.items[slug.current == $donationitemSlug][0] {
-      title,
-      subtext,
-      slug,
+    "item": donationSection.donationItems[slug.current == $donationitemSlug][0] {
+      icon,
+      itemTitle,
+      itemSubtext,
       price,
-      frequency,
-      bodyText,
-      amounts,
+      donationType,
+      donationItemBody,
+      amounts[] {
+        _key,
+        amount,
+        label
+      },
       intentions[]-> {
         title,
-        "slug": slug.current,
-        description,
+        description
       },
       images[] {
-        alt,
+        altText,
         caption,
-        asset,
+        link,
+        asset
       },
       keyFeatures,
       howItHelps,
       endGoal,
       summarise,
       additionalFields,
-      info,
+      info
     }
   }
 `;
@@ -44,39 +49,51 @@ export default async function DonationItemPage({
 }: {
   params: Promise<{ projectSlug: string; donationitemSlug: string }>
 }) {
-
   const { projectSlug, donationitemSlug } = await params
 
-  const data = await sanityFetch(ITEM_QUERY, { projectSlug, donationitemSlug } as any);
+  const data = await sanityFetch<{ name: string; item: DonationItemData | null }>(
+    ITEM_QUERY,
+    { projectSlug, donationitemSlug }
+  );
 
-  const { item, name: projectName } = data;
-
-  // data.item is null if the slug doesn't match any item in the project
   if (!data?.item) notFound()
 
+  const { item } = data;
+
+  const galleryImages: GalleryImage[] = (item.images ?? []).map((img) => ({
+    src: img.asset
+      ? urlFor(img.asset).width(1200).height(900).fit('crop').url()
+      : '/img-placeholder.JPG',
+    altText: img.altText,
+    caption: img.caption,
+    link: img.link,
+  }));
+
+  if (galleryImages.length === 0) {
+    galleryImages.push({
+      src: '/img-placeholder.JPG',
+      altText: item.itemTitle,
+    });
+  }
 
   return (
     <div className="min-h-screen bg-brand-white font-sans antialiased">
-      {/* ── Page Header ── */}
-      {/* <PageHeader
-        title="Donation Item"
-        subtitle="Lorem Ipsum text"
-      /> */}
+      <PageHeader
+        title={item.itemTitle}
+        subtitle={item.itemSubtext}
+        display={false}
+      />
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-24 mt-6">
-        {/* Product layout: image left | options right */}
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14 xl:grid-cols-[55fr_45fr]">
-          {/* Left – Image Gallery */}
           <div className="lg:sticky lg:top-24 lg:self-start">
-            {/* <ImageGallery /> */}
-            <ImageGallery />
+            <ImageGallery images={galleryImages} />
           </div>
-          {/* Right – Product Options */}
           <div>
-            <DonationOptions />
+            <DonationOptions item={item} />
           </div>
         </div>
-        <AidItemDetails />
+        <AidItemDetails item={item} />
       </main>
     </div>
   );

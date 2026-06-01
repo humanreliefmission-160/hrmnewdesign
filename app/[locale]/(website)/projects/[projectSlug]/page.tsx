@@ -4,7 +4,6 @@ import Intro from "../../components/project/Intro";
 import DonationItems from "../../components/project/DonationItems";
 import Impact from "../../components/project/Impact";
 import ImageCarousel from "../../components/project/ImageCarousel";
-import Stats from "../../components/project/Stats";
 import HowItHelps from "../../components/project/HowItHelps";
 import FAQ from "../../components/project/faq";
 import CaseStudy from "../../components/project/CaseStudy";
@@ -16,10 +15,30 @@ const PROJECT_QUERY = `
   *[_type == "project" && slug.current == $projectSlug][0] {
     name,
     tagline,
+    "projectCategory": projectCategory->{ name },
     headerImage,
     introSection,
     caseStudies,
-    donationSection,
+    donationSection {
+      sectionTag,
+      donationTitle,
+      donationSubtext,
+      donationItems[] {
+        _key,
+        icon,
+        itemTitle,
+        itemSubtext,
+        price,
+        donationType,
+        donationItemBody,
+        amounts[] {
+          _key,
+          amount,
+          label
+        },
+        "slug": slug.current
+      }
+    },
     benefits {
       title,
       subtext,
@@ -28,7 +47,6 @@ const PROJECT_QUERY = `
         icon,
         title,
         subtext,
-        slug,
       },
       "imageGallery": imageGallery[] {
         "_type": image._type,
@@ -53,14 +71,6 @@ const PROJECT_QUERY = `
   }
 `;
 
-interface HeroAmount {
-  amount: number;
-  impactLabel: string;
-}
-
-interface HeroAmountProps {
-  heroAmounts: HeroAmount[];
-}
 
 
 export default async function ProjectItem({
@@ -68,7 +78,6 @@ export default async function ProjectItem({
 }: {
   params: Promise<{ projectSlug: string }>
 }) {
-  // export default async function ProjectItem({ params }: { params: Promise<{ slug: string }>, heroAmounts: HeroAmount[] }) {
   const { projectSlug } = await params;
   const project = await sanityFetch(PROJECT_QUERY, { projectSlug });
 
@@ -76,19 +85,22 @@ export default async function ProjectItem({
     notFound();
   }
 
-  const headerImageUrl = project.headerImage?.asset
-    ? urlFor(project.headerImage.asset).url()
+  const headerImageUrl = project.headerImage
+    ? urlFor(project.headerImage).url()
     : "/img-placeholder.JPG";
 
   return (
     <>
       <ProjectsPageHeader
+        projectCategory={project.projectCategory?.name}
         title={project.name}
         subtitle={project.tagline}
         breadcrumb="PROJECTS"
         display={true}
         image={headerImageUrl}
-      // heroAmounts={project.heroAmounts}
+        heroAmounts={project.heroAmounts}
+        projectName={project.name}
+        projectSlug={projectSlug}
       />
 
       <section>
@@ -98,9 +110,13 @@ export default async function ProjectItem({
           <DonationItems
             data={project.donationSection}
             projectSlug={projectSlug}
+            projectName={project.name}
           />
           <Impact data={project.impactSection} />
-          <ImageCarousel images={project.benefits?.imageGallery} />
+          <ImageCarousel
+            images={project.benefits?.imageGallery}
+            projectSlug={projectSlug}
+          />
           <HowItHelps data={project.benefits} />
           <FAQ data={project.faq} />
         </div>

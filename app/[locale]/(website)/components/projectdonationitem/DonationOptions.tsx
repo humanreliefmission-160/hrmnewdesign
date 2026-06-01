@@ -3,11 +3,24 @@
 import React, { useState } from "react";
 import YellowCTA from "../YellowCTA";
 import { FaInfoCircle } from "react-icons/fa";
+import type { DonationItemData } from "../../types/donationItem";
 
-export default function DonationOptions() {
-  const [amount, setAmount] = useState<number | null>(null);
+const DEFAULT_AMOUNTS = [5, 10, 20, 50];
+
+export default function DonationOptions({ item }: { item: DonationItemData }) {
+  const presetAmounts = item.amounts?.length
+    ? item.amounts.map((a) => a.amount)
+    : DEFAULT_AMOUNTS;
+
+  const [amount, setAmount] = useState<number | null>(
+    presetAmounts.length > 1 ? presetAmounts[1] : presetAmounts[0] ?? null
+  );
   const [customAmount, setCustomAmount] = useState("");
   const [intention, setIntention] = useState("");
+
+  const intentions = item.intentions?.length
+    ? item.intentions.map((i) => i.title)
+    : ["Zakat", "Sadaqah", "Lillah", "General"];
 
   const getImpactMessage = (amt: number | null) => {
     if (!amt) return null;
@@ -30,53 +43,56 @@ export default function DonationOptions() {
   };
 
   const isValid = amount !== null && amount > 0 && intention !== "";
+
   return (
     <div className="">
 
-      {/* Title */}
       <div className="mb-4">
         <h2 className="text-3xl sm:text-6xl font-bold text-brand-black mb-2 font-body leading-tight">
-          Support this project
+          {item.itemTitle}
         </h2>
-        <p className="text-[0.95rem] text-brand-grey font-medium">
-          Your donation will directly support this cause.
-        </p>
+        {item.itemSubtext && (
+          <p className="text-[0.95rem] text-brand-grey font-medium">
+            {item.itemSubtext}
+          </p>
+        )}
       </div>
 
       <div className="flex">
         <div className="flex flex-row items-end gap-1 bg-purple-dark px-4 py-2 text-brand-white rounded-sm">
           <h2 className="text-xl font-bold">
-            £20
+            £{item.price}
           </h2>
           <span className="text-[10px] text-brand-white rounded-sm">
-            One Off
+            {item.donationType === "one-off" ? "One Off" : "Monthly"}
           </span>
         </div>
       </div>
 
-      {/* Amount Selection */}
+      {item.info && (
+        <p className="mt-4 text-sm text-brand-grey leading-relaxed">{item.info}</p>
+      )}
+
       <div className="mt-10">
         <h3 className="text-lg font-bold text-brand-black mb-3">
           Choose an amount
         </h3>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
-          {["5", "10", "20", "50"].map((val) => (
+          {presetAmounts.map((val) => (
             <button
               key={val}
-              onClick={() => handleAmountSelect(val)}
-              className={`px-4 py-2 rounded-sm text-sm font-bold border transition-all duration-200 ${amount === parseFloat(val) && customAmount === ""
+              onClick={() => handleAmountSelect(String(val))}
+              className={`px-4 py-2 rounded-sm text-sm font-bold border transition-all duration-200 ${amount === val && customAmount === ""
                 ? "bg-purple text-white"
                 : "bg-white/50 text-brand-black border-brand-lgrey hover:border-purple/50"
                 }`}
-
             >
               £{val}
             </button>
           ))}
         </div>
 
-        {/* Custom amount */}
         <input
           type="number"
           placeholder="Enter custom amount (£)"
@@ -96,46 +112,47 @@ export default function DonationOptions() {
           </div>
         )}
 
-        <div className="my-10">
-          {/* Additional Options */}
-          <input
-            type="String"
-            placeholder="Enter plaque name (optional)"
-            className="w-full px-4 py-3 border border-brand-black/25 rounded-sm focus:outline-none font-bold bg-brand-white"
-          />
-          <p className="mt-1 text-xs italic text-brand-grey leading-relaxed">Can be for any project. Dynamic for any project</p>
-        </div>
+        {item.additionalFields && item.additionalFields.length > 0 && (
+          <div className="my-10 space-y-4">
+            {item.additionalFields.map((field) => (
+              <div key={field.label}>
+                <input
+                  type="text"
+                  placeholder={field.label}
+                  className="w-full px-4 py-3 border border-brand-black/25 rounded-sm focus:outline-none font-bold bg-brand-white"
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Intention */}
       <div className="my-10">
         <h3 className="text-lg font-bold text-brand-black mb-3">
           Select intention
         </h3>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {["Zakat", "Sadaqah", "Lillah", "General"].map((item) => (
+          {intentions.map((label) => (
             <button
-              key={item}
-              onClick={() => setIntention(item)}
-              className={`px-4 py-2 rounded-sm text-sm font-bold border transition-all duration-200 ${intention === item
+              key={label}
+              onClick={() => setIntention(label)}
+              className={`px-4 py-2 rounded-sm text-sm font-bold border transition-all duration-200 ${intention === label
                 ? "bg-purple text-brand-white border-purple"
                 : "bg-white/50 text-brand-black border-brand-lgrey hover:border-purple/50"
                 }`}
             >
-              {item}
+              {label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* CTA */}
       <YellowCTA
         text="Add to Donation Basket"
         href={isValid ? "/donate" : undefined}
         disabled={!isValid}
       />
     </div>
-
   );
 }

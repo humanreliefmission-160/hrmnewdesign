@@ -1,6 +1,7 @@
 import React from 'react';
 import { DonationState } from './types';
 import DonationStepFooter from './DonationStepFooter';
+import DonationBasketTotal from './DonationBasketTotal';
 
 interface DonationStepDetailsProps {
   currentStep: number;
@@ -13,6 +14,7 @@ export default function DonationStepDetails({ currentStep, donationState, goStep
 
   return (
     <div className="bg-brand-white p-8 md:p-10 rounded-2xl shadow-card border border-brand-lgrey">
+      <DonationBasketTotal />
       <h2 className="text-2xl md:text-3xl font-bold text-brand-black mb-2 font-body leading-tight">Your details</h2>
       <p className="text-[0.95rem] text-brand-grey mb-8 font-medium">
         So we can send your donation receipt and keep you updated on the

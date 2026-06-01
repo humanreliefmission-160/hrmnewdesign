@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react";
+import { PortableText } from "next-sanity";
+import type { DonationItemData } from "../../types/donationItem";
 
 interface AccordionItemProps {
 	title: string;
@@ -18,7 +20,7 @@ function AccordionItem({ title, children, defaultOpen = false }: AccordionItemPr
 			>
 				{title}
 				<svg
-					className={`"h-4 w-4 shrink-0 transition-transform duration-200", ${open ? "rotate-180" : ""}`}
+					className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
 					fill="none"
 					stroke="currentColor"
 					strokeWidth={2.5}
@@ -36,79 +38,64 @@ function AccordionItem({ title, children, defaultOpen = false }: AccordionItemPr
 	);
 }
 
-export default function AidItemDetails() {
+export default function AidItemDetails({ item }: { item: DonationItemData }) {
+	const hasBody = item.donationItemBody && item.donationItemBody.length > 0;
+	const hasFeatures = item.keyFeatures && item.keyFeatures.length > 0;
+	const hasHowItHelps = item.howItHelps && item.howItHelps.length > 0;
+	const hasEndGoal = Boolean(item.endGoal);
+	const hasSummarise = Boolean(item.summarise);
+
+	if (!hasBody && !hasFeatures && !hasHowItHelps && !hasEndGoal && !hasSummarise) {
+		return null;
+	}
+
 	return (
 		<div className="mt-10 border-t border-brand-lgrey pt-8">
-			{/* Description */}
-			<div className="mb-8">
-				<p className="text-sm text-brand-grey leading-relaxed">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec venenatis imperdiet tortor, quis convallis dolor finibus a. Donec vestibulum eros massa, nec dictum orci ultrices id.
-				</p>
-			</div>
-
-			{/* Key Features */}
-			<div className="mb-8">
-				<h3 className="mb-4 text-sm font-bold text-brand-black">Key Features:</h3>
-				<ul className="space-y-2">
-					{[
-						{
-							title: "Feature 1",
-							desc: "Lorem Ipsum elit dolor",
-						},
-						{
-							title: "Feature 2",
-							desc: "Lorem Ipsum elit dolor",
-						},
-						{
-							title: "Feature 3",
-							desc: "Lorem Ipsum elit dolor",
-						},
-						{
-							title: "Feature 4",
-							desc: "Lorem Ipsum elit dolor",
-						},
-						{
-							title: "Feature 5",
-							desc: "Lorem Ipsum elit dolor",
-						},
-					].map(({ title, desc }) => (
-						<li key={title} className="flex gap-2 text-sm text-brand-grey">
-							<span className="mt-0.5 shrink-0 text-brand-black">•</span>
-							<span>
-								<span className="font-semibold text-brand-black underline">{title}:</span>{" "}
-								{desc}
-							</span>
-						</li>
-					))}
-				</ul>
-			</div>
-
-			{/* Accordion Sections */}
-			<div className="border-t border-brand-lgrey">
-
-				<AccordionItem title="How it helps those in Afghanistan">
-					<ul className="space-y-1.5">
-						<li>• Spot clean fabric with a damp cloth — avoid harsh chemicals.</li>
-						<li>• Rotate mattress every 3 months for even wear.</li>
-						<li>• Do not place in direct sunlight for extended periods.</li>
-						<li>• Vacuum upholstery gently with an upholstery attachment.</li>
-					</ul>
-				</AccordionItem>
-
-				<AccordionItem title="End Goal">
-					<p>
-						Lorem ipsum elit dolor...
-						The aim for this project is to help a family pay Zakat instead of receiving zakat.
-					</p>
-				</AccordionItem>
-
-				{/* Charity Banner */}
-				<div className="mb-8 rounded-sm border border-purple-light bg-purple-faint px-5 py-4 flex flex-col items-start text-sm font-semibold text-purple">
-					<p className="">Your donation helps humanity through welfare</p>
-					<p className="mt-1 text-xs text-purple/75 leading-relaxed">
-						100% of the donation goes to helping families in Afghanistan become self sustainable.
-					</p>
+			{hasBody && (
+				<div className="mb-8 portable-text text-sm text-brand-grey leading-relaxed">
+					<PortableText value={item.donationItemBody} />
 				</div>
+			)}
+
+			{hasFeatures && (
+				<div className="mb-8">
+					<h3 className="mb-4 text-sm font-bold text-brand-black">Key Features:</h3>
+					<ul className="space-y-2">
+						{item.keyFeatures!.map(({ title, text }) => (
+							<li key={title} className="flex gap-2 text-sm text-brand-grey">
+								<span className="mt-0.5 shrink-0 text-brand-black">•</span>
+								<span>
+									<span className="font-semibold text-brand-black underline">{title}:</span>{" "}
+									{text}
+								</span>
+							</li>
+						))}
+					</ul>
+				</div>
+			)}
+
+			<div className="border-t border-brand-lgrey">
+				{hasHowItHelps && (
+					<AccordionItem title="How it helps">
+						<ul className="space-y-1.5">
+							{item.howItHelps!.map((entry) => (
+								<li key={entry.text}>• {entry.text}</li>
+							))}
+						</ul>
+					</AccordionItem>
+				)}
+
+				{hasEndGoal && (
+					<AccordionItem title="End Goal">
+						<p>{item.endGoal}</p>
+					</AccordionItem>
+				)}
+
+				{hasSummarise && (
+					<div className="mb-8 rounded-sm border border-purple-light bg-purple-faint px-5 py-4 flex flex-col items-start text-sm font-semibold text-purple">
+						<p>{item.summarise}</p>
+					</div>
+				)}
 			</div>
 		</div>
 	);

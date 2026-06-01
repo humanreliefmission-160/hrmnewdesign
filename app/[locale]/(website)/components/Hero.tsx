@@ -1,6 +1,7 @@
 import YellowCTA from "./YellowCTA";
 import { sanityFetch } from "../../lib/sanity/client";
 import { urlFor } from "@/sanity/lib/image";
+import { resolveHeroSlideHref } from "../lib/resolveHeroSlideLink";
 
 
 const HOMEPAGE_HERO_QUERY = `
@@ -11,8 +12,13 @@ const HOMEPAGE_HERO_QUERY = `
   subtext,
   link {
     label,
-    url,
-    isExternal
+    linkType,
+    internalDestination,
+    internalPath,
+    externalUrl,
+    isExternal,
+    "projectSlug": project->slug.current,
+    url
   },
   image,
   mobileImage
@@ -34,7 +40,7 @@ export default async function Hero() {
   const mobileImageUrl = slide.mobileImage ? urlFor(slide.mobileImage).url() : null;
 
   const ctaText = slide.link?.label;
-  const ctaHref = slide.link?.url;
+  const ctaHref = resolveHeroSlideHref(slide.link);
   const altText = slide.image?.altText || "Human Relief Mission";
 
   const imageUrl = desktopImageUrl || mobileImageUrl;
@@ -60,7 +66,7 @@ export default async function Hero() {
           </picture>
         )}
         {/* Dark gradient overlay — stronger at bottom-left for text readability */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(26,26,26,0.75)_10%,rgba(26,26,26,0.45)_40%,rgba(26,26,26,0.25)_60%,rgba(26,26,26,0.35)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(26,26,26,0.9)_10%,rgba(26,26,26,0.65)_40%,rgba(26,26,26,0.25)_60%,rgba(26,26,26,0.35)_100%)]" />
       </div>
 
       <div className="flex-1 flex items-end text-white relative z-10 justify-items-start">
