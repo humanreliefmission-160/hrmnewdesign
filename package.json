@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "build": "NODE_ENV=production next build",
-    "vercel-build": "npm run build -- --no-audit --no-fund"
+    "vercel-build": "npm run build --no-audit --no-fund"
   },
   "dependencies": {
     "@sanity/image-url": "^2.1.1",
