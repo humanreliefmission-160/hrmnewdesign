@@ -74,7 +74,7 @@ function DonationCard({
   const amountsToRender = item.amounts ? item.amounts.map(a => a.amount) : [5, 10, 20];
 
   return (
-    <div className="shadow-md bg-brand-white rounded-sm border border-gray-100 p-7 flex flex-col gap-4 hover:shadow-xl transition-shadow duration-300 justify-between">
+    <div className="shadow-md bg-brand-white rounded-sm border border-gray-100 p-7 flex flex-col gap-4 hover:shadow-xl transition-shadow duration-300 justify-between w-full max-w-[23.75em]">
       <div className="flex gap-4 items-center">
         <div className="bg-purple-faint p-3 rounded-sm">
           <span className="text-4xl">
@@ -83,7 +83,7 @@ function DonationCard({
         </div>
         <div>
           <h3 className="text-lg font-bold text-gray-900 leading-tight">{item.itemTitle}</h3>
-          {item.itemSubtext && <p className="text-xs text-purple mt-1">{item.itemSubtext}</p>}
+          {/* {item.itemSubtext && <p className="text-xs text-purple mt-1">{item.itemSubtext}</p>} */}
         </div>
       </div>
 
@@ -100,7 +100,8 @@ function DonationCard({
 
       {item.donationItemBody && (
         <div className="text-sm text-brand-black/75 leading-relaxed portable-text space-y-2">
-          <PortableText value={item.donationItemBody} />
+          {/* <PortableText value={item.donationItemBody} /> */}
+          {item.itemSubtext}
         </div>
       )}
 
@@ -151,7 +152,7 @@ function DonationCard({
         </div>
         {item.slug && (
           <Link
-            className="underline text-sm font-semibold text-purple"
+            className="underline text-sm font-semibold text-purple mt-2"
             href={`/projects/${projectSlug}/${item.slug}`}
           >
             Find out more
@@ -194,7 +195,7 @@ export default function DonationItems({
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mt-10 flex flex-col sm:flex-row flex-wrap gap-6 items-center justify-center">
           {data.donationItems.map((item) => (
             <DonationCard
               key={item._key}

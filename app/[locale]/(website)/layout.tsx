@@ -6,12 +6,42 @@ import "../globals.css";
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import Providers from "./components/Providers";
-
+import { sanityFetch } from "../lib/sanity/client";
 
 export const metadata: Metadata = {
   title: "Human Relief Mission",
   description: "Helping Humanity Through Welfare",
 };
+
+const HEADER_NAV_QUERY = `
+  *[_type == "navigation" && placement == "header"][0] {
+    navItems[] {
+      label,
+      linkType,
+      internalLink,
+      externalLink,
+      isExternal,
+      subItems[] {
+        label,
+        linkType,
+        internalLink,
+        externalLink,
+        isExternal
+      }
+    }
+  }
+`;
+
+const PROJECT_CATEGORIES_QUERY = `
+  *[_type == "projectCategory"] {
+    _id,
+    name,
+    "projects": *[_type == "project" && references(^._id)] | order(name asc) {
+      name,
+      "slug": slug.current
+    }
+  }
+`;
 
 export default async function LocaleLayout({
   children,
@@ -22,6 +52,12 @@ export default async function LocaleLayout({
 }>) {
   const { locale } = await params
   const messages = await getMessages()
+
+  const [headerNav, projectCategories] = await Promise.all([
+    sanityFetch<any>(HEADER_NAV_QUERY),
+    sanityFetch<any[]>(PROJECT_CATEGORIES_QUERY),
+  ]);
+
   return (
     <html lang={locale}>
       <head>
@@ -33,7 +69,10 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <Providers>
             <ImpactTicker />
-            <Navbar />
+            <Navbar
+              navItems={headerNav?.navItems ?? []}
+              projectCategories={projectCategories ?? []}
+            />
             {children}
             <Footer />
           </Providers>
