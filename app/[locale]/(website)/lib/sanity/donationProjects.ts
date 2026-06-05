@@ -64,5 +64,9 @@ export function getProjectDonationItems(
 ): DonationPortalItem[] {
   const items = project?.donationSection?.donationItems ?? []
   const sanityType = donationType === 'oneoff' ? 'one-off' : 'monthly'
-  return items.filter((item) => item.donationType === sanityType)
+  return items.filter(
+    // Items saved before donationType was added have undefined — treat them as
+    // 'monthly' to match the schema's initialValue so they are not silently hidden.
+    (item) => (item.donationType ?? 'monthly') === sanityType
+  )
 }

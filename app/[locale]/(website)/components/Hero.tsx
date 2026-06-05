@@ -61,6 +61,8 @@ export default async function Hero() {
             <img
               src={imageUrl}
               alt={altText}
+              fetchPriority="high"
+              loading="eager"
               className="w-full h-full object-cover object-center"
             />
           </picture>

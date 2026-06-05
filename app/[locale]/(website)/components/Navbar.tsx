@@ -57,6 +57,11 @@ export default function Navbar({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpandedIdx, setMobileExpandedIdx] = useState<number | null>(null);
 
+  // Filter out categories that have no projects
+  const activeCategories = (projectCategories ?? []).filter(
+    (cat) => cat.projects && cat.projects.length > 0
+  );
+
   const toggleMobileMenu = () => setMobileOpen((o) => !o);
   const closeMenu = () => {
     setMobileOpen(false);
@@ -119,10 +124,10 @@ export default function Navbar({
 
                         {/* Category grid — 4 columns */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-10 my-8">
-                          {projectCategories.map((cat) => (
+                          {activeCategories.map((cat) => (
                             <div key={cat._id} className="flex flex-col gap-3">
                               {/* Category heading with red underline */}
-                              <h3 className="text-[0.85rem] font-bold text-brand-black tracking-widest uppercase pb-1 w-fit">
+                              <h3 className="text-[1rem] font-bold text-brand-black uppercase pb-1 w-fit">
                                 {cat.name}
                               </h3>
                               <ul className="flex flex-col gap-3">
@@ -130,15 +135,15 @@ export default function Navbar({
                                   <li key={project.slug}>
                                     <Link
                                       href={`/projects/${project.slug}`}
-                                      className="text-[0.88rem] text-gray-700 hover:text-purple transition-colors no-underline"
+                                      className="text-[0.88rem] text-brand-black hover:text-purple transition-colors no-underline"
                                     >
                                       {project.name}
                                     </Link>
                                   </li>
                                 ))}
-                                {cat.projects.length === 0 && (
+                                {/* {cat.projects.length === 0 && (
                                   <li className="text-[0.8rem] text-gray-400 italic">No projects yet</li>
-                                )}
+                                )} */}
                               </ul>
                             </div>
                           ))}
@@ -195,7 +200,7 @@ export default function Navbar({
           {/* Right side: basket + donate + hamburger */}
           <div className="flex items-center gap-3">
             <DonationBasketButton />
-            <div className="hidden md:block">
+            <div>
               <YellowCTA text="Donate Now" href="/donate" />
             </div>
             {/* Hamburger */}
@@ -213,7 +218,7 @@ export default function Navbar({
 
       {/* ── Mobile Menu ──────────────────────────────────────────────── */}
       <div className={`md:hidden bg-purple transition-all duration-300 ${mobileOpen ? "block" : "hidden"}`}>
-        <ul className="flex flex-col gap-1 list-none px-8 pt-4 pb-8">
+        <ul className="flex flex-col gap-1 list-none px-8 pt-20 pb-8">
 
           {navItems.map((item, idx) => {
             const href = resolveHref(item);
@@ -224,7 +229,7 @@ export default function Navbar({
             // Items with sub-items or the Projects mega menu get an accordion
             if (hasSubItems || hasProjects) {
               const subLinks: { label: string; href: string }[] = hasProjects
-                ? projectCategories.flatMap((cat) =>
+                ? activeCategories.flatMap((cat) =>
                   cat.projects.map((p) => ({ label: p.name, href: `/projects/${p.slug}` }))
                 )
                 : item.subItems!.map((sub) => ({ label: sub.label, href: resolveHref(sub) }));
@@ -245,17 +250,7 @@ export default function Navbar({
                   </button>
                   {isExpanded && (
                     <ul className="pl-4 flex flex-col gap-2 pb-3 list-none border-l-2 border-white/20 ml-2">
-                      {hasProjects && (
-                        <li>
-                          <Link
-                            href="/projects"
-                            onClick={closeMenu}
-                            className="block py-1 text-brand-white text-sm font-semibold no-underline"
-                          >
-                            View All Projects →
-                          </Link>
-                        </li>
-                      )}
+
                       {subLinks.map((sub, sIdx) => (
                         <li key={sIdx}>
                           <Link
@@ -267,6 +262,17 @@ export default function Navbar({
                           </Link>
                         </li>
                       ))}
+                      {hasProjects && (
+                        <li>
+                          <Link
+                            href="/projects"
+                            onClick={closeMenu}
+                            className="block py-1 text-brand-white text-sm font-semibold underline-offset-1"
+                          >
+                            View All Projects →
+                          </Link>
+                        </li>
+                      )}
                     </ul>
                   )}
                 </li>

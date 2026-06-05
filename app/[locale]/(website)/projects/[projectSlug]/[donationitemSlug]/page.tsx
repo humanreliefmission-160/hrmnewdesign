@@ -1,7 +1,7 @@
-
 import AidItemDetails from "../../../components/projectdonationitem/AidItemDetails";
 import DonationOptions from "../../../components/projectdonationitem/DonationOptions";
 import ImageGallery from "../../../components/projectdonationitem/ImageGallary";
+import Link from "next/link";
 
 import { notFound } from 'next/navigation'
 import { urlFor } from '@/sanity/lib/image'
@@ -87,6 +87,25 @@ export default async function DonationItemPage({
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-24 mt-6">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14 xl:grid-cols-[55fr_45fr]">
           <div className="lg:sticky lg:top-24 lg:self-start">
+            {/* Breadcrumb Bar */}
+            <div className="flex flex-wrap items-center gap-2 text-[0.75rem] font-bold uppercase mb-6 text-brand-black/60">
+              <Link href="/" className="hover:text-purple transition-colors">
+                Home
+              </Link>
+              <span className="text-purple">&gt;</span>
+              <Link href="/projects" className="hover:text-purple transition-colors">
+                Projects
+              </Link>
+              <span className="text-purple">&gt;</span>
+              <Link href={`/projects/${projectSlug}`} className="hover:text-purple transition-colors">
+                {data.name}
+              </Link>
+              <span className="text-purple">&gt;</span>
+              <span className="text-brand-black font-bold">
+                {item.itemTitle}
+              </span>
+            </div>
+
             <ImageGallery images={galleryImages} />
           </div>
           <div>

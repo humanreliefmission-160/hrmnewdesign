@@ -11,6 +11,9 @@ import { notFound } from "next/navigation";
 import { sanityFetch } from "../../../lib/sanity/client";
 import { urlFor } from "@/sanity/lib/image";
 
+// Cache each project page for 60 s with ISR
+export const revalidate = 60;
+
 const PROJECT_QUERY = `
   *[_type == "project" && slug.current == $projectSlug][0] {
     name,

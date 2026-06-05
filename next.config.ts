@@ -13,17 +13,6 @@ const nextConfig: NextConfig = {
     '@sanity/client',
     '@sanity/image-url',
   ],
-  webpack: (config, { dev, isServer }) => {
-    // In development, limit webpack memory usage
-    if (dev) {
-      config.cache = {
-        type: 'filesystem',
-        allowCollectingMemory: true,
-        memoryCacheUnaffected: true,
-      }
-    }
-    return config
-  },
 };
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')

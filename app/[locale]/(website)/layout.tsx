@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Rubik } from "next/font/google";
 import Footer from "./components/Footer";
 import ImpactTicker from "./components/ImpactTicker";
 import Navbar from "./components/Navbar";
@@ -7,6 +8,16 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import Providers from "./components/Providers";
 import { sanityFetch } from "../lib/sanity/client";
+
+// Load Rubik via next/font — font-face is inlined at build time,
+// eliminating the external Google Fonts round-trip and render-blocking stylesheet.
+const rubik = Rubik({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  style: ['normal', 'italic'],
+  variable: '--font-rubik',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: "Human Relief Mission",
@@ -59,12 +70,7 @@ export default async function LocaleLayout({
   ]);
 
   return (
-    <html lang={locale}>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet" />
-      </head>
+    <html lang={locale} className={rubik.variable}>
       <body>
         <NextIntlClientProvider messages={messages}>
           <Providers>
