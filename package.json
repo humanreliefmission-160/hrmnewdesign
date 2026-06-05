@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" next dev",
     "dev:studio": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" sanity dev",
-    "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" next build",
     "build:studio": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" sanity build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build": "NODE_ENV=production next build",
+    "vercel-build": "npm run build -- --no-audit --no-fund"
   },
   "dependencies": {
     "@sanity/image-url": "^2.1.1",
