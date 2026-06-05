@@ -1,6 +1,6 @@
 "use client";
 
-import YellowCTA from "@/app/(website)/components/YellowCTA";
+import YellowCTA from "@/app/[locale]/(website)/components/YellowCTA";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
