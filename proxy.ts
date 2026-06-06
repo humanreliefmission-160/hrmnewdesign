@@ -11,5 +11,6 @@ export const config = {
   // This prevents ~157 ms of middleware overhead on font/icon/image fetches.
   matcher: [
     '/((?!api|_next/static|_next/image|favicon.ico|studio|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?|ttf|otf|css|js|map)$).*)',
+    "/((?!studio|api|_next|.*\\..*).*)",
   ],
 }
