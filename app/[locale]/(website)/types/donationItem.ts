@@ -22,7 +22,7 @@ export type DonationItemData = {
   itemSubtext?: string
   price: number
   donationType: 'one-off' | 'monthly'
-  donationItemBody?: unknown[]
+  donationItemBody?: any[]
   amounts?: DonationAmountOption[]
   intentions?: IntentionRef[]
   additionalFields?: Array<{ label: string }>

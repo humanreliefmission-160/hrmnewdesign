@@ -53,8 +53,7 @@ export default function AidItemDetails({ item }: { item: DonationItemData }) {
 		<div className="mt-10 border-t border-brand-lgrey pt-8">
 			{hasBody && (
 				<div className="mb-8 portable-text text-sm text-brand-grey leading-relaxed">
-					{/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-				<PortableText value={item.donationItemBody as any} />
+					<PortableText value={item.donationItemBody} />
 				</div>
 			)}
 
