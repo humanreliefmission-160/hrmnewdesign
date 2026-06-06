@@ -3,6 +3,7 @@ import { urlFor } from "@/sanity/lib/image";
 import PageHeader from "../components/PageHeader";
 import YellowCTA from "../components/YellowCTA";
 import Link from "next/link";
+import { YouTubeEmbed } from "@next/third-parties/google";
 
 export const revalidate = 60;
 
@@ -60,8 +61,23 @@ export default async function ProjectsPage() {
         display={true}
       />
 
+      {/* Youtube Video
+      <div className="flex flex-col justify-center items-center px-5 pt-10 pb-10 ">
+        <h1 className="text-center text-4xl font-bold text-brand-black mb-3">
+          Watch our video
+        </h1>
+        <p className="text-center text-brand-black mb-5">
+          Lorem Ipsum
+        </p>
+        <div className="w-full md:w-[700px] overflow-hidden h-auto">
+          <YouTubeEmbed videoid="ogfYd705cRs" params="controls=0" />
+        </div>
+      </div> */}
+
       <section className="py-20 px-4 md:px-8 bg-brand-white">
+
         <div className="max-w-[1140px] mx-auto">
+          {/* Projects */}
           {populatedCategories.length === 0 ? (
             <p className="text-brand-grey text-center py-20">
               No projects found. Check back soon.
