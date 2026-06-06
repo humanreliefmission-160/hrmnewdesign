@@ -5,6 +5,11 @@ import YellowCTA from "../YellowCTA";
 import Link from "next/link";
 import { PortableText } from "next-sanity";
 import DynamicIcon from "../DynamicIcon";
+import { useBasket } from "../../context/BasketContext";
+import {
+  intentionFromZakat,
+  resolveSelectedAmount,
+} from "../../lib/donation/basketHelpers";
 
 interface DonationAmount {
   _key: string;
@@ -22,6 +27,7 @@ interface DonationItemData {
   amounts?: DonationAmount[];
   donationItemBody?: any[];
   intentions?: any[];
+  slug?: string;
 }
 
 interface DonationSectionData {
@@ -31,13 +37,36 @@ interface DonationSectionData {
   donationItems?: DonationItemData[];
 }
 
-function DonationCard({ item }: { item: DonationItemData }) {
-  // Use first predefined amount or fallback to 10
+function DonationCard({
+  item,
+  projectSlug,
+  projectName,
+}: {
+  item: DonationItemData;
+  projectSlug: string;
+  projectName: string;
+}) {
+  const { addItem } = useBasket();
   const defaultAmount = item.amounts && item.amounts.length > 1 ? item.amounts[1].amount : (item.amounts?.[0]?.amount || 10);
   const [selected, setSelected] = useState<number>(defaultAmount);
   const [custom, setCustom] = useState("");
+  const [isZakat, setIsZakat] = useState(false);
   const [added, setAdded] = useState(false);
+
+  const effectiveAmount = resolveSelectedAmount(selected, custom);
+
   const handleAdd = () => {
+    if (!effectiveAmount || !item.itemTitle) return;
+
+    addItem({
+      projectName,
+      projectSlug,
+      projectItem: item.itemTitle,
+      donationItemKey: item._key,
+      amount: effectiveAmount,
+      intention: intentionFromZakat(isZakat),
+      isZakat,
+    });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -45,7 +74,7 @@ function DonationCard({ item }: { item: DonationItemData }) {
   const amountsToRender = item.amounts ? item.amounts.map(a => a.amount) : [5, 10, 20];
 
   return (
-    <div className="shadow-md bg-brand-white rounded-sm border border-gray-100 p-7 flex flex-col gap-4 hover:shadow-xl transition-shadow duration-300 justify-between">
+    <div className="shadow-md bg-brand-white rounded-sm border border-gray-100 p-7 flex flex-col gap-4 hover:shadow-xl transition-shadow duration-300 justify-between w-full max-w-[23.75em]">
       <div className="flex gap-4 items-center">
         <div className="bg-purple-faint p-3 rounded-sm">
           <span className="text-4xl">
@@ -54,7 +83,7 @@ function DonationCard({ item }: { item: DonationItemData }) {
         </div>
         <div>
           <h3 className="text-lg font-bold text-gray-900 leading-tight">{item.itemTitle}</h3>
-          {item.itemSubtext && <p className="text-xs text-purple mt-1">{item.itemSubtext}</p>}
+          {/* {item.itemSubtext && <p className="text-xs text-purple mt-1">{item.itemSubtext}</p>} */}
         </div>
       </div>
 
@@ -71,7 +100,8 @@ function DonationCard({ item }: { item: DonationItemData }) {
 
       {item.donationItemBody && (
         <div className="text-sm text-brand-black/75 leading-relaxed portable-text space-y-2">
-          <PortableText value={item.donationItemBody} />
+          {/* <PortableText value={item.donationItemBody} /> */}
+          {item.itemSubtext}
         </div>
       )}
 
@@ -105,22 +135,43 @@ function DonationCard({ item }: { item: DonationItemData }) {
           id={`di-zakat-checkbox-${item._key}`}
           name="zakat"
           type="checkbox"
-          value="Is this a zakat donation"
-          className="accent-purple cursor-pointer" />
+          checked={isZakat}
+          onChange={(e) => setIsZakat(e.target.checked)}
+          className="accent-purple cursor-pointer"
+        />
         <label htmlFor={`di-zakat-checkbox-${item._key}`} className="italic text-xs font-medium text-brand-grey">I want this to be treated as Zakat</label>
       </div>
 
       <div className="flex flex-col gap-4 justify-between items-left sm:flex sm:justify-between sm:gap-2 mt-4">
         <div>
-          <YellowCTA text="Add to Donation Basket" href="/donate" />
+          <YellowCTA
+            text={added ? "Added to basket!" : "Add to Donation Basket"}
+            onClick={handleAdd}
+            disabled={!effectiveAmount}
+          />
         </div>
-        <Link className="underline text-sm font-semibold text-purple" href="/projects/projectitem/donationitem">Find out more</Link>
+        {item.slug && (
+          <Link
+            className="underline text-sm font-semibold text-purple mt-2"
+            href={`/projects/${projectSlug}/${item.slug}`}
+          >
+            Find out more
+          </Link>
+        )}
       </div>
     </div>
   );
 }
 
-export default function DonationItems({ data }: { data?: DonationSectionData }) {
+export default function DonationItems({
+  data,
+  projectSlug,
+  projectName,
+}: {
+  data?: DonationSectionData;
+  projectSlug: string;
+  projectName: string;
+}) {
   if (!data || !data.donationItems || data.donationItems.length === 0) return null;
 
   return (
@@ -144,9 +195,15 @@ export default function DonationItems({ data }: { data?: DonationSectionData }) 
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mt-10 flex flex-col sm:flex-row flex-wrap gap-6 items-center justify-center">
           {data.donationItems.map((item) => (
-            <DonationCard key={item._key} item={item} />
+            <DonationCard
+              key={item._key}
+              item={item}
+              projectSlug={projectSlug}
+              projectName={projectName}
+            />
+
           ))}
         </div>
       </div>

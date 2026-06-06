@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { DonationState } from './types';
 import DonationStepFooter from './DonationStepFooter';
+import DonationBasketTotal from './DonationBasketTotal';
 import { BsCalendar2DayFill } from 'react-icons/bs';
 import { FaClock } from 'react-icons/fa';
 import { MdEventRepeat } from 'react-icons/md';
@@ -19,6 +20,7 @@ export default function DonationStepType({ currentStep, donationState, setDonati
 
   return (
     <div className="bg-brand-white p-8 md:p-10 rounded-2xl shadow-card border border-brand-lgrey">
+      <DonationBasketTotal />
       <h2 className="text-2xl md:text-3xl font-bold text-brand-black mb-2 font-body leading-tight">How would you like to give?</h2>
       <p className="text-[0.95rem] text-brand-grey mb-8 font-medium">
         Choose a one off donation or set up a recurring monthly gift.

@@ -1,4 +1,5 @@
-import { createServerClient } from '@/app/lib/supabase/server'
+import { createServerClient } from "@/app/[locale]/lib/supabase/server"
+
 
 export async function GET() {
   try {

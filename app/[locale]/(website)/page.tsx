@@ -6,6 +6,10 @@ import Hero from "./components/Hero";
 import LastMonthImpact from "./components/LastMonthsImpact";
 import { sanityFetch } from "@/app/[locale]/lib/sanity/client";
 
+// Cache this page for 60 seconds (ISR) — Sanity content rarely changes more
+// frequently than this, so there's no need to hit the API on every request.
+export const revalidate = 60;
+
 const ALL_PROJECTS_QUERY = `
   *[_type == "project"] | order(_createdAt desc) {
     _id,

@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" next dev",
-    "dev:studio": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" sanity dev",
-    "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" next build",
-    "build:studio": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" sanity build",
+    "dev": "next dev",
     "start": "next start",
-    "lint": "eslint"
+    "build": "next build",
+    "lint": "eslint",
+    "dev:studio": "sanity dev",
+    "build:studio": "sanity build"
   },
   "dependencies": {
     "@sanity/image-url": "^2.1.1",

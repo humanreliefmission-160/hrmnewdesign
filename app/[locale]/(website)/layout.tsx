@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Rubik } from "next/font/google";
 import Footer from "./components/Footer";
 import ImpactTicker from "./components/ImpactTicker";
 import Navbar from "./components/Navbar";
@@ -6,12 +7,52 @@ import "../globals.css";
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import Providers from "./components/Providers";
+import { sanityFetch } from "../lib/sanity/client";
 
+// Load Rubik via next/font — font-face is inlined at build time,
+// eliminating the external Google Fonts round-trip and render-blocking stylesheet.
+const rubik = Rubik({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  style: ['normal', 'italic'],
+  variable: '--font-rubik',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: "Human Relief Mission",
   description: "Helping Humanity Through Welfare",
 };
+
+const HEADER_NAV_QUERY = `
+  *[_type == "navigation" && placement == "header"][0] {
+    navItems[] {
+      label,
+      linkType,
+      internalLink,
+      externalLink,
+      isExternal,
+      subItems[] {
+        label,
+        linkType,
+        internalLink,
+        externalLink,
+        isExternal
+      }
+    }
+  }
+`;
+
+const PROJECT_CATEGORIES_QUERY = `
+  *[_type == "projectCategory"] {
+    _id,
+    name,
+    "projects": *[_type == "project" && references(^._id)] | order(name asc) {
+      name,
+      "slug": slug.current
+    }
+  }
+`;
 
 export default async function LocaleLayout({
   children,
@@ -22,18 +63,22 @@ export default async function LocaleLayout({
 }>) {
   const { locale } = await params
   const messages = await getMessages()
+
+  const [headerNav, projectCategories] = await Promise.all([
+    sanityFetch<any>(HEADER_NAV_QUERY),
+    sanityFetch<any[]>(PROJECT_CATEGORIES_QUERY),
+  ]);
+
   return (
-    <html lang={locale}>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet" />
-      </head>
+    <html lang={locale} className={rubik.variable}>
       <body>
         <NextIntlClientProvider messages={messages}>
           <Providers>
             <ImpactTicker />
-            <Navbar />
+            <Navbar
+              navItems={headerNav?.navItems ?? []}
+              projectCategories={projectCategories ?? []}
+            />
             {children}
             <Footer />
           </Providers>

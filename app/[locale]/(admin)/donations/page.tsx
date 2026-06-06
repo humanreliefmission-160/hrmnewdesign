@@ -3,9 +3,9 @@
 import { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import YellowCTA from "@/app/(website)/components/YellowCTA";
 import { FaChevronDown } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
+import YellowCTA from "../../(website)/components/YellowCTA";
 
 const donations = [
   {

@@ -30,6 +30,17 @@ export const donationItem = defineType({
       type: 'text',
       rows: 2,
     }),
+    defineField({
+      name: 'slug',
+      title: 'URL Slug',
+      type: 'slug',
+      description: 'Auto-generated from title. Used for the donation item detail page URL.',
+      options: {
+        source: 'itemTitle',
+        maxLength: 96,
+      },
+      validation: (R) => R.required(),
+    }),
 
     // ── Price ─────────────────────────────────────────────────
     defineField({

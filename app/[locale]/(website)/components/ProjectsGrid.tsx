@@ -76,7 +76,10 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
                   <div className="p-6 pt-0">
                     <div className="flex justify-between items-center pt-4 border-t border-brand-lgrey">
                       <YellowCTA text="Find out more" href={`/projects/${project.slug}`} />
-                      <Link href={`/projects/${project.slug}`} className="text-purple font-bold text-sm underline hover:text-purple-dark">
+                      <Link
+                        href={`/donate?project=${encodeURIComponent(project.slug)}`}
+                        className="text-purple font-bold text-sm underline hover:text-purple-dark"
+                      >
                         Donate Now
                       </Link>
                     </div>

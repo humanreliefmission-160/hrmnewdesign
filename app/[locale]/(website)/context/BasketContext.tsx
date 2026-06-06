@@ -5,9 +5,12 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 export interface BasketItem {
   id: string;
   projectName: string;
+  projectSlug?: string;
   projectItem: string;
+  donationItemKey?: string;
   amount: number;
   intention: string;
+  isZakat?: boolean;
 }
 
 interface BasketContextValue {

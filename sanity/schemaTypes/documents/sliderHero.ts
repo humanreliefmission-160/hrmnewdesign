@@ -1,5 +1,10 @@
 import { defineField, defineType } from 'sanity'
 
+type LinkParent = {
+  linkType?: 'internal' | 'external'
+  internalDestination?: 'project' | 'path'
+}
+
 export const sliderHero = defineType({
   name: 'heroSlide',
   title: 'Homepage Hero Slider',
@@ -65,17 +70,107 @@ export const sliderHero = defineType({
           validation: (Rule) => Rule.required(),
         }),
         defineField({
-          name: 'url',
-          title: 'URL',
+          name: 'linkType',
+          title: 'Link type',
           type: 'string',
-          description: 'Can be internal path e.g. "/projects" or external URL',
+          options: {
+            list: [
+              { title: 'Internal', value: 'internal' },
+              { title: 'External', value: 'external' },
+            ],
+            layout: 'radio',
+            direction: 'horizontal',
+          },
+          initialValue: 'internal',
           validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'internalDestination',
+          title: 'Internal destination',
+          type: 'string',
+          description: 'Pick a project page from the list, or enter a custom path for any other page.',
+          options: {
+            list: [
+              { title: 'Project page', value: 'project' },
+              { title: 'Other page (custom path)', value: 'path' },
+            ],
+            layout: 'radio',
+            direction: 'horizontal',
+          },
+          initialValue: 'path',
+          hidden: ({ parent }) => (parent as LinkParent)?.linkType !== 'internal',
+          validation: (Rule) =>
+            Rule.custom((value, context) => {
+              const parent = context.parent as LinkParent
+              if (parent?.linkType === 'internal' && !value) {
+                return 'Choose where this internal link should go'
+              }
+              return true
+            }),
+        }),
+        defineField({
+          name: 'project',
+          title: 'Project',
+          type: 'reference',
+          to: [{ type: 'project' }],
+          description: 'Links to /projects/{project-slug}',
+          hidden: ({ parent }) =>
+            (parent as LinkParent)?.linkType !== 'internal' ||
+            (parent as LinkParent)?.internalDestination !== 'project',
+          validation: (Rule) =>
+            Rule.custom((value, context) => {
+              const parent = context.parent as LinkParent
+              if (
+                parent?.linkType === 'internal' &&
+                parent?.internalDestination === 'project' &&
+                !value
+              ) {
+                return 'Select a project'
+              }
+              return true
+            }),
+        }),
+        defineField({
+          name: 'internalPath',
+          title: 'Internal page path',
+          type: 'string',
+          description: 'e.g. "/about", "/donate", or "/projects"',
+          hidden: ({ parent }) =>
+            (parent as LinkParent)?.linkType !== 'internal' ||
+            (parent as LinkParent)?.internalDestination !== 'path',
+          validation: (Rule) =>
+            Rule.custom((value, context) => {
+              const parent = context.parent as LinkParent
+              if (
+                parent?.linkType === 'internal' &&
+                parent?.internalDestination === 'path' &&
+                !value
+              ) {
+                return 'Internal path is required'
+              }
+              return true
+            }),
+        }),
+        defineField({
+          name: 'externalUrl',
+          title: 'External URL',
+          type: 'url',
+          hidden: ({ parent }) => (parent as LinkParent)?.linkType !== 'external',
+          validation: (Rule) =>
+            Rule.custom((value, context) => {
+              const parent = context.parent as LinkParent
+              if (parent?.linkType === 'external' && !value) {
+                return 'External URL is required'
+              }
+              return true
+            }),
         }),
         defineField({
           name: 'isExternal',
           title: 'Opens in new tab?',
           type: 'boolean',
           initialValue: false,
+          hidden: ({ parent }) => (parent as LinkParent)?.linkType !== 'external',
         }),
       ],
     }),
@@ -99,6 +194,26 @@ export const sliderHero = defineType({
       title: 'slideName',
       subtitle: 'title',
       media: 'image.asset',
+      linkType: 'link.linkType',
+      internalDestination: 'link.internalDestination',
+      projectName: 'link.project.name',
+      internalPath: 'link.internalPath',
+      externalUrl: 'link.externalUrl',
+    },
+    prepare({ title, subtitle, media, linkType, internalDestination, projectName, internalPath, externalUrl }) {
+      let linkLabel = ''
+      if (linkType === 'external') {
+        linkLabel = externalUrl || 'External link'
+      } else if (internalDestination === 'project') {
+        linkLabel = projectName ? `Project: ${projectName}` : 'Project (not set)'
+      } else {
+        linkLabel = internalPath || 'Internal path'
+      }
+      return {
+        title,
+        subtitle: [subtitle, linkLabel].filter(Boolean).join(' · '),
+        media,
+      }
     },
   },
 })

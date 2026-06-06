@@ -10,7 +10,8 @@
 
 @theme {
   --font-display: "Getronde", "Georgia", serif;
-  --font-body: "Rubik", sans-serif;
+  /* Uses the CSS variable injected by next/font/google in layout.tsx */
+  --font-body: var(--font-rubik), sans-serif;
 
   --color-purple: #650199;
   --color-purple-dark: #4a0070;
