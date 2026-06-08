@@ -1,4 +1,3 @@
-import React from 'react';
 import YellowCTA from '../YellowCTA';
 
 interface DonationStepFooterProps {

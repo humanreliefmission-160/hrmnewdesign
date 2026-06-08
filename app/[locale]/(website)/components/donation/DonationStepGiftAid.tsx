@@ -57,7 +57,7 @@ export default function DonationStepGiftAid({ currentStep, donationState, setGif
 
       {donationState.giftAid && (
         <div className="bg-purple-faint border-l-4 border-purple p-4 rounded-r-lg mb-8 text-purple text-sm animate-pulse-2">
-          🎉 <strong>Great!</strong> Your donation will be worth{" "}<strong>25% more</strong> thanks to Gift Aid.
+          <strong>Great!</strong> Your donation will be worth{" "}<strong>25% more</strong> thanks to Gift Aid.
         </div>
       )}
 

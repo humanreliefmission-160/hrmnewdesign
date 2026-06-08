@@ -111,17 +111,15 @@ export default function DonationStepFundAmount({
   };
 
   const optionButtonClass = (selected: boolean) =>
-    `p-3 rounded-sm border text-[0.8rem] font-bold transition-all text-center leading-tight ${
-      selected
-        ? 'bg-purple text-brand-white border-purple'
-        : 'border-brand-lgrey bg-brand-white text-brand-black hover:bg-brand-lgrey/30'
+    `p-3 rounded-sm border text-[0.8rem] font-bold transition-all text-center leading-tight ${selected
+      ? 'bg-purple text-brand-white border-purple'
+      : 'border-brand-lgrey bg-brand-white text-brand-black hover:bg-brand-lgrey/30'
     }`;
 
   const amountButtonClass = (selected: boolean) =>
-    `p-3 rounded-sm border font-bold transition-all text-center text-[0.8rem] ${
-      selected
-        ? 'bg-purple text-brand-white border-purple'
-        : 'border-brand-lgrey bg-brand-white text-brand-black hover:bg-brand-lgrey/30'
+    `p-3 rounded-sm border font-bold transition-all text-center text-[0.8rem] ${selected
+      ? 'bg-purple text-brand-white border-purple'
+      : 'border-brand-lgrey bg-brand-white text-brand-black hover:bg-brand-lgrey/30'
     }`;
 
   const publishedProjects = projects.filter(
@@ -133,7 +131,7 @@ export default function DonationStepFundAmount({
       <DonationBasketTotal />
       <div>
         <h2 className="text-2xl md:text-3xl font-bold text-brand-black mb-2 font-body leading-tight">
-          Select project
+          1. Select project
         </h2>
         <p className="text-[0.95rem] text-brand-grey mb-4 font-medium">
           Choose which project you would like to support.
@@ -164,10 +162,10 @@ export default function DonationStepFundAmount({
       {donationState.projectId && (
         <div className="py-6 border-t border-brand-lgrey">
           <h2 className="text-2xl md:text-3xl font-bold text-brand-black mb-2 font-body leading-tight">
-            Select donation item
+            2. Select donation item
           </h2>
           <p className="text-[0.95rem] text-brand-grey mb-4 font-medium">
-            Pick what your gift will fund within {donationState.projectName}.
+            Choose how you can help in the {donationState.projectName} project.
           </p>
 
           {donationItems.length === 0 ? (
@@ -202,7 +200,7 @@ export default function DonationStepFundAmount({
       {selectedItem && (
         <div className="py-6 border-t border-brand-lgrey">
           <h2 className="text-2xl md:text-3xl font-bold text-brand-black mb-2 font-body leading-tight">
-            Select amount
+            3. Select amount
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-5">
             {presetAmounts.map((val) => (
@@ -270,7 +268,7 @@ export default function DonationStepFundAmount({
       {selectedItem && requiresIntention && (
         <div className="py-6 border-t border-brand-lgrey">
           <h2 className="text-2xl md:text-3xl font-bold text-brand-black mb-2 font-body leading-tight">
-            Select intention
+            4. Select intention
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {intentions.map((intention) => (

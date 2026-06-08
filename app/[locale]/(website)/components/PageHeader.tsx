@@ -17,7 +17,7 @@ export default function PageHeader({
   display = true
 }: PageHeaderProps) {
   return (
-    <div className={`bg-purple-dark pt-32 pb-16 px-4 md:px-8 text-brand-white ${display ? "" : "hidden"} ${centered ? 'text-center' : ''}`}>
+    <div className={`bg-purple-dark pt-16 pb-16 px-4 md:px-8 text-brand-white ${display ? "" : "hidden"} ${centered ? 'text-center' : ''}`}>
       <div className="max-w-[1140px] mx-auto">
         {display && <div className="text-[0.75rem] font-bold tracking-widest uppercase mb-4 text-brand-white hover:text-brand-lgrey/50">
           <Link href="/" className="transition-colors ">
