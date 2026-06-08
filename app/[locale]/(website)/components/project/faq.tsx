@@ -28,7 +28,7 @@ export default function FAQ({ data }: { data?: FaqData }) {
 
   return (
     <>
-      <hr className="h-px border-t-0 bg-transparent bg-linear-to-r from-transparent via-brand-purple to-transparent opacity-50 dark:via-purple" />
+      <hr className="h-px border-t-0 bg-transparent bg-linear-to-r from-transparent via-purple to-transparent dark:via-purple" />
 
       <section className="w-full bg-brand-white py-20 px-6">
         {/* Heading */}
@@ -51,11 +51,10 @@ export default function FAQ({ data }: { data?: FaqData }) {
             return (
               <div
                 key={item._key}
-                className={`rounded-sm border transition-all duration-300 bg-white/50 ${
-                  isOpen
-                    ? "border-purple bg-white/5"
-                    : "border-purple/10 bg-white/50 hover:border-purple/25"
-                }`}
+                className={`rounded-sm border transition-all duration-300 bg-white/50 ${isOpen
+                  ? "border-purple bg-white/5"
+                  : "border-purple/10 bg-white/50 hover:border-purple/25"
+                  }`}
               >
                 {/* Question row */}
                 <button
@@ -64,18 +63,16 @@ export default function FAQ({ data }: { data?: FaqData }) {
                   aria-expanded={isOpen}
                 >
                   <span
-                    className={`text-base font-semibold transition-colors duration-200 ${
-                      isOpen ? "text-purple" : "text-black group-hover:text-purple"
-                    }`}
+                    className={`text-base font-semibold transition-colors duration-200 ${isOpen ? "text-purple" : "text-black group-hover:text-purple"
+                      }`}
                   >
                     {item.question}
                   </span>
 
                   {/* Toggle icon */}
                   <span
-                    className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-                      isOpen ? "bg-purple rotate-45" : "bg-brand-white group-hover:bg-purple"
-                    }`}
+                    className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen ? "bg-purple rotate-45" : "bg-brand-white group-hover:bg-purple"
+                      }`}
                   >
                     <svg
                       className="w-4 h-4 text-brand-white"
@@ -91,9 +88,8 @@ export default function FAQ({ data }: { data?: FaqData }) {
 
                 {/* Answer — animated height */}
                 <div
-                  className={`overflow-hidden transition-all duration-400 ease-in-out ${
-                    isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                  }`}
+                  className={`overflow-hidden transition-all duration-400 ease-in-out ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                    }`}
                   style={{
                     transitionProperty: "max-height, opacity",
                     transitionDuration: "350ms",

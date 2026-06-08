@@ -3,6 +3,8 @@ import { urlFor } from "@/sanity/lib/image";
 import PageHeader from "../components/PageHeader";
 import YellowCTA from "../components/YellowCTA";
 import Link from "next/link";
+import { YouTubeEmbed } from "@next/third-parties/google";
+import ProjectPageVideo from "../components/project/ProjectPageVideo";
 
 export const revalidate = 60;
 
@@ -52,16 +54,20 @@ export default async function ProjectsPage() {
         title="Projects"
         subtitle={
           <>
-            Explore our work across food aid, healthcare, education, water, and
-            more — every project is a step toward lasting change.
+            Explore our work across food aid, healthcare, education, water and
+            more. Every project is a step toward lasting change.
           </>
         }
         breadcrumb="Projects"
         display={true}
       />
 
+      {/* <ProjectPageVideo /> */}
+
       <section className="py-20 px-4 md:px-8 bg-brand-white">
+
         <div className="max-w-[1140px] mx-auto">
+          {/* Projects */}
           {populatedCategories.length === 0 ? (
             <p className="text-brand-grey text-center py-20">
               No projects found. Check back soon.
@@ -69,14 +75,14 @@ export default async function ProjectsPage() {
           ) : (
             populatedCategories.map((category, catIdx) => (
               <div key={category._id}>
-                {/* ── Category Header ── */}
+                {/* Category Header */}
                 <div className="mb-4">
                   <h2 className="text-4xl md:text-5xl font-bold text-brand-black mb-3">
                     {category.name}
                   </h2>
                 </div>
 
-                {/* ── Project Cards ── */}
+                {/* Project Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
                   {category.projects.map((project) => {
                     const imageUrl = project.headerImage?.asset

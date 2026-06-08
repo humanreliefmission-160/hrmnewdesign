@@ -1,5 +1,6 @@
 import { PortableText } from "next-sanity";
 import { urlFor } from "@/sanity/lib/image";
+import { YouTubeEmbed } from '@next/third-parties/google'
 
 interface CaseStudyImage {
   asset: any;
@@ -82,6 +83,7 @@ export default function CaseStudy({ data }: { data?: CaseStudyItem[] }) {
                   </>
                 )}
               </div>
+
             </div>
           </div>
         </section>

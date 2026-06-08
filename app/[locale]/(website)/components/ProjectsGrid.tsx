@@ -27,9 +27,9 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
               From emergency food aid to long term education, our projects create lasting change.
             </p>
           </div>
-          <YellowCTA text="Support a Project" href="/donate" />
+          <YellowCTA text="Support a Project" href="/projects" />
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
           {projects && projects.length > 0 ? (
             projects.map((project) => {
@@ -38,22 +38,22 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
                 : "/img-placeholder.JPG";
 
               return (
-                <div 
-                  key={project._id} 
+                <div
+                  key={project._id}
                   className="bg-brand-white rounded-sm overflow-hidden shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover group flex flex-col h-full justify-between"
                 >
                   <div>
                     <div className="aspect-4/3 relative overflow-hidden">
                       <Link href={`/projects/${project.slug}`}>
-                        <img 
-                          src={headerImageUrl} 
-                          alt={project.name} 
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                        <img
+                          src={headerImageUrl}
+                          alt={project.name}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                       </Link>
                       {project.category && (
-                        <Link 
-                          href={`/projects/${project.slug}`} 
+                        <Link
+                          href={`/projects/${project.slug}`}
                           className="absolute bottom-0 left-0 right-0 bg-purple text-brand-white font-bold text-[0.8rem] tracking-widest uppercase py-2.5 px-6 no-underline"
                         >
                           {project.category}
