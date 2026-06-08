@@ -1,8 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import YellowCTA from "./YellowCTA";
 
 export default function NewsletterForm() {
+  const [isPending, setIsPending] = useState(false);
+  const [subscribeSuccess, setSubscribeSuccess] = useState("");
+  const [subscribeError, setSubscribeError] = useState("");
+
+
   return (
     <section className="bg-purple py-20 px-4 md:px-8">
       <div className="max-w-[1140px] mx-auto">
