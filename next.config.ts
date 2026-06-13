@@ -13,6 +13,14 @@ const nextConfig: NextConfig = {
     '@sanity/client',
     '@sanity/image-url',
   ],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+      },
+    ],
+  },
 };
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')

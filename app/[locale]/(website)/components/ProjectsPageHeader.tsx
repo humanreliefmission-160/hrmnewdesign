@@ -82,12 +82,15 @@ export default function ProjectsPageHeader({
     isOtherAmount ? customAmount : ""
   );
 
+  const resolvedProjectName = projectName || (typeof title === "string" ? title : "");
+  const resolvedProjectSlug = projectSlug || "";
+
   const handleAddToBasket = () => {
-    if (!effectiveAmount || !projectName) return;
+    if (!effectiveAmount || !resolvedProjectName) return;
 
     addItem({
-      projectName,
-      projectSlug,
+      projectName: resolvedProjectName,
+      projectSlug: resolvedProjectSlug,
       projectItem: "",
       amount: effectiveAmount,
       intention: intentionFromZakat(isZakat),
@@ -97,7 +100,7 @@ export default function ProjectsPageHeader({
     setTimeout(() => setAdded(false), 2000);
   };
   const showImpactMessage =
-    !isOtherAmount && selectedAmount !== null && Boolean(selectedHero?.impactLabel);
+    !isEcosystem && !isOtherAmount && selectedAmount !== null && Boolean(selectedHero?.impactLabel);
 
   if (!display) return null;
 
@@ -208,7 +211,7 @@ export default function ProjectsPageHeader({
             <YellowCTA
               text={added ? "Added to basket!" : "Add to Donation Basket"}
               onClick={handleAddToBasket}
-              disabled={!effectiveAmount || !projectName}
+              disabled={!effectiveAmount || !resolvedProjectName}
             />
           </div>
         </div>

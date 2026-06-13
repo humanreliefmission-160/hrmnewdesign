@@ -120,8 +120,8 @@ export default async function ProjectsPage() {
                               href={`/projects/${project.slug}`}
                             />
                             <Link
-                              href="/donate"
-                              className="text-brand-black font-bold text-sm underline hover:text-brand-grey"
+                              href={`/donate?project=${project.slug}`}
+                              className="text-purple font-bold text-sm underline hover:text-brand-grey"
                             >
                               Donate Now
                             </Link>

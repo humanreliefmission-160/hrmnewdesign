@@ -6,6 +6,7 @@ import {
   X,
   Utensils,
 } from "lucide-react";
+import Link from "next/link";
 import YellowCTA from "../../YellowCTA";
 import { FaAmbulance, FaBuilding, FaChevronRight, FaChild, FaClinicMedical, FaGraduationCap, FaHome, FaMosque, FaQuran, FaTree } from "react-icons/fa";
 import { PiSprayBottleFill } from "react-icons/pi";
@@ -16,7 +17,7 @@ import { GiSewingMachine, GiWaterTank, GiWell } from "react-icons/gi";
 import { RiCashFill } from "react-icons/ri";
 import { MdBakeryDining, } from "react-icons/md";
 import { IoWomanSharp } from "react-icons/io5";
-
+import IconRenderer from "@/app/[locale]/lib/icons/IconRenderer";
 
 interface Project {
   icon: React.ReactNode;
@@ -83,19 +84,9 @@ const phases: Phase[] = [
       { icon: <FaQuran size={13} />, name: "Hifz Sponsorship", desc: "Providing Quranic education to orphans", link: "/projects/projectitem", projectType: "normal", category: "Development" },
       { icon: <FaGraduationCap size={13} />, name: "Student Sponsorship", desc: "Providing education to children", link: "/projects/projectitem", projectType: "normal", category: "Development" },
       { icon: <GiSewingMachine size={13} />, name: "Sewing Course", desc: "Providing the tools needed for women to make a living", link: "/projects/projectitem", projectType: "normal", category: "Development" },
-
     ],
   },
   {
-    /*
-    Chicken carts
-    Juice carts
-    Sugar cane carts
-    Cargo tricycle
-    Taxis
-    Sewing course (exit stage)
-    Orphan sponsorship (long-term outcome)
-    */
     id: 4,
     label: "Sustainability",
     subtitle: "Stage 4",
@@ -105,7 +96,6 @@ const phases: Phase[] = [
       { icon: <FaArrowTrendUp size={13} />, name: "Income Generation", desc: "Providing the means to make bread winners with various means", link: "/projects/projectitem", projectType: "normal", category: "Sustainability" },
       { icon: <GiSewingMachine size={13} />, name: "Sewing Course", desc: "Providing the tools needed for women to make a living", link: "/projects/projectitem", projectType: "normal", category: "Development" },
       { icon: <FaChild size={13} />, name: "Orphan Sponorship", desc: "Providing the orphans the ability to achieving their dreams", link: "/projects/projectitem", projectType: "normal", category: "Stability" },
-
     ],
   },
 ];
@@ -119,9 +109,27 @@ const CARD_CENTERS = [
 ];
 const HUB_CENTER = { cx: 260, cy: 260 };
 
-export default function EcosystemDiagram() {
+export default function EcosystemDiagram({ stages }: { stages?: any[] }) {
   const [activePhase, setActivePhase] = useState<number | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
+
+  const resolvedPhases = stages && stages.length > 0
+    ? stages.map((stage) => ({
+      id: stage.stageNumber || stage.order || 1,
+      label: stage.stageName || stage.title || "",
+      subtitle: `Stage ${stage.stageNumber || stage.order || 1}`,
+      badge: stage.title || "",
+      description: stage.cardDescription || "",
+      projects: (stage.projects || []).map((p: any) => ({
+        icon: <IconRenderer name={p.icon} size={13} />,
+        name: p.name || "",
+        category: p.projectCategory?.name || "",
+        desc: p.tagline || "",
+        link: p.slug ? `/projects/${p.slug}` : "/projects",
+        projectType: "normal" as const,
+      }))
+    }))
+    : phases;
 
   const handlePhaseClick = (id: number) => {
     setActivePhase((prev) => (prev === id ? null : id));
@@ -138,7 +146,8 @@ export default function EcosystemDiagram() {
           preserveAspectRatio="xMidYMid meet"
         >
           {CARD_CENTERS.map((pos, i) => {
-            const phase = phases[i];
+            const phase = resolvedPhases[i];
+            if (!phase) return null;
             const isActive = activePhase === phase.id || hovered === phase.id;
 
             const strokeClass =
@@ -171,7 +180,7 @@ export default function EcosystemDiagram() {
         </div>
 
         {/* Phase Cards */}
-        {phases.map((phase, idx) => (
+        {resolvedPhases.map((phase, idx) => (
           <PhaseCard
             key={phase.id}
             phase={phase}
@@ -188,10 +197,11 @@ export default function EcosystemDiagram() {
       {/* Phase Detail Drawer */}
       {activePhase !== null && (
         <PhaseDetailPanel
-          phase={phases[activePhase - 1]}
+          phase={resolvedPhases.find((p) => p.id === activePhase)}
           onClose={() => setActivePhase(null)}
         />
       )}
+
       <div className="flex flex-col items-center mt-4">
         <span className="font-medium italic text-xs items-center text-brand-grey">
           Click on the cards above to see more detail
@@ -204,7 +214,7 @@ export default function EcosystemDiagram() {
           Zakat Receiver
         </span>
         <div className="flex items-center gap-2 mx-3 flex-1">
-          {phases.map((ph, i) => {
+          {resolvedPhases.map((ph) => {
             const bgClass =
               ph.id === 1 ? "bg-purple-light" :
                 ph.id === 2 ? "bg-purple" :
@@ -236,19 +246,12 @@ const CARD_POSITIONS = [
 ];
 
 function PhaseCard({ phase, idx, isActive, isHovered, anyActive, onHover, onClick }: any) {
-  const pos = CARD_POSITIONS[idx];
+  const pos = CARD_POSITIONS[idx] || CARD_POSITIONS[0];
   const highlighted = isActive || isHovered;
   const dimmed = anyActive && !isActive && !isHovered;
 
-  const bgClass = phase.id === 1 ? "bg-purple" : phase.id === 2 ? "bg-purple-light" : phase.id === 3 ? "bg-purple-dark" : "bg-brand-black";
-  const textClass = "text-brand-white";
-  const borderClassBase = phase.id === 1 ? "border-purple-light" : phase.id === 2 ? "border-purple" : phase.id === 3 ? "border-purple-dark" : "border-brand-black";
   const lightBgClass = phase.id === 1 ? "bg-purple/10" : phase.id === 2 ? "bg-purple-light/10" : phase.id === 3 ? "bg-purple-dark/10" : "bg-brand-black/10";
-  const shadowBase = phase.id === 1 ? "shadow-purple/50" : phase.id === 2 ? "shadow-purple-light/50" : phase.id === 3 ? "shadow-purple-dark/50" : "shadow-brand-black/40";
   const badgeTextClass = phase.id === 1 ? "text-purple-light" : phase.id === 2 ? "text-purple" : phase.id === 3 ? "text-purple-dark" : "text-brand-black";
-
-  const borderClass = highlighted ? `border-2 ${borderClassBase}` : "border-2 border-brand-black/5";
-  const shadowClass = highlighted ? `shadow-lg ${shadowBase}` : "shadow-md shadow-brand-black/5";
 
   return (
     <div
@@ -277,18 +280,16 @@ function PhaseCard({ phase, idx, isActive, isHovered, anyActive, onHover, onClic
           {phase.badge}
         </span>
       </div>
-
-
     </div>
   );
 }
 
 function PhaseDetailPanel({ phase, onClose }: any) {
+  if (!phase) return null;
   const bgClass = phase.id === 1 ? "bg-purple-light" : phase.id === 2 ? "bg-purple-light" : phase.id === 3 ? "bg-purple-dark" : "bg-brand-black";
   const textClass = "text-brand-white";
   const borderClass = phase.id === 1 ? "border-purple-light" : phase.id === 2 ? "border-purple" : phase.id === 3 ? "border-purple-dark" : "border-brand-black";
   const lightBgClass = phase.id === 1 ? "bg-purple/10" : phase.id === 2 ? "bg-purple-light/10" : phase.id === 3 ? "bg-purple-dark/10" : "bg-brand-black/10";
-  const shadowClass = phase.id === 1 ? "shadow-purple/50" : phase.id === 2 ? "shadow-purple-light/50" : phase.id === 3 ? "shadow-purple-dark/50" : "shadow-brand-black/40";
   const badgeTextClass = phase.id === 1 ? "text-purple-light" : phase.id === 2 ? "text-purple" : phase.id === 3 ? "text-purple-dark" : "text-brand-black";
 
   return (
@@ -299,9 +300,6 @@ function PhaseDetailPanel({ phase, onClose }: any) {
             <span className={`px-3 py-1 rounded-sm text-xs font-bold uppercase tracking-widest ${bgClass} ${textClass}`}>
               {phase.subtitle} - {phase.label}
             </span>
-            {/* <span className={`px-2.5 py-1 rounded-sm text-[10px] font-bold uppercase tracking-wider ${lightBgClass} ${badgeTextClass}`}>
-              {phase.badge}
-            </span> */}
           </div>
 
           <p className="text-sm leading-relaxed mb-4 text-brand-black">
@@ -310,9 +308,10 @@ function PhaseDetailPanel({ phase, onClose }: any) {
 
           <div className="flex flex-wrap gap-2">
             {phase.projects.map((p: any) => (
-              <div
+              <Link
                 key={p.name}
-                className={`flex items-start gap-2 px-3 py-2 rounded-sm cursor-pointer transition-transform hover:scale-105 border ${borderClass} ${lightBgClass}`}
+                href={p.link}
+                className={`flex items-start gap-2 px-3 py-2 rounded-sm cursor-pointer transition-all hover:scale-105 border ${borderClass} ${lightBgClass}`}
               >
                 <span className={`mt-0.5 shrink-0 ${badgeTextClass}`}>
                   {p.icon}
@@ -323,19 +322,14 @@ function PhaseDetailPanel({ phase, onClose }: any) {
                       {p.name}
                     </div>
                     <div>
-                      <FaChevronRight className="opacity-0 hover:opacity-100" size={10} color="#650199" />
+                      <FaChevronRight className="opacity-0 hover:opacity-100 ml-1.5" size={10} color="#650199" />
                     </div>
                   </div>
-                  {/* <div className="font-normal text-purple-dark text-[0.55em]">
-                    <div>
-                      {p.category}
-                    </div>
-                  </div> */}
-                  <div className="text-[10px] mt-0.5">
+                  <div className="text-[10px] mt-0.5 text-brand-grey">
                     {p.desc}
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 

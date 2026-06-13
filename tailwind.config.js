@@ -24,6 +24,7 @@ module.exports = {
           black: '#1a1a1a',     // --black          → bg-brand-black / text-brand-black
           grey: '#6b6b6b',     // --grey           → text-brand-grey
           lgrey: '#e8e8e8',     // --light-grey     → bg-brand-lgrey / border-brand-lgrey
+          red: '#B60000',
         },
       },
 

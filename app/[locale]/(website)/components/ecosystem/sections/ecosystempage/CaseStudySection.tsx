@@ -1,11 +1,19 @@
-import { EcosystemStage } from "../../data/ecosystemData";
+import { PortableText } from "next-sanity";
+import { urlFor } from "@/sanity/lib/image";
+import { type SanityEcosystemStage } from "../../data/sanityTypes";
 
 type Props = {
-  stage: EcosystemStage;
+  stage: SanityEcosystemStage;
 };
 
 export default function CaseStudySection({ stage }: Props) {
-  const { caseStudy } = stage;
+  const caseStudy = stage.caseStudy;
+  if (!caseStudy?.title) return null;
+
+  const imageUrl =
+    caseStudy.image?.asset
+      ? urlFor(caseStudy.image.asset).width(800).height(600).fit("crop").url()
+      : null;
 
   return (
     <section className="bg-brand-white/50 py-8 sm:py-16 px-6 md:px-12 lg:px-24 shadow-lg my-12 max-w-[1140px] mx-3 sm:mx-auto rounded-sm">
@@ -24,47 +32,65 @@ export default function CaseStudySection({ stage }: Props) {
         <div className="bg-transparent rounded-sm overflow-hidden border-none">
           <div className="flex flex-col lg:flex-row gap-10 items-center">
             {/* Image column */}
-            <div className="w-full lg:w-1/2 shrink-0">
-              <div className="relative overflow-hidden shadow-md">
-                <img
-                  src={caseStudy.image}
-                  alt={caseStudy.subjectName}
-                  className="w-full h-[400px] object-cover"
-                />
-                {/* Label over image */}
-                <div className="absolute bottom-4 left-4 bg-brand-white/90 backdrop-blur-sm px-4 py-2 rounded-sm shadow-lg">
-                  <span className="text-purple font-semibold text-xs uppercase tracking-wide">
-                    {caseStudy.subjectLabel}
-                  </span>
+            {imageUrl && (
+              <div className="w-full lg:w-1/2 shrink-0">
+                <div className="relative overflow-hidden shadow-md">
+                  <img
+                    src={imageUrl}
+                    alt={caseStudy.image?.caption || caseStudy.title || "Case Study"}
+                    className="w-full h-[400px] object-cover"
+                  />
+                  {caseStudy.image?.caption && (
+                    <div className="absolute bottom-4 left-4 bg-brand-white/90 backdrop-blur-sm px-4 py-2 rounded-sm shadow-lg">
+                      <span className="text-purple font-semibold text-xs uppercase tracking-wide">
+                        {caseStudy.image.caption}
+                      </span>
+                    </div>
+                  )}
                 </div>
-              </div>
 
-              {/* Quote below image on mobile */}
-              <blockquote className="lg:hidden text-xl font-semibold text-purple italic border-l-4 border-purple pl-4 mt-4">
-                "{caseStudy.quote}"
-              </blockquote>
-            </div>
+                {/* Quote below image on mobile */}
+                {caseStudy.quote && (
+                  <blockquote className="lg:hidden text-xl font-semibold text-purple italic border-l-4 border-purple pl-4 mt-4">
+                    &ldquo;{caseStudy.quote}&rdquo;
+                  </blockquote>
+                )}
+              </div>
+            )}
 
             {/* Text column */}
             <div className="w-full lg:w-1/2 space-y-5">
-              <div className="space-y-4 mb-6">
-                {caseStudy.story.map((paragraph, i) => (
-                  <p key={i} className="text-brand-black leading-relaxed">
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
+              {/* Desktop quote */}
+              {caseStudy.quote && (
+                <blockquote className="hidden lg:block text-xl font-semibold text-purple italic border-l-4 border-purple pl-4">
+                  &ldquo;{caseStudy.quote}&rdquo;
+                </blockquote>
+              )}
 
-              <hr className="h-px border-0.5 border-purple opacity-25" />
+              {/* Body text (Portable Text) */}
+              {caseStudy.bodyText && caseStudy.bodyText.length > 0 && (
+                <div className="space-y-4 text-brand-black leading-relaxed prose prose-sm max-w-none">
+                  <PortableText value={caseStudy.bodyText} />
+                </div>
+              )}
 
-              <div>
-                <p className="font-bold text-gray-800 text-sm">
-                  Interview with {caseStudy.subjectName}
-                </p>
-                <p className="text-gray-500 text-xs">
-                  {caseStudy.interviewSource}, {caseStudy.interviewDate}
-                </p>
-              </div>
+              {caseStudy.reference && (
+                <>
+                  <hr className="h-px border-0.5 border-purple opacity-25" />
+                  <div>
+                    {caseStudy.reference.text && (
+                      <p className="font-bold text-gray-800 text-sm">
+                        {caseStudy.reference.text}
+                      </p>
+                    )}
+                    {caseStudy.reference.dateAndInterviewer && (
+                      <p className="text-gray-500 text-xs">
+                        {caseStudy.reference.dateAndInterviewer}
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
