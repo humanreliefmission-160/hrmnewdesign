@@ -5,6 +5,7 @@ import FinalCTA from "./components/FinalCTA";
 import Hero from "./components/Hero";
 import LastMonthImpact from "./components/LastMonthsImpact";
 import { sanityFetch } from "@/app/[locale]/lib/sanity/client";
+import BottomCTA from "./components/ecosystem/sections/BottomCTA";
 
 // Cache this page for 60 seconds (ISR) — Sanity content rarely changes more
 // frequently than this, so there's no need to hit the API on every request.
@@ -21,8 +22,18 @@ const ALL_PROJECTS_QUERY = `
   }
 `;
 
+const ECOSYSTEM_STAGES_QUERY = `
+  *[_type == "ecosystemStage" && defined(slug.current)] | order(order asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    stageName
+  }
+`;
+
 export default async function Home() {
   const projects = await sanityFetch(ALL_PROJECTS_QUERY);
+  const stages = await sanityFetch(ECOSYSTEM_STAGES_QUERY);
 
   return (
     <div id="page-home" className="page active">
@@ -31,7 +42,8 @@ export default async function Home() {
       <NewsletterForm />
       <Impact />
       <LastMonthImpact />
-      <FinalCTA />
+      <BottomCTA stages={stages} />
+      {/* <FinalCTA /> */}
     </div>
   );
 }

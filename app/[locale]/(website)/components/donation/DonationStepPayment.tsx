@@ -52,6 +52,10 @@ export default function DonationStepPayment({
     [isOneOff]
   );
 
+  const [cardNumber, setCardNumber] = React.useState("");
+  const [expiryDate, setExpiryDate] = React.useState("");
+  const [cvv, setCvv] = React.useState("");
+
   useEffect(() => {
     if (isOneOff && payMethod === "Direct Debit") {
       setPayMethod("Card");
@@ -71,6 +75,12 @@ export default function DonationStepPayment({
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
+
+  const isCardValid = payMethod === "Card"
+    ? cardNumber.replace(/\s/g, "").length >= 16 && expiryDate.trim().length >= 5 && cvv.trim().length === 3
+    : true;
+
+  const isSubmitDisabled = isProcessing || !isCardValid;
 
   return (
     <div className="bg-brand-white/50 p-8 md:p-10 rounded-sm shadow-card border border-brand-lgrey">
@@ -167,6 +177,8 @@ export default function DonationStepPayment({
               type="text"
               placeholder="1234 5678 9012 3456"
               maxLength={19}
+              value={cardNumber}
+              onChange={(e) => setCardNumber(e.target.value)}
             />
           </div>
           <div className="grid grid-cols-2 gap-4 mb-8">
@@ -177,6 +189,8 @@ export default function DonationStepPayment({
                 type="text"
                 placeholder="MM / YY"
                 maxLength={7}
+                value={expiryDate}
+                onChange={(e) => setExpiryDate(e.target.value)}
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -186,6 +200,8 @@ export default function DonationStepPayment({
                 type="text"
                 placeholder="123"
                 maxLength={3}
+                value={cvv}
+                onChange={(e) => setCvv(e.target.value)}
               />
             </div>
           </div>
@@ -195,7 +211,7 @@ export default function DonationStepPayment({
       <YellowCTA
         text={isProcessing ? "Processing..." : `Donate Now — £${formatMoney(amountToPay)}`}
         onClick={completeDonation}
-        disabled={isProcessing}
+        disabled={isSubmitDisabled}
         className="w-full justify-center text-lg py-4"
       />
 

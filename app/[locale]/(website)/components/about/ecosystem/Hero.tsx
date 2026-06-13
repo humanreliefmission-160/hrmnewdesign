@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import EcosystemDiagram from "./EcosystemDiagram";
 import YellowCTA from "../../YellowCTA";
+import { sanityFetch } from "@/app/[locale]/lib/sanity/client";
 
 const projects = [
   { icon: <Heart size={13} />, label: "Healthcare" },
@@ -18,7 +19,30 @@ const projects = [
   { icon: <TrendingUp size={13} />, label: "Income Generation" },
 ];
 
-export default function Hero() {
+const ECOSYSTEM_STAGES_QUERY = `
+  *[_type == "ecosystemStage"] | order(order asc) {
+    _id,
+    title,
+    order,
+    cardDescription,
+    cardIcon,
+    stageNumber,
+    stageName,
+    cardImage,
+    "projects": *[_type == "project" && ecosystemSection.stage._ref == ^._id] | order(name asc) {
+      _id,
+      name,
+      icon,
+      tagline,
+      "slug": slug.current,
+      projectCategory->{ name }
+    }
+  }
+`;
+
+export default async function Hero() {
+  const stages = await sanityFetch<any[]>(ECOSYSTEM_STAGES_QUERY);
+
   return (
     <section className="relative overflow-hidden bg-purple-faint/50 py-12">
       {/* Content */}
@@ -76,38 +100,12 @@ export default function Hero() {
               text="Explore our projects"
               href="/projects"
             />
-
-            {/* Phase mini-steps */}
-            {/* <div className="flex items-center gap-3 mt-10">
-              {[
-                { num: "1", name: "Essentials", bg: "bg-purple", text: "text-brand-white" },
-                { num: "2", name: "Stability", bg: "bg-purple-light", text: "text-brand-white" },
-                { num: "3", name: "Development", bg: "bg-purple-dark", text: "text-brand-white" },
-                { num: "4", name: "Sustainability", bg: "bg-brand-black", text: "text-brand-white" },
-              ].map((ph, i) => (
-                <div key={ph.num} className="flex items-center gap-2">
-                  <div className="flex flex-col items-center gap-0.5">
-                    <div
-                      className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black ${ph.bg} ${ph.text}`}
-                    >
-                      {ph.num}
-                    </div>
-                    <span className="text-[8px] font-semibold hidden sm:block text-center leading-tight text-brand-black/70 max-w-[48px]">
-                      {ph.name}
-                    </span>
-                  </div>
-                  {i < 3 && (
-                    <div className="h-[2px] flex-1 rounded-full bg-purple/20 min-w-[12px]" />
-                  )}
-                </div>
-              ))}
-            </div> */}
           </div>
 
           {/* ══ RIGHT — Ecosystem Diagram ══ */}
           <div className="flex-1 w-full flex items-center justify-center lg:justify-end">
             <div className="w-full max-w-[560px]">
-              <EcosystemDiagram />
+              <EcosystemDiagram stages={stages} />
             </div>
           </div>
         </div>

@@ -1,16 +1,18 @@
-import { notFound } from "next/navigation";
-
-import { EcosystemStage, allStages } from "../../data/ecosystemData";
 import Link from "next/link";
-
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import {
+  type SanityEcosystemStage,
+  type SanityEcosystemStageNav,
+} from "../../data/sanityTypes";
 
 type Props = {
-  stage: EcosystemStage;
+  stage: SanityEcosystemStage;
+  allStages: SanityEcosystemStageNav[];
 };
 
-export default function StageNavigation({ stage }: Props) {
-  const slug = stage.slug;
-  const currentIndex = allStages.findIndex((s) => s.slug === slug);
+export default function StageNavigation({ stage, allStages }: Props) {
+  const currentSlug = stage.slug.current;
+  const currentIndex = allStages.findIndex((s) => s.slug.current === currentSlug);
   const prevStage = currentIndex > 0 ? allStages[currentIndex - 1] : null;
   const nextStage = currentIndex < allStages.length - 1 ? allStages[currentIndex + 1] : null;
 
@@ -19,17 +21,18 @@ export default function StageNavigation({ stage }: Props) {
       {/* Stage Navigation */}
       <section className="bg-white border-t border-gray-100 py-12 px-4">
         <div className="max-w-5xl mx-auto">
-          <p className="text-center text-gray-400 text-xs uppercase tracking-widest font-semibold mb-8">
-            Zakat Transformation Ecosystem
+          <p className="text-center text-brand-grey text-xs uppercase tracking-widest font-semibold mb-8">
+            Our Ecosystem
           </p>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {allStages.map((s, i) => {
-              const isCurrent = s.slug === slug;
+              const isCurrent = s.slug.current === currentSlug;
               const isPast = i < currentIndex;
+              console.log(allStages);
               return (
                 <Link
-                  key={s.slug}
-                  href={`/ecosystem/${s.slug}`}
+                  key={s._id}
+                  href={`/ecosystem/${s.slug.current}`}
                   className={`rounded-sm p-4 text-center border transition-all ${isCurrent
                     ? "bg-purple text-white border-purple"
                     : isPast
@@ -37,31 +40,27 @@ export default function StageNavigation({ stage }: Props) {
                       : "bg-gray-50 border-gray-200 text-brand-black/50 hover:bg-brand-black/20"
                     }`}
                 >
-                  <p className="text-xs uppercase tracking-widest font-semibold mb-1">
-                    Stage {s.stageNumber}
+                  <p className="text-[0.65em] uppercase mb-1">
+                    Stage {s.stageNumber ?? s.order}
                   </p>
-                  <p className="font-black text-lg">{s.name}</p>
-                  <p className="text-xs font-semibold mt-1 uppercase tracking-wider">
-                    {s.badge}
-                  </p>
+                  <p className="font-bold text-lg">{s.stageName || s.title}</p>
                 </Link>
               );
             })}
           </div>
+
           {/* Prev / Next */}
-          <div className="flex justify-between mt-10">
+          <div className="flex justify-between items-center mt-10">
             <div>
               {prevStage && (
                 <Link
-                  href={`/ecosystem/${prevStage.slug}`}
+                  href={`/ecosystem/${prevStage.slug.current}`}
                   className="inline-flex items-center gap-2 text-brand-black/60 hover:text-purple-light font-medium text-sm transition-colors group"
                 >
-                  <svg className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
+                  <FaChevronLeft />
                   <span>
-                    <span className="block text-xs text-gray-400">Previous Stage</span>
-                    {prevStage.name}
+                    <span className="block text-xs text-brand-gray">Previous Stage</span>
+                    {prevStage.stageName || prevStage.title}
                   </span>
                 </Link>
               )}
@@ -69,16 +68,14 @@ export default function StageNavigation({ stage }: Props) {
             <div>
               {nextStage && (
                 <Link
-                  href={`/ecosystem/${nextStage.slug}`}
+                  href={`/ecosystem/${nextStage.slug.current}`}
                   className="inline-flex items-center gap-2 text-brand-black/60 hover:text-purple-light font-medium text-sm transition-colors group text-right"
                 >
                   <span>
                     <span className="block text-xs text-brand-black/50">Next Stage</span>
-                    {nextStage.name}
+                    {nextStage.stageName || nextStage.title}
                   </span>
-                  <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
+                  <FaChevronRight />
                 </Link>
               )}
             </div>
@@ -86,5 +83,5 @@ export default function StageNavigation({ stage }: Props) {
         </div>
       </section>
     </>
-  );
+  )
 }

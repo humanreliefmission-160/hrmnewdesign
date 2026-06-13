@@ -61,7 +61,7 @@ export default function DonationStepGiftAid({ currentStep, donationState, setGif
         </div>
       )}
 
-      <DonationStepFooter onBack={() => goStep(2)} onNext={() => goStep(4)} />
+      <DonationStepFooter onBack={() => goStep(2)} onNext={() => goStep(4)} nextDisabled={donationState.giftAid === null || donationState.giftAid === undefined} />
     </div>
   );
 }

@@ -1,5 +1,3 @@
-"use client";
-
 import Hero from "../components/about/ecosystem/Hero";
 import WhoWeAre from "../components/about/WhoWeAre";
 import Impact from "../components/about/Impact";

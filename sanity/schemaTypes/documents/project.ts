@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import IconSelector from '../../components/IconSelector'
 
 export const project = defineType({
   name: 'project',
@@ -17,6 +18,16 @@ export const project = defineType({
   ],
   fields: [
     // ── Overview ────────────────────────────────────────────────
+    defineField({
+      name: 'icon',
+      title: 'Icon',
+      type: 'string',
+      components: {
+        input: IconSelector,
+      },
+      group: 'overview',
+      description: 'React Icons name e.g. "FaHeart"',
+    }),
     defineField({
       name: 'name',
       title: 'Project Name',
@@ -242,7 +253,7 @@ export const project = defineType({
           description: 'Select which stage this project is currently in',
           type: 'reference',
           to: [{ type: 'ecosystemStage' }],
-          validation: (Rule) => Rule.required(),
+          // validation: (Rule) => Rule.required(),
         }),
         defineField({
           name: 'ecosystemCards',

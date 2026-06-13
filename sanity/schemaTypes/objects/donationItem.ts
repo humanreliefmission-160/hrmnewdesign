@@ -38,6 +38,9 @@ export const donationItem = defineType({
       options: {
         source: 'itemTitle',
         maxLength: 96,
+        // Slug lives inside an array; provide isUnique to suppress the
+        // "cannot be automatically checked for uniqueness" warning.
+        isUnique: () => true,
       },
       validation: (R) => R.required(),
     }),

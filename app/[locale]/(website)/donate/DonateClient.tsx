@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import PageHeader from "../components/PageHeader";
 import DonationProgress from "../components/donation/DonationProgress";
 import DonationStepType from "../components/donation/DonationStepType";
@@ -8,11 +9,12 @@ import DonationStepFundAmount from "../components/donation/DonationStepFundAmoun
 import DonationStepGiftAid from "../components/donation/DonationStepGiftAid";
 import DonationStepDetails from "../components/donation/DonationStepDetails";
 import DonationStepPayment from "../components/donation/DonationStepPayment";
-import DonationSuccess from "../components/donation/DonationSuccess";
 import { DonationState, initialDonationState } from "../components/donation/types";
 import type { DonationPortalProject } from "../lib/sanity/donationProjects";
 import { useBasket } from "../context/BasketContext";
 import { buildDonationStateFromBasket } from "../lib/donation/syncBasketToDonationState";
+
+export const DONATION_SESSION_KEY = "hrm_donation_result";
 
 interface DonateClientProps {
   projects: DonationPortalProject[];
@@ -38,7 +40,8 @@ export default function DonateClient({
   initialProjectSlug,
   initialStep,
 }: DonateClientProps) {
-  const { items } = useBasket();
+  const router = useRouter();
+  const { items, totalAmount: basketTotal, itemCount, clearBasket } = useBasket();
   const [donationState, setDonationState] = useState<DonationState>(() => ({
     ...initialDonationState,
     type:
@@ -54,7 +57,11 @@ export default function DonateClient({
   const syncedBasket = useRef(false);
   const [payMethod, setPayMethod] = useState("Card");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+
+  // Lifted from DonationStepDetails so we can read them in completeDonation
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
 
   const setDonationType = (type: string) =>
     setDonationState({
@@ -174,18 +181,60 @@ export default function DonateClient({
 
   const completeDonation = () => {
     setIsProcessing(true);
+
+    // Build the donation summary to pass to the result pages
+    const donatedTotal = itemCount > 0 ? basketTotal : donationState.amount || 0;
+    const giftAidAmt = donationState.giftAid ? donatedTotal * 0.25 : 0;
+
+    // Build basket line items for the receipt
+    const lineItems =
+      itemCount > 0
+        ? items.map((item) => ({
+          projectName: item.projectName,
+          projectItem: item.projectItem,
+          intention: item.intention,
+          amount: item.amount,
+        }))
+        : donationState.projectName
+          ? [
+            {
+              projectName: donationState.projectName,
+              projectItem: donationState.donationItemTitle || "",
+              intention: donationState.intention || "",
+              amount: donationState.amount || 0,
+            },
+          ]
+          : [];
+
+    const donationResult = {
+      firstName,
+      lastName,
+      email,
+      total: donatedTotal,
+      giftAidAmount: giftAidAmt,
+      totalWithGiftAid: donatedTotal + giftAidAmt,
+      giftAid: donationState.giftAid,
+      type: donationState.type,
+      lineItems,
+      reference: `DON-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`,
+      date: new Date().toISOString(),
+      // Simulate success (swap to false to test failure page)
+      success: true,
+    };
+
     setTimeout(() => {
       setIsProcessing(false);
-      setShowSuccess(true);
+      try {
+        sessionStorage.setItem(DONATION_SESSION_KEY, JSON.stringify(donationResult));
+      } catch { }
+      // Clear basket on success
+      if (donationResult.success) {
+        clearBasket();
+        router.push("/donate/donate-success");
+      } else {
+        router.push("/donate/donate-fail");
+      }
     }, 1800);
-  };
-
-  const resetDonation = () => {
-    setDonationState(initialDonationState);
-    setCustomAmount("");
-    setCurrentStep(1);
-    setShowSuccess(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -198,57 +247,57 @@ export default function DonateClient({
       />
 
       <div className="max-w-[800px] mx-auto px-4 md:px-8 my-15 sm:my-20">
-        {!showSuccess && <DonationProgress currentStep={currentStep} />}
+        <DonationProgress currentStep={currentStep} />
 
-        {!showSuccess && (
-          <>
-            <DonationStepType
-              currentStep={currentStep}
-              donationState={donationState}
-              setDonationType={setDonationType}
-              goStep={goStep}
-            />
+        <DonationStepType
+          currentStep={currentStep}
+          donationState={donationState}
+          setDonationType={setDonationType}
+          goStep={goStep}
+        />
 
-            <DonationStepFundAmount
-              currentStep={currentStep}
-              donationState={donationState}
-              projects={projects}
-              customAmount={customAmount}
-              selectProject={selectProject}
-              selectDonationItem={selectDonationItem}
-              selectAmount={selectAmount}
-              selectIntention={selectIntention}
-              handleCustomAmount={handleCustomAmount}
-              updateAdditionalField={updateAdditionalField}
-              goStep={goStep}
-            />
+        <DonationStepFundAmount
+          currentStep={currentStep}
+          donationState={donationState}
+          projects={projects}
+          customAmount={customAmount}
+          selectProject={selectProject}
+          selectDonationItem={selectDonationItem}
+          selectAmount={selectAmount}
+          selectIntention={selectIntention}
+          handleCustomAmount={handleCustomAmount}
+          updateAdditionalField={updateAdditionalField}
+          goStep={goStep}
+        />
 
-            <DonationStepGiftAid
-              currentStep={currentStep}
-              donationState={donationState}
-              setGiftAid={setGiftAid}
-              goStep={goStep}
-            />
+        <DonationStepGiftAid
+          currentStep={currentStep}
+          donationState={donationState}
+          setGiftAid={setGiftAid}
+          goStep={goStep}
+        />
 
-            <DonationStepDetails
-              currentStep={currentStep}
-              donationState={donationState}
-              goStep={goStep}
-            />
+        <DonationStepDetails
+          currentStep={currentStep}
+          donationState={donationState}
+          goStep={goStep}
+          firstName={firstName}
+          setFirstName={setFirstName}
+          lastName={lastName}
+          setLastName={setLastName}
+          email={email}
+          setEmail={setEmail}
+        />
 
-            <DonationStepPayment
-              currentStep={currentStep}
-              donationState={donationState}
-              payMethod={payMethod}
-              setPayMethod={setPayMethod}
-              isProcessing={isProcessing}
-              completeDonation={completeDonation}
-              goStep={goStep}
-            />
-          </>
-        )}
-
-        <DonationSuccess showSuccess={showSuccess} resetDonation={resetDonation} />
+        <DonationStepPayment
+          currentStep={currentStep}
+          donationState={donationState}
+          payMethod={payMethod}
+          setPayMethod={setPayMethod}
+          isProcessing={isProcessing}
+          completeDonation={completeDonation}
+          goStep={goStep}
+        />
       </div>
     </div>
   );
