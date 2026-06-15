@@ -95,7 +95,7 @@ const STAGE_PROJECTS_QUERY = `
         amounts[] {
           _key,
           amount,
-          impactLabel
+          "impactLabel": label
         }
       }
     }

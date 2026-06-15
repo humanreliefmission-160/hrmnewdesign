@@ -2,7 +2,8 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { set, StringInputProps } from 'sanity'
 import { Stack, Text, TextInput, Grid, Card, Flex } from '@sanity/ui'
-import * as FaIcons from 'react-icons/fa'  // Font Awesome 5/6
+import * as FaIcons from 'react-icons/fa'  // Font Awesome 5
+import * as Fa6Icons from 'react-icons/fa6' // Font Awesome 6
 import * as MdIcons from 'react-icons/md' // Material Design
 import * as HiIcons from 'react-icons/hi' // Hero Icons
 import * as BsIcons from 'react-icons/bs' // Bootstrap Icons
@@ -11,11 +12,14 @@ import * as PiIcons from 'react-icons/pi' // Phosphor Icons
 import * as BiIcons from 'react-icons/bi' // BoxIcons
 import * as SiIcons from 'react-icons/si' // Simple Icons
 import * as IoIcons from 'react-icons/io5' // Ionicons 5
+import * as TbIcons from 'react-icons/tb' // Tabler Icons
+import * as RiIcons from 'react-icons/ri' // Remix Icons
 // Add more icon sets as you like
 
 // Merge all icons into one big map
 const allIcons: Record<string, React.ComponentType<{ size?: number }>> = {
   ...FaIcons,
+  ...Fa6Icons,
   ...MdIcons,
   ...HiIcons,
   ...BsIcons,
@@ -24,6 +28,8 @@ const allIcons: Record<string, React.ComponentType<{ size?: number }>> = {
   ...BiIcons,
   ...SiIcons,
   ...IoIcons,
+  ...TbIcons,
+  ...RiIcons,
 }
 
 const iconNames = Object.keys(allIcons).sort()

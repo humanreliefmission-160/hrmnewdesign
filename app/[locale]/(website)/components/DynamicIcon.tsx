@@ -21,7 +21,7 @@ export default function DynamicIcon({ name, className, size = 30, color, fill }:
 
     switch (prefix) {
       case 'fa':
-        promise = import('react-icons/fa');
+        promise = import('react-icons/fa6');
         break;
       case 'md':
         promise = import('react-icons/md');
@@ -47,8 +47,17 @@ export default function DynamicIcon({ name, className, size = 30, color, fill }:
       case 'io':
         promise = import('react-icons/io5');
         break;
+      case 'fa6':
+        promise = import('react-icons/fa6');
+        break;
+      case 'tb':
+        promise = import('react-icons/tb');
+        break;
+      case 'ri':
+        promise = import('react-icons/ri');
+        break;
       default:
-        promise = import('react-icons/fa');
+        promise = import('react-icons/fa6');
     }
 
     promise
@@ -56,10 +65,16 @@ export default function DynamicIcon({ name, className, size = 30, color, fill }:
         if (mod && mod[name]) {
           setIconState({ icon: mod[name] as React.ComponentType<any> });
         } else {
-          // If not found in the prefixed set, try searching FontAwesome as fallback
-          import('react-icons/fa').then((faMod) => {
-            if (faMod && faMod[name]) {
-              setIconState({ icon: faMod[name] as React.ComponentType<any> });
+          // If not found in the prefixed set, try searching FontAwesome 6 then FontAwesome 5 as fallback
+          import('react-icons/fa6').then((fa6Mod) => {
+            if (fa6Mod && fa6Mod[name]) {
+              setIconState({ icon: fa6Mod[name] as React.ComponentType<any> });
+            } else {
+              import('react-icons/fa').then((faMod) => {
+                if (faMod && faMod[name]) {
+                  setIconState({ icon: faMod[name] as React.ComponentType<any> });
+                }
+              });
             }
           });
         }

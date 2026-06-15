@@ -4,10 +4,19 @@ import React, { useState } from "react";
 import YellowCTA from "../YellowCTA";
 import { FaInfoCircle } from "react-icons/fa";
 import type { DonationItemData } from "../../types/donationItem";
+import { useBasket } from "../../context/BasketContext";
 
 const DEFAULT_AMOUNTS = [5, 10, 20, 50];
 
-export default function DonationOptions({ item }: { item: DonationItemData }) {
+interface DonationOptionsProps {
+  item: DonationItemData;
+  projectName: string;
+  projectSlug: string;
+}
+
+export default function DonationOptions({ item, projectName, projectSlug }: DonationOptionsProps) {
+  const { addItem } = useBasket();
+
   const presetAmounts = item.amounts?.length
     ? item.amounts.map((a) => a.amount)
     : DEFAULT_AMOUNTS;
@@ -22,8 +31,28 @@ export default function DonationOptions({ item }: { item: DonationItemData }) {
     ? item.intentions.map((i) => i.title)
     : ["Zakat", "Sadaqah", "Lillah", "General"];
 
+  const handleAddToBasket = () => {
+    if (!isValid) return;
+    addItem({
+      projectName,
+      projectSlug,
+      projectItem: item.itemTitle,
+      amount: amount!,
+      intention,
+      isZakat: intention.toLowerCase() === "zakat",
+    });
+
+    // Auto-open the basket panel
+    setTimeout(() => {
+      document.getElementById("donation-basket-trigger")?.click();
+    }, 100);
+  };
+
+
   const getImpactMessage = (amt: number | null) => {
     if (!amt) return null;
+    const matched = item.amounts?.find((a) => a.amount === amt);
+    if (matched?.label) return matched.label;
     const people = Math.floor(amt / 10);
     if (people >= 1) {
       return `£${amt} feeds ${people} person${people > 1 ? 's' : ''}.`;
@@ -150,7 +179,7 @@ export default function DonationOptions({ item }: { item: DonationItemData }) {
 
       <YellowCTA
         text="Add to Donation Basket"
-        href={isValid ? "/donate" : undefined}
+        onClick={handleAddToBasket}
         disabled={!isValid}
       />
     </div>

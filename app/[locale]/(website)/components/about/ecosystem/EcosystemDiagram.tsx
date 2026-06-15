@@ -35,6 +35,7 @@ interface Phase {
   projects: Project[];
   description: string;
   badge: string;
+  slug?: string;
 }
 
 const phases: Phase[] = [
@@ -44,6 +45,7 @@ const phases: Phase[] = [
     subtitle: "Stage 1",
     badge: "Urgency",
     description: "Provide the bare necessities to keep people alive and safe — immediate relief before anything else can begin.",
+    slug: "essentials",
     projects: [
       { icon: <FaAmbulance size={13} />, name: "Ambulance Service", desc: "Providing immediate emergency medical care & transport", link: "/projects/projectitem", projectType: "emergency", category: "Healthcare" },
       { icon: <BiSolidDonateBlood size={13} />, name: "Blood Donation Awareness", desc: "Saving lives by tackling blood shortages", link: "/projects/projectitem", projectType: "normal", category: "Healthcare" },
@@ -61,6 +63,7 @@ const phases: Phase[] = [
     subtitle: "Stage 2",
     badge: "Stabilise",
     description: "Build stable foundations so families can live safely with clean water and proper infrastructure in place.",
+    slug: "stability",
     projects: [
       { icon: <RiCashFill size={13} />, name: "Cash Assistance", desc: "Providing cash to families to meet their basic needs", link: "/projects/projectitem", projectType: "normal", category: "Infrastructure" },
       { icon: <IoWomanSharp size={13} />, name: "Family Sponorship", desc: "Empowering families with monthly support", link: "/projects/projectitem", projectType: "normal", category: "Stability" },
@@ -75,6 +78,7 @@ const phases: Phase[] = [
     subtitle: "Stage 3",
     badge: "Grow",
     description: "Invest in people through education and sponsorships to unlock their potential, skills, and capabilities.",
+    slug: "development",
     projects: [
       { icon: <GiWell size={13} />, name: "Water Wells | Handpump", desc: "Providing clean drinking water to communities", link: "/projects/projectitem", projectType: "normal", category: "Development" },
       { icon: <MdBakeryDining size={13} />, name: "Bakery", desc: "Providing freshly baked bread to families on a daily basis", link: "/projects/projectitem", projectType: "normal", category: "Development" },
@@ -92,6 +96,7 @@ const phases: Phase[] = [
     subtitle: "Stage 4",
     badge: "Thrive",
     description: "Generate sustainable income so individuals become self-sufficient — and eventually Zakat payers themselves.",
+    slug: "self-sustainability",
     projects: [
       { icon: <FaArrowTrendUp size={13} />, name: "Income Generation", desc: "Providing the means to make bread winners with various means", link: "/projects/projectitem", projectType: "normal", category: "Sustainability" },
       { icon: <GiSewingMachine size={13} />, name: "Sewing Course", desc: "Providing the tools needed for women to make a living", link: "/projects/projectitem", projectType: "normal", category: "Development" },
@@ -120,6 +125,7 @@ export default function EcosystemDiagram({ stages }: { stages?: any[] }) {
       subtitle: `Stage ${stage.stageNumber || stage.order || 1}`,
       badge: stage.title || "",
       description: stage.cardDescription || "",
+      slug: stage.slug || stage.stageName?.toLowerCase() || stage.title?.toLowerCase() || "",
       projects: (stage.projects || []).map((p: any) => ({
         icon: <IconRenderer name={p.icon} size={13} />,
         name: p.name || "",
@@ -337,7 +343,7 @@ function PhaseDetailPanel({ phase, onClose }: any) {
           <div className="mt-4">
             <YellowCTA
               text="Support Phase"
-              href="/donate"
+              href={`/ecosystem/${phase.slug || ""}`}
             />
           </div>
         </div>

@@ -109,7 +109,7 @@ export default async function DonationItemPage({
             <ImageGallery images={galleryImages} />
           </div>
           <div>
-            <DonationOptions item={item} />
+            <DonationOptions item={item} projectName={data.name} projectSlug={projectSlug} />
           </div>
         </div>
         <AidItemDetails item={item} />

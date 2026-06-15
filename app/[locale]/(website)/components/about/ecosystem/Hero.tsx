@@ -29,6 +29,7 @@ const ECOSYSTEM_STAGES_QUERY = `
     stageNumber,
     stageName,
     cardImage,
+    "slug": slug.current,
     "projects": *[_type == "project" && ecosystemSection.stage._ref == ^._id] | order(name asc) {
       _id,
       name,
