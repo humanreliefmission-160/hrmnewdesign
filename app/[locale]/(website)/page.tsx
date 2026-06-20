@@ -31,9 +31,24 @@ const ECOSYSTEM_STAGES_QUERY = `
   }
 `;
 
+const LAST_MONTHS_IMPACT_QUERY = `
+  *[_type == "lastMonthsImpact"][0] {
+    sectionMonth,
+    "impactCards": impactCards[] {
+      "category": category->name,
+      image,
+      impactNumber,
+      secondaryText,
+      description,
+      pageLink,
+    }
+  }
+`;
+
 export default async function Home() {
   const projects = await sanityFetch(ALL_PROJECTS_QUERY);
   const stages = await sanityFetch(ECOSYSTEM_STAGES_QUERY);
+  const lastMonthsImpactData = await sanityFetch(LAST_MONTHS_IMPACT_QUERY);
 
   return (
     <div id="page-home" className="page active">
@@ -41,7 +56,7 @@ export default async function Home() {
       <ProjectsGrid projects={projects} />
       <NewsletterForm />
       <Impact />
-      <LastMonthImpact />
+      <LastMonthImpact data={lastMonthsImpactData} />
       <BottomCTA stages={stages} />
       {/* <FinalCTA /> */}
     </div>

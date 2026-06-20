@@ -54,6 +54,10 @@ const PROJECT_CATEGORIES_QUERY = `
   }
 `;
 
+const IMPACT_TICKER_QUERY = `
+  *[_type == "impactTicker"][0].impactItems
+`;
+
 export default async function LocaleLayout({
   children,
   params,
@@ -64,9 +68,10 @@ export default async function LocaleLayout({
   const { locale } = await params
   const messages = await getMessages()
 
-  const [headerNav, projectCategories] = await Promise.all([
+  const [headerNav, projectCategories, impactItems] = await Promise.all([
     sanityFetch<any>(HEADER_NAV_QUERY),
     sanityFetch<any[]>(PROJECT_CATEGORIES_QUERY),
+    sanityFetch<string[] | null>(IMPACT_TICKER_QUERY),
   ]);
 
   return (
@@ -74,7 +79,7 @@ export default async function LocaleLayout({
       <body>
         <NextIntlClientProvider messages={messages}>
           <Providers>
-            <ImpactTicker />
+            <ImpactTicker items={impactItems ?? []} />
             <Navbar
               navItems={headerNav?.navItems ?? []}
               projectCategories={projectCategories ?? []}
