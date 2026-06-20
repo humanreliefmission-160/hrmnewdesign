@@ -30,6 +30,8 @@ import { navItem } from './objects/navItem'
 import { navSubItem } from './objects/navSubItem'
 import { SchemaTypeDefinition } from 'sanity'
 import { navigation } from './documents/navigation'
+import { lastMonthsImpact } from './documents/lastMonthsImpact'
+import { impactTicker } from './documents/impactTicker'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -42,6 +44,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     donationIntention,
     fileCard,
     navigation,
+    lastMonthsImpact,
+    impactTicker,
 
     // Objects
     imageWithAlt,

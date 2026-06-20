@@ -59,6 +59,27 @@ const PROJECT_QUERY = `
     },
     impactSection,
 
+    ecosystemSection {
+      title,
+      bodyText,
+      "stage": stage->{ title, slug },
+      ecosystemCards[] {
+        _key,
+        icon,
+        cardTitle,
+        customSummary
+      },
+      quoteCard {
+        quote,
+        reference
+      },
+      callToAction {
+        title,
+        body,
+        text
+      }
+    },
+
     faq {
       title,
       cards[] {
@@ -120,7 +141,7 @@ export default async function ProjectItem({
             images={project.benefits?.imageGallery}
             projectSlug={projectSlug}
           />
-          <HowItHelps data={project.benefits} />
+          <HowItHelps data={project.benefits} ecosystemSection={project.ecosystemSection} />
           <FAQ data={project.faq} />
         </div>
       </section >

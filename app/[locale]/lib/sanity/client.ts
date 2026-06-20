@@ -14,5 +14,8 @@ export const sanityFetch = cache(async <T = any>(
   query: string,
   params?: QueryParams
 ): Promise<T> => {
-  return await sanityClient.fetch<T>(query, params ?? {})
+  return await sanityClient.fetch<T>(query, params ?? {}, {
+    // Bypass Next.js data cache so Sanity content is always fresh
+    next: { revalidate: 60 },
+  })
 })
