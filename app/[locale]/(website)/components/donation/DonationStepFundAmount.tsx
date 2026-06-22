@@ -22,6 +22,7 @@ interface DonationStepFundAmountProps {
   selectIntention: (intention: string) => void;
   handleCustomAmount: (e: React.ChangeEvent<HTMLInputElement>) => void;
   updateAdditionalField: (label: string, value: string) => void;
+  selectDurationMonths: (months: number | null) => void;
   goStep: (step: number) => void;
 }
 
@@ -50,6 +51,7 @@ export default function DonationStepFundAmount({
   selectIntention,
   handleCustomAmount,
   updateAdditionalField,
+  selectDurationMonths,
   goStep,
 }: DonationStepFundAmountProps) {
   const { addItem } = useBasket();
@@ -236,6 +238,27 @@ export default function DonationStepFundAmount({
               value={customAmount}
               onChange={handleCustomAmount}
             />
+          )}
+
+          {donationState.type === 'monthly' && (
+            <div className="mb-4 flex flex-col gap-1.5 animate-in fade-in duration-300">
+              <label className="text-sm font-bold text-brand-black">Donation Duration (Months)</label>
+              <select
+                className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none bg-brand-white font-medium text-brand-black cursor-pointer"
+                value={donationState.durationMonths ?? ''}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  selectDurationMonths(val ? parseInt(val, 10) : null);
+                }}
+              >
+                <option value="">Ongoing (No fixed end date)</option>
+                {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                  <option key={m} value={m}>
+                    {m} Month{m > 1 ? 's' : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
           )}
 
           {hasValidAmount && (

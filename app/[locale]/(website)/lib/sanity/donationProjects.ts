@@ -10,6 +10,7 @@ export const DONATION_PROJECTS_QUERY = `
         itemSubtext,
         price,
         donationType,
+        frequency,
         amounts[] {
           _key,
           amount,
@@ -43,7 +44,8 @@ export type DonationPortalItem = {
   itemTitle: string
   itemSubtext?: string
   price: number
-  donationType: 'one-off' | 'monthly'
+  donationType?: 'one-off' | 'monthly'
+  frequency?: 'one-off' | 'daily' | 'weekly' | 'monthly'
   amounts?: DonationPortalAmount[]
   intentions?: DonationPortalIntention[]
   additionalFields?: Array<{ label: string }>
@@ -63,10 +65,16 @@ export function getProjectDonationItems(
   donationType: string
 ): DonationPortalItem[] {
   const items = project?.donationSection?.donationItems ?? []
-  const sanityType = donationType === 'oneoff' ? 'one-off' : 'monthly'
+  if (donationType === 'oneoff') {
+    return items.filter(
+      (item) => (item.frequency ?? item.donationType ?? 'monthly') === 'one-off'
+    )
+  }
+  // monthly or friday (friday is weekly/recurring)
   return items.filter(
-    // Items saved before donationType was added have undefined — treat them as
-    // 'monthly' to match the schema's initialValue so they are not silently hidden.
-    (item) => (item.donationType ?? 'monthly') === sanityType
+    (item) => {
+      const freq = item.frequency ?? item.donationType ?? 'monthly'
+      return freq === 'monthly' || freq === 'weekly' || freq === 'daily'
+    }
   )
 }

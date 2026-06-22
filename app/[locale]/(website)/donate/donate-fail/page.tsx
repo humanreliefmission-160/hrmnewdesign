@@ -112,6 +112,15 @@ export default function DonationFail() {
                   </p>
                 </div>
 
+                {data?.reference && (
+                  <div className="mt-4 pt-4 border-t border-brand-lgrey/50">
+                    <p className="text-brand-grey text-xs mb-1">Attempt Reference</p>
+                    <p className="text-brand-black text-sm font-bold tracking-tight">
+                      {data.reference}
+                    </p>
+                  </div>
+                )}
+
                 {/* Line items */}
                 <div className="flex flex-col gap-2 mt-4 bg-white/75 text-center">
                   {data && data.lineItems.length > 0 ? (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import PageHeader from "../components/PageHeader";
 import DonationProgress from "../components/donation/DonationProgress";
 import DonationStepType from "../components/donation/DonationStepType";
@@ -42,6 +42,8 @@ export default function DonateClient({
   initialStep,
 }: DonateClientProps) {
   const router = useRouter();
+  const params = useParams();
+  const locale = params?.locale || "en";
   const { items, totalAmount: basketTotal, itemCount, clearBasket } = useBasket();
   const [donationState, setDonationState] = useState<DonationState>(() => ({
     ...initialDonationState,
@@ -64,6 +66,11 @@ export default function DonateClient({
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [newsletterOptIn, setNewsletterOptIn] = useState(false);
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [postcode, setPostcode] = useState("");
+  const [phone, setPhone] = useState("");
+  const [country, setCountry] = useState("United Kingdom");
 
   const setDonationType = (type: string) =>
     setDonationState({
@@ -173,6 +180,10 @@ export default function DonateClient({
     }));
   };
 
+  const selectDurationMonths = (months: number | null) => {
+    setDonationState((prev) => ({ ...prev, durationMonths: months }));
+  };
+
   const setGiftAid = (giftAid: boolean) =>
     setDonationState((prev) => ({ ...prev, giftAid }));
 
@@ -181,10 +192,10 @@ export default function DonateClient({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const completeDonation = () => {
+  const completeDonation = (reference: string, success: boolean) => {
     setIsProcessing(true);
 
-    if (newsletterOptIn) {
+    if (success && newsletterOptIn) {
       subscribeNewsletter(firstName, lastName, email, "Donation Checkout Subscribe").catch((err) => {
         console.error("Failed to subscribe user during checkout:", err);
       });
@@ -224,25 +235,22 @@ export default function DonateClient({
       giftAid: donationState.giftAid,
       type: donationState.type,
       lineItems,
-      reference: `DON-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`,
+      reference: reference || `DON-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`,
       date: new Date().toISOString(),
-      // Simulate success (swap to false to test failure page)
-      success: true,
+      success,
     };
 
-    setTimeout(() => {
-      setIsProcessing(false);
-      try {
-        sessionStorage.setItem(DONATION_SESSION_KEY, JSON.stringify(donationResult));
-      } catch { }
-      // Clear basket on success
-      if (donationResult.success) {
-        clearBasket();
-        router.push("/donate/donate-success");
-      } else {
-        router.push("/donate/donate-fail");
-      }
-    }, 1800);
+    setIsProcessing(false);
+    try {
+      sessionStorage.setItem(DONATION_SESSION_KEY, JSON.stringify(donationResult));
+    } catch { }
+    // Clear basket on success
+    if (success) {
+      clearBasket();
+      router.push(`/${locale}/donate/donate-success`);
+    } else {
+      router.push(`/${locale}/donate/donate-fail`);
+    }
   };
 
   return (
@@ -275,6 +283,7 @@ export default function DonateClient({
           selectIntention={selectIntention}
           handleCustomAmount={handleCustomAmount}
           updateAdditionalField={updateAdditionalField}
+          selectDurationMonths={selectDurationMonths}
           goStep={goStep}
         />
 
@@ -297,6 +306,16 @@ export default function DonateClient({
           setEmail={setEmail}
           newsletterOptIn={newsletterOptIn}
           setNewsletterOptIn={setNewsletterOptIn}
+          address={address}
+          setAddress={setAddress}
+          city={city}
+          setCity={setCity}
+          postcode={postcode}
+          setPostcode={setPostcode}
+          phone={phone}
+          setPhone={setPhone}
+          country={country}
+          setCountry={setCountry}
         />
 
         <DonationStepPayment
@@ -307,6 +326,14 @@ export default function DonateClient({
           isProcessing={isProcessing}
           completeDonation={completeDonation}
           goStep={goStep}
+          firstName={firstName}
+          lastName={lastName}
+          email={email}
+          address={address}
+          city={city}
+          postcode={postcode}
+          phone={phone}
+          country={country}
         />
       </div>
     </div>

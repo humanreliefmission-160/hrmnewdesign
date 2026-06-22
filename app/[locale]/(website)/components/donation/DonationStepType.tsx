@@ -58,7 +58,13 @@ export default function DonationStepType({ currentStep, donationState, setDonati
               Set up automatic donations on Fridays — the blessed day — for maximum spiritual reward.
             </p>
           </div>
-          <button className="sm:inline-flex items-center gap-2 font-bold text-sm cursor-pointer transition-all duration-200 no-underline px-4 py-2 text-purple hover:text-purple-dark rounded-lg whitespace-nowrap hover:decoration-1 hover:underline">
+          <button
+            onClick={() => {
+              setDonationType("friday");
+              goStep(2);
+            }}
+            className="sm:inline-flex items-center gap-2 font-bold text-sm cursor-pointer transition-all duration-200 no-underline px-4 py-2 text-purple hover:text-purple-dark rounded-lg whitespace-nowrap hover:decoration-1 hover:underline"
+          >
             Set Up →
           </button>
         </div>

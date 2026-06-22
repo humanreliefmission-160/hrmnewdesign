@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { DonationState } from './types';
 import DonationStepFooter from './DonationStepFooter';
 import DonationBasketTotal from './DonationBasketTotal';
@@ -16,21 +15,48 @@ interface DonationStepDetailsProps {
   setEmail: (v: string) => void;
   newsletterOptIn: boolean;
   setNewsletterOptIn: (v: boolean) => void;
+  address: string;
+  setAddress: (v: string) => void;
+  city: string;
+  setCity: (v: string) => void;
+  postcode: string;
+  setPostcode: (v: string) => void;
+  phone: string;
+  setPhone: (v: string) => void;
+  country: string;
+  setCountry: (v: string) => void;
 }
 
-export default function DonationStepDetails({ currentStep, donationState, goStep, firstName, setFirstName, lastName, setLastName, email, setEmail, newsletterOptIn, setNewsletterOptIn }: DonationStepDetailsProps) {
-  const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [postcode, setPostcode] = useState('');
-
+export default function DonationStepDetails({
+  currentStep,
+  donationState,
+  goStep,
+  firstName,
+  setFirstName,
+  lastName,
+  setLastName,
+  email,
+  setEmail,
+  newsletterOptIn,
+  setNewsletterOptIn,
+  address,
+  setAddress,
+  city,
+  setCity,
+  postcode,
+  setPostcode,
+  phone,
+  setPhone,
+  country,
+  setCountry,
+}: DonationStepDetailsProps) {
   if (currentStep !== 4) return null;
 
   // Validation logic
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const baseFieldsValid = firstName.trim() !== '' && lastName.trim() !== '' && isEmailValid;
   const giftAidFieldsValid = donationState.giftAid
-    ? address.trim() !== '' && city.trim() !== '' && postcode.trim() !== ''
+    ? address.trim() !== '' && city.trim() !== '' && postcode.trim() !== '' && country.trim() !== ''
     : true;
 
   const isNextDisabled = !baseFieldsValid || !giftAidFieldsValid;
@@ -100,7 +126,7 @@ export default function DonationStepDetails({ currentStep, donationState, goStep
               onChange={(e) => setAddress(e.target.value)}
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="flex flex-col gap-1.5">
               <label className="block text-sm font-bold text-brand-black">City *</label>
               <input
@@ -119,6 +145,16 @@ export default function DonationStepDetails({ currentStep, donationState, goStep
                 placeholder="LS1 2AB"
                 value={postcode}
                 onChange={(e) => setPostcode(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="block text-sm font-bold text-brand-black">Country *</label>
+              <input
+                className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:bg-purple-faint focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white"
+                type="text"
+                placeholder="United Kingdom"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
               />
             </div>
           </div>
