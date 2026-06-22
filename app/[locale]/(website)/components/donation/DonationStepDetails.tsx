@@ -102,15 +102,55 @@ export default function DonationStepDetails({
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
-      <div className="flex flex-col gap-1.5 mb-6">
-        <label className="block text-sm font-bold text-brand-black">Phone Number</label>
-        <input
-          className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:bg-purple-faint focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white"
-          type="tel"
-          placeholder="+44 7700 000000"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="flex flex-col gap-1.5">
+          <label className="block text-sm font-bold text-brand-black">Phone Number</label>
+          <input
+            className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:bg-purple-faint focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white"
+            type="tel"
+            placeholder="+44 7700 000000"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <label className="block text-sm font-bold text-brand-black">Country</label>
+          <select
+            className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:bg-purple-faint focus:ring-1 focus:ring-purple outline-none transition-all font-medium bg-brand-white text-brand-black"
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+          >
+            <option value="GB">United Kingdom</option>
+            <option value="US">United States</option>
+            <option value="CA">Canada</option>
+            <option value="AU">Australia</option>
+            <option value="AE">United Arab Emirates</option>
+            <option value="SA">Saudi Arabia</option>
+            <option value="QA">Qatar</option>
+            <option value="KW">Kuwait</option>
+            <option value="BH">Bahrain</option>
+            <option value="OM">Oman</option>
+            <option value="PK">Pakistan</option>
+            <option value="BD">Bangladesh</option>
+            <option value="IN">India</option>
+            <option value="DE">Germany</option>
+            <option value="FR">France</option>
+            <option value="NL">Netherlands</option>
+            <option value="SE">Sweden</option>
+            <option value="NO">Norway</option>
+            <option value="DK">Denmark</option>
+            <option value="IE">Ireland</option>
+            <option value="NZ">New Zealand</option>
+            <option value="ZA">South Africa</option>
+            <option value="NG">Nigeria</option>
+            <option value="KE">Kenya</option>
+            <option value="EG">Egypt</option>
+            <option value="TR">Turkey</option>
+            <option value="MY">Malaysia</option>
+            <option value="SG">Singapore</option>
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
       </div>
       {donationState.giftAid && (
         <div>
@@ -126,7 +166,7 @@ export default function DonationStepDetails({
               onChange={(e) => setAddress(e.target.value)}
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div className="flex flex-col gap-1.5">
               <label className="block text-sm font-bold text-brand-black">City *</label>
               <input
@@ -145,16 +185,6 @@ export default function DonationStepDetails({
                 placeholder="LS1 2AB"
                 value={postcode}
                 onChange={(e) => setPostcode(e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="block text-sm font-bold text-brand-black">Country *</label>
-              <input
-                className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:bg-purple-faint focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 font-medium bg-brand-white"
-                type="text"
-                placeholder="United Kingdom"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
               />
             </div>
           </div>
