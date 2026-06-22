@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       line1: address,
       city: city || undefined,
       postal_code: postcode || undefined,
-      country: country ? country.slice(0, 2).toUpperCase() : 'GB',
+      country: country || 'GB',
     } : undefined;
 
     if (customers.data.length > 0) {
@@ -55,6 +55,8 @@ export async function POST(request: Request) {
       currency: currency || 'gbp',
       customer: customer.id,
       receipt_email: email,
+      // 'card' covers all card-based payment methods incl. Google Pay & Apple Pay
+      payment_method_types: ['card'],
       // description shows in the Stripe Dashboard payment row alongside the email
       description: donationRef
         ? `HRM Donation ${donationRef} — ${email}`

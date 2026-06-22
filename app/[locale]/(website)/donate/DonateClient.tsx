@@ -70,7 +70,7 @@ export default function DonateClient({
   const [city, setCity] = useState("");
   const [postcode, setPostcode] = useState("");
   const [phone, setPhone] = useState("");
-  const [country, setCountry] = useState("United Kingdom");
+  const [country, setCountry] = useState("GB");
 
   const setDonationType = (type: string) =>
     setDonationState({

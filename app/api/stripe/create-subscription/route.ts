@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       line1: address,
       city: city || undefined,
       postal_code: postcode || undefined,
-      country: country ? country.slice(0, 2).toUpperCase() : 'GB',
+      country: country || 'GB',
     } : undefined;
 
     if (customers.data.length > 0) {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import YellowCTA from '../YellowCTA';
 import { DonationState } from './types';
 import DonationStepFooter from './DonationStepFooter';
@@ -10,7 +10,13 @@ import { IoCardSharp, IoShieldCheckmark } from 'react-icons/io5';
 import { GrPaypal } from 'react-icons/gr';
 import { AiFillLock } from 'react-icons/ai';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
-import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import {
+  Elements,
+  CardElement,
+  useStripe,
+  useElements,
+  PaymentRequestButtonElement,
+} from '@stripe/react-stripe-js';
 import getStripe from '@/app/api/stripe/stripejs';
 
 interface DonationStepPaymentProps {
@@ -79,11 +85,45 @@ function DonationStepPaymentForm({
   const [localProcessing, setLocalProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isCardComplete, setIsCardComplete] = useState(false);
+  const [paymentRequest, setPaymentRequest] = useState<any>(null);
+  const prInitialized = useRef(false);
 
   const donatedTotal = itemCount > 0 ? basketTotal : donationState.amount || 0;
   const giftAidAmt = donationState.giftAid ? donatedTotal * 0.25 : 0;
   const totalDonationValue = donatedTotal + giftAidAmt;
   const amountToPay = donatedTotal;
+
+  // Keep a ref of all values the PR event handler needs (avoids stale closures)
+  const paymentValuesRef = useRef({
+    amountToPay,
+    donationState,
+    email,
+    firstName,
+    lastName,
+    address,
+    city,
+    postcode,
+    phone,
+    country,
+    items,
+    itemCount,
+  });
+  useEffect(() => {
+    paymentValuesRef.current = {
+      amountToPay,
+      donationState,
+      email,
+      firstName,
+      lastName,
+      address,
+      city,
+      postcode,
+      phone,
+      country,
+      items,
+      itemCount,
+    };
+  });
 
   const formatMoney = (value: number) =>
     value.toLocaleString(undefined, {
@@ -91,17 +131,170 @@ function DonationStepPaymentForm({
       maximumFractionDigits: 2,
     });
 
+  // ─── Build metadata ──────────────────────────────────────────────────────────
+  const buildMetadata = (ref: string, vals: typeof paymentValuesRef.current) => {
+    const projectSummary =
+      vals.itemCount > 0
+        ? vals.items
+            .map((i) => `${i.projectName} (${i.projectItem || 'Donation'}) - £${i.amount}`)
+            .join(', ')
+        : `${vals.donationState.projectName || 'General'} (${
+            vals.donationState.donationItemTitle || 'Donation'
+          }) - £${vals.donationState.amount || 0}`;
+
+    return {
+      donation_reference: ref,
+      donor_name: `${vals.firstName} ${vals.lastName}`,
+      email: vals.email,
+      address: vals.address || '',
+      city: vals.city || '',
+      postcode: vals.postcode || '',
+      projects_donated_to: projectSummary,
+    };
+  };
+
+  // ─── Initialize Payment Request (Google Pay / Apple Pay) ─────────────────────
+  useEffect(() => {
+    if (!stripe || amountToPay <= 0 || prInitialized.current) return;
+    prInitialized.current = true;
+
+    const pr = stripe.paymentRequest({
+      country: 'GB',
+      currency: 'gbp',
+      total: {
+        label: 'Human Relief Mission Donation',
+        amount: Math.round(amountToPay * 100),
+      },
+      requestPayerName: true,
+      requestPayerEmail: true,
+    });
+
+    // Handle the payment method from the wallet sheet
+    pr.on('paymentmethod', async (ev) => {
+      const vals = paymentValuesRef.current;
+      const donationReference = `DON-${new Date().getFullYear()}-${Math.floor(
+        1000 + Math.random() * 9000
+      )}`;
+      const metadata = buildMetadata(donationReference, vals);
+
+      const isRecurring =
+        vals.donationState.type === 'monthly' || vals.donationState.type === 'friday';
+      const interval = vals.donationState.type === 'friday' ? 'week' : 'month';
+      const donorEmail = ev.payerEmail || vals.email;
+      const donorName = ev.payerName || `${vals.firstName} ${vals.lastName}`;
+
+      try {
+        let clientSecret: string;
+
+        if (isRecurring) {
+          const response = await fetch('/api/stripe/create-subscription', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              amount: vals.amountToPay,
+              currency: 'gbp',
+              email: donorEmail,
+              name: donorName,
+              address: vals.address,
+              city: vals.city,
+              postcode: vals.postcode,
+              phone: vals.phone,
+              country: vals.country,
+              interval,
+              durationMonths:
+                vals.donationState.type === 'monthly'
+                  ? vals.donationState.durationMonths
+                  : null,
+              metadata,
+            }),
+          });
+          const data = await response.json();
+          if (!response.ok || data.error || !data.clientSecret) {
+            ev.complete('fail');
+            completeDonation(donationReference, false);
+            return;
+          }
+          clientSecret = data.clientSecret;
+        } else {
+          const response = await fetch('/api/stripe/create-payment-intent', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              amount: vals.amountToPay,
+              currency: 'gbp',
+              email: donorEmail,
+              name: donorName,
+              address: vals.address,
+              city: vals.city,
+              postcode: vals.postcode,
+              phone: vals.phone,
+              country: vals.country,
+              metadata,
+            }),
+          });
+          const data = await response.json();
+          if (!response.ok || data.error) {
+            ev.complete('fail');
+            completeDonation(donationReference, false);
+            return;
+          }
+          clientSecret = data.clientSecret;
+        }
+
+        // Confirm the payment using the wallet's payment method
+        const { error: confirmError } = await stripe!.confirmCardPayment(
+          clientSecret,
+          { payment_method: ev.paymentMethod.id },
+          { handleActions: false } // wallet handles its own auth
+        );
+
+        if (confirmError) {
+          ev.complete('fail');
+          completeDonation(donationReference, false);
+        } else {
+          ev.complete('success');
+          completeDonation(donationReference, true);
+        }
+      } catch (err: any) {
+        ev.complete('fail');
+        completeDonation(donationReference, false);
+      }
+    });
+
+    pr.canMakePayment().then((result) => {
+      if (result) {
+        setPaymentRequest(pr);
+      }
+    });
+  }, [stripe, amountToPay]); // amountToPay needed for first-time init
+
+  // Keep the payment request amount in sync when it changes
+  useEffect(() => {
+    if (!paymentRequest || amountToPay <= 0) return;
+    try {
+      paymentRequest.update({
+        total: {
+          label: 'Human Relief Mission Donation',
+          amount: Math.round(amountToPay * 100),
+        },
+      });
+    } catch (_) {
+      // Can't update while the payment sheet is open — safe to ignore
+    }
+  }, [paymentRequest, amountToPay]);
+
+  // ─── Card / PayPal payment handler ───────────────────────────────────────────
   const isSubmitDisabled =
     isProcessing ||
     localProcessing ||
     (payMethod === "Card" && (!stripe || !elements || !isCardComplete));
 
   const handlePayment = async () => {
-    // Generate donation reference up front
-    const donationReference = `DON-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const donationReference = `DON-${new Date().getFullYear()}-${Math.floor(
+      1000 + Math.random() * 9000
+    )}`;
 
     if (payMethod !== "Card") {
-      // Simulate non-card payment (e.g. PayPal)
       setLocalProcessing(true);
       setTimeout(() => {
         setLocalProcessing(false);
@@ -115,20 +308,8 @@ function DonationStepPaymentForm({
     setLocalProcessing(true);
     setErrorMessage(null);
 
-    // Build snake_case metadata summary of projects donated to
-    const projectSummary = itemCount > 0
-      ? items.map(item => `${item.projectName} (${item.projectItem || 'Donation'}) - £${item.amount}`).join(', ')
-      : `${donationState.projectName || 'General'} (${donationState.donationItemTitle || 'Donation'}) - £${donationState.amount || 0}`;
-
-    const metadata = {
-      donation_reference: donationReference,
-      donor_name: `${firstName} ${lastName}`,
-      email: email,
-      address: address || '',
-      city: city || '',
-      postcode: postcode || '',
-      projects_donated_to: projectSummary,
-    };
+    const vals = paymentValuesRef.current;
+    const metadata = buildMetadata(donationReference, vals);
 
     try {
       const cardElement = elements.getElement(CardElement);
@@ -138,11 +319,11 @@ function DonationStepPaymentForm({
         return;
       }
 
-      const isRecurring = donationState.type === 'monthly' || donationState.type === 'friday';
+      const isRecurring =
+        donationState.type === 'monthly' || donationState.type === 'friday';
       const interval = donationState.type === 'friday' ? 'week' : 'month';
 
       if (isRecurring) {
-        // Recurring subscription via Stripe
         const response = await fetch('/api/stripe/create-subscription', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -157,7 +338,8 @@ function DonationStepPaymentForm({
             phone,
             country,
             interval,
-            durationMonths: donationState.type === 'monthly' ? donationState.durationMonths : null,
+            durationMonths:
+              donationState.type === 'monthly' ? donationState.durationMonths : null,
             metadata,
           }),
         });
@@ -166,26 +348,25 @@ function DonationStepPaymentForm({
         if (!response.ok || data.error) {
           setErrorMessage(data.error || 'Failed to create subscription.');
           setLocalProcessing(false);
-          // Go to failure screen on api failure
           completeDonation(donationReference, false);
           return;
         }
 
         if (data.clientSecret) {
-          const { error: confirmError } = await stripe.confirmCardPayment(data.clientSecret, {
-            payment_method: {
-              card: cardElement,
-              billing_details: {
-                name: `${firstName} ${lastName}`,
-                email,
+          const { error: confirmError } = await stripe.confirmCardPayment(
+            data.clientSecret,
+            {
+              payment_method: {
+                card: cardElement,
+                billing_details: { name: `${firstName} ${lastName}`, email },
               },
-            },
-          });
-
+            }
+          );
           if (confirmError) {
-            setErrorMessage(confirmError.message || 'Subscription confirmation failed.');
+            setErrorMessage(
+              confirmError.message || 'Subscription confirmation failed.'
+            );
             setLocalProcessing(false);
-            // Go to failure screen on card failure
             completeDonation(donationReference, false);
             return;
           }
@@ -194,7 +375,6 @@ function DonationStepPaymentForm({
         setLocalProcessing(false);
         completeDonation(donationReference, true);
       } else {
-        // One-off donation via Stripe PaymentIntent
         const response = await fetch('/api/stripe/create-payment-intent', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -216,25 +396,21 @@ function DonationStepPaymentForm({
         if (!response.ok || data.error) {
           setErrorMessage(data.error || 'Failed to initialize payment.');
           setLocalProcessing(false);
-          // Go to failure screen on api failure
           completeDonation(donationReference, false);
           return;
         }
 
-        const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(data.clientSecret, {
-          payment_method: {
-            card: cardElement,
-            billing_details: {
-              name: `${firstName} ${lastName}`,
-              email,
+        const { error: confirmError, paymentIntent } =
+          await stripe.confirmCardPayment(data.clientSecret, {
+            payment_method: {
+              card: cardElement,
+              billing_details: { name: `${firstName} ${lastName}`, email },
             },
-          },
-        });
+          });
 
         if (confirmError) {
           setErrorMessage(confirmError.message || 'Payment confirmation failed.');
           setLocalProcessing(false);
-          // Go to failure screen on card failure
           completeDonation(donationReference, false);
           return;
         }
@@ -250,7 +426,9 @@ function DonationStepPaymentForm({
       }
     } catch (err: any) {
       console.error(err);
-      setErrorMessage(err.message || 'An unexpected error occurred during payment.');
+      setErrorMessage(
+        err.message || 'An unexpected error occurred during payment.'
+      );
       setLocalProcessing(false);
       completeDonation(donationReference, false);
     }
@@ -262,6 +440,7 @@ function DonationStepPaymentForm({
         Complete your donation
       </h2>
 
+      {/* Basket / summary */}
       <div className="mb-8 flex flex-col gap-3">
         {itemCount > 0 ? (
           items.map((item) => <BasketItemCard key={item.id} item={item} />)
@@ -269,7 +448,11 @@ function DonationStepPaymentForm({
           <div className="bg-brand-lgrey/75 border border-brand-lgrey rounded-sm p-4 text-sm text-brand-grey">
             <p>
               <span className="font-bold text-brand-black">Type:</span>{" "}
-              {donationState.type === "monthly" ? "Monthly" : donationState.type === "friday" ? "Friday Giving" : "One-off"}
+              {donationState.type === "monthly"
+                ? "Monthly"
+                : donationState.type === "friday"
+                ? "Friday Giving"
+                : "One-off"}
             </p>
             {donationState.projectName && (
               <p className="mt-2">
@@ -299,6 +482,7 @@ function DonationStepPaymentForm({
         )}
       </div>
 
+      {/* Totals */}
       <div className="bg-brand-lgrey/75 p-6 rounded-sm mb-8 space-y-3">
         <div className="flex justify-between items-center gap-4">
           <span className="text-sm font-bold text-brand-black">Total</span>
@@ -319,7 +503,7 @@ function DonationStepPaymentForm({
           </div>
         )}
 
-        <hr className='text-brand-grey/50 mt-5' />
+        <hr className="text-brand-grey/50 mt-5" />
 
         <div className="border-t border-brand-lgrey pt-3 flex justify-between items-end">
           <span className="font-bold text-lg text-brand-black">Total to donate</span>
@@ -329,14 +513,48 @@ function DonationStepPaymentForm({
         </div>
       </div>
 
-      <h2 className="text-lg font-bold text-brand-black mb-4 font-body">Select payment method</h2>
+      {/* ── Google Pay / Apple Pay ── */}
+      {paymentRequest && (
+        <div className="mb-6 animate-in fade-in slide-in-from-top-2 duration-300">
+          <p className="text-xs font-bold text-brand-grey uppercase tracking-wide mb-3">
+            Pay instantly with
+          </p>
+          <PaymentRequestButtonElement
+            options={{
+              paymentRequest,
+              style: {
+                paymentRequestButton: {
+                  type: 'donate',
+                  theme: 'dark',
+                  height: '52px',
+                },
+              },
+            }}
+          />
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-6">
+            <hr className="flex-1 border-brand-lgrey" />
+            <span className="text-xs font-semibold text-brand-grey">or pay by card</span>
+            <hr className="flex-1 border-brand-lgrey" />
+          </div>
+        </div>
+      )}
+
+      {/* ── Payment method selector ── */}
+      <h2 className="text-lg font-bold text-brand-black mb-4 font-body">
+        Select payment method
+      </h2>
       <div className="grid grid-cols-2 gap-3 mb-8 items-center">
         {PAYMENT_METHODS.map((method) => (
           <div
             key={method.name}
             role="button"
             tabIndex={0}
-            className={`p-4 rounded-sm border flex flex-col items-center gap-2 cursor-pointer transition-all font-bold text-[0.85rem] ${payMethod === method.name ? "border-purple bg-purple-faint text-purple scale-[1.02]" : "border-brand-lgrey bg-brand-white text-brand-black hover:border-purple/30"}`}
+            className={`p-4 rounded-sm border flex flex-col items-center gap-2 cursor-pointer transition-all font-bold text-[0.85rem] ${
+              payMethod === method.name
+                ? "border-purple bg-purple-faint text-purple scale-[1.02]"
+                : "border-brand-lgrey bg-brand-white text-brand-black hover:border-purple/30"
+            }`}
             onClick={() => setPayMethod(method.name)}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") setPayMethod(method.name);
@@ -351,7 +569,9 @@ function DonationStepPaymentForm({
       {payMethod === "Card" && (
         <div className="animate-in fade-in slide-in-from-top-2 duration-300 mb-6">
           <div className="flex flex-col gap-1.5 p-4 border border-brand-lgrey rounded-sm bg-brand-white">
-            <label className="block text-sm font-bold text-brand-black mb-2">Card Details</label>
+            <label className="block text-sm font-bold text-brand-black mb-2">
+              Card Details
+            </label>
             <div className="py-2.5">
               <CardElement
                 options={CARD_ELEMENT_OPTIONS}
@@ -369,7 +589,11 @@ function DonationStepPaymentForm({
       )}
 
       <YellowCTA
-        text={isProcessing || localProcessing ? "Processing..." : `Donate Now — £${formatMoney(amountToPay)}`}
+        text={
+          isProcessing || localProcessing
+            ? "Processing..."
+            : `Donate Now — £${formatMoney(amountToPay)}`
+        }
         onClick={handlePayment}
         disabled={isSubmitDisabled}
         className="w-full justify-center text-lg py-4"
