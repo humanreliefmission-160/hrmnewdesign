@@ -73,9 +73,9 @@ export default function NotFound() {
                 <FaArrowRightLong />
               </div>
             </Link>
-            <Link href="/" className="text-purple font-semibold mx-auto text-sm hover:underline mt-2">
+            <a href="/" className="text-purple font-semibold mx-auto text-sm hover:underline mt-2">
               Back to homepage
-            </Link>
+            </a>
           </div>
         </div>
 

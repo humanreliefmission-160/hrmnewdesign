@@ -151,7 +151,7 @@ export default function DonationBasketButton() {
             <button
               id="basket-clear-btn"
               onClick={clearBasket}
-              className="w-full text-xs font-semibold text-gray-400 hover:text-red-400 transition-colors py-1"
+              className="w-full text-xs font-semibold text-gray-400 hover:text-[#B60000] transition-colors py-1"
             >
               Clear basket
             </button>

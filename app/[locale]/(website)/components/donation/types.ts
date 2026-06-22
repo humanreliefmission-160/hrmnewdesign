@@ -12,6 +12,7 @@ export interface DonationState {
   amount: number | null
   giftAid: boolean | null
   additionalFieldValues: Record<string, string>
+  durationMonths: number | null // null means ongoing / indefinite
 }
 
 export const initialDonationState: DonationState = {
@@ -27,4 +28,5 @@ export const initialDonationState: DonationState = {
   amount: null,
   giftAid: null,
   additionalFieldValues: {},
+  durationMonths: null,
 }
