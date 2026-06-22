@@ -104,8 +104,8 @@ export default function DonationSuccess() {
               <div className="bg-white/75 flex flex-col">
                 {data && data.lineItems.length > 0 ? (
                   data.lineItems.map((item, i) => (
-                    <div>
-                      <div key={i} className="px-3 py-3 rounded-sm">
+                    <div key={i}>
+                      <div className="px-3 py-3 rounded-sm">
                         <div className="flex justify-between items-end">
                           <div>
                             <p className="text-brand-black font-semibold text-sm">

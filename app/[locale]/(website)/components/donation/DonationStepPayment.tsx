@@ -121,7 +121,7 @@ export default function DonationStepPayment({
 
       <div className="bg-brand-lgrey/75 p-6 rounded-sm mb-8 space-y-3">
         <div className="flex justify-between items-center gap-4">
-          <span className="text-sm font-bold text-brand-black">Total amount donated</span>
+          <span className="text-sm font-bold text-brand-black">Total</span>
           <span className="font-bold text-brand-black">£{formatMoney(donatedTotal)}</span>
         </div>
 
