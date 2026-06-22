@@ -14,9 +14,11 @@ interface DonationStepDetailsProps {
   setLastName: (v: string) => void;
   email: string;
   setEmail: (v: string) => void;
+  newsletterOptIn: boolean;
+  setNewsletterOptIn: (v: boolean) => void;
 }
 
-export default function DonationStepDetails({ currentStep, donationState, goStep, firstName, setFirstName, lastName, setLastName, email, setEmail }: DonationStepDetailsProps) {
+export default function DonationStepDetails({ currentStep, donationState, goStep, firstName, setFirstName, lastName, setLastName, email, setEmail, newsletterOptIn, setNewsletterOptIn }: DonationStepDetailsProps) {
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
@@ -122,11 +124,13 @@ export default function DonationStepDetails({ currentStep, donationState, goStep
           </div>
         </div>
       )}
-      <div className="p-4 bg-purple-faint border border-purple rounded-lg mb-8 flex gap-3 items-start">
+      <div className="p-4 bg-purple-faint border border-purple rounded-sm mb-8 flex gap-3 items-start">
         <input
           type="checkbox"
           className="mt-1 w-4 h-4 cursor-pointer accent-purple"
           id="optIn"
+          checked={newsletterOptIn}
+          onChange={(e) => setNewsletterOptIn(e.target.checked)}
         />
         <label
           htmlFor="optIn"

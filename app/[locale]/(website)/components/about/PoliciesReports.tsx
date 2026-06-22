@@ -1,8 +1,9 @@
+import { sanityFetch } from "@/app/[locale]/lib/sanity/client";
 import Link from "next/link";
 import DownloadCard from "./DownloadCard";
 
-// ─── Annual Reports Data ────────────────────────────────────────────────────
-const annualReports = [
+// ─── Default/Fallback Annual Reports Data ────────────────────────────────────────────────────
+const defaultAnnualReports = [
   {
     id: "ar-2023",
     title: "2023",
@@ -23,8 +24,8 @@ const annualReports = [
   },
 ];
 
-// ─── Policies Data ──────────────────────────────────────────────────────────
-const policies = [
+// ─── Default/Fallback Policies Data ──────────────────────────────────────────────────────────
+const defaultPolicies = [
   {
     id: "policy-social",
     title: "Social Media Policy",
@@ -55,7 +56,43 @@ const policies = [
   },
 ];
 
-export default function PoliciesReports() {
+const POLICIES_REPORTS_QUERY = `
+  *[_type == "aboutUs" ][0] {
+    fileCards[]-> {
+      _id,
+      type,
+      title,
+      body,
+      "fileUrl": file.asset->url
+    }
+  }
+`;
+
+export default async function PoliciesReports() {
+  const data = await sanityFetch<any>(POLICIES_REPORTS_QUERY);
+  const fetchedCards = data?.fileCards || [];
+
+  const annualReports = fetchedCards
+    .filter((card: any) => card && card.type === 'annual-report')
+    .map((card: any) => ({
+      id: card._id,
+      title: card.title,
+      subtext: card.body,
+      href: card.fileUrl || '#',
+    }));
+
+  const policies = fetchedCards
+    .filter((card: any) => card && card.type === 'policies')
+    .map((card: any) => ({
+      id: card._id,
+      title: card.title,
+      subtext: card.body,
+      href: card.fileUrl || '#',
+    }));
+
+  const displayAnnualReports = annualReports.length > 0 ? annualReports : defaultAnnualReports;
+  const displayPolicies = policies.length > 0 ? policies : defaultPolicies;
+
   return (
     <section className="bg-purple w-full py-16 px-4 sm:px-6">
       <div className="max-w-[1140px] mx-auto">
@@ -72,7 +109,7 @@ export default function PoliciesReports() {
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {annualReports.map((report) => (
+            {displayAnnualReports.map((report: any) => (
               <DownloadCard
                 key={report.id}
                 title={report.title}
@@ -95,7 +132,7 @@ export default function PoliciesReports() {
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {policies.map((policy) => (
+            {displayPolicies.map((policy: any) => (
               <DownloadCard
                 key={policy.id}
                 title={policy.title}
