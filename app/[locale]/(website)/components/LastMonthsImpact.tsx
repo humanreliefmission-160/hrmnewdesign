@@ -144,9 +144,9 @@ export default function LastMonthImpact({ data }: Props) {
                     <div className="flex items-center justify-between pt-3 border-t border-white/50">
                       <Link
                         href={card.pageLink}
-                        className="text-white text-[11px] font-bold underline-offset-2 transition-colors uppercase tracking-wide flex items-center gap-2"
+                        className="text-white text-[11px] font-semibold underline-offset-2 transition-colors uppercase tracking-wide flex items-center gap-2"
                       >
-                        View How You Can Help
+                        See How Your Support Can Help
                         <span>
                           <FaArrowRightLong />
                         </span>

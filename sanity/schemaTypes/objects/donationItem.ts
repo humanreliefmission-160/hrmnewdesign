@@ -58,19 +58,19 @@ export const donationItem = defineType({
     defineField({
       name: 'frequency',
       title: 'Frequency',
-      description: 'The payment frequency for this donation item',
-      type: 'string',
+      description: 'The payment frequencies for this donation item',
+      type: 'array',
+      of: [{ type: 'string' }],
       options: {
         list: [
           { title: 'One Off', value: 'one-off' },
           { title: 'Daily', value: 'daily' },
           { title: 'Weekly', value: 'weekly' },
           { title: 'Monthly', value: 'monthly' },
+          { title: 'Friday Giving', value: 'friday' },
         ],
-        layout: 'radio',
-        direction: 'horizontal',
       },
-      initialValue: 'monthly',
+      initialValue: ['monthly'],
       validation: (Rule) => Rule.required(),
     }),
 

@@ -114,6 +114,7 @@ export type StageProjectDonationItem = {
   itemSubtext?: string;
   price?: number;
   donationType?: "one-off" | "monthly";
+  frequency?: string | string[];
   amounts?: StageProjectDonationAmount[];
 };
 

@@ -11,6 +11,7 @@ export interface BasketItem {
   amount: number;
   intention: string;
   isZakat?: boolean;
+  frequency?: string;
 }
 
 interface BasketContextValue {
