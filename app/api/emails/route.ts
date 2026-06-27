@@ -1,7 +1,16 @@
 import DonationReceipt from '@/app/[locale]/(website)/components/emails/DonationReceipt';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.NEXT_RESEND_API_KEY);
+const apiKey = process.env.RESEND_API_KEY;
+
+if (!apiKey) {
+  // This throws at build/cold-start time with a clear message instead of
+  // the opaque Resend constructor error, making future misconfigurations
+  // easier to diagnose in Vercel's logs.
+  throw new Error('Missing RESEND_API_KEY environment variable.');
+}
+
+const resend = new Resend(apiKey);
 
 export async function POST() {
   try {
