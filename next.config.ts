@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
   serverExternalPackages: [
     '@sanity/client',
     '@sanity/image-url',
+    '@react-email/render',
+    '@react-email/components'
   ],
   images: {
     remotePatterns: [
