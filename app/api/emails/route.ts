@@ -7,7 +7,7 @@ if (!apiKey) {
   // This throws at build/cold-start time with a clear message instead of
   // the opaque Resend constructor error, making future misconfigurations
   // easier to diagnose in Vercel's logs.
-  throw new Error('Missing RESEND_API_KEY environment variable.');
+  throw new Error('Missing environment variable.');
 }
 
 const resend = new Resend(apiKey);
