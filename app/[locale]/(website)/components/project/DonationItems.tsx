@@ -95,6 +95,9 @@ function DonationCard({
             £{item.price || 0}
           </h2>
           <span className="text-[10px] text-brand-white rounded-sm capitalize">
+            per {item.itemTitle}
+          </span>
+          {/* <span className="text-[10px] text-brand-white rounded-sm capitalize">
             {(() => {
               const freq = item.frequency;
               if (Array.isArray(freq)) {
@@ -110,7 +113,7 @@ function DonationCard({
               if (f === 'friday') return 'Friday Giving';
               return f.charAt(0).toUpperCase() + f.slice(1);
             })()}
-          </span>
+          </span> */}
         </div>
       </div>
 
