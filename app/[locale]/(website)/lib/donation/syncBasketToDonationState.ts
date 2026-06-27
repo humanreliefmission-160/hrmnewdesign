@@ -20,7 +20,7 @@ export function buildDonationStateFromBasket(
 
   return {
     ...prev,
-    type: "oneoff",
+    type: primary.frequency ?? "oneoff",
     amount: total,
     projectId: project?._id ?? prev.projectId,
     projectName: primary.projectName,

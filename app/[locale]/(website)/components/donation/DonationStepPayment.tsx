@@ -78,7 +78,7 @@ function DonationStepPaymentForm({
   phone,
   country,
 }: DonationStepPaymentProps) {
-  const { items, totalAmount: basketTotal, itemCount } = useBasket();
+  const { items, totalAmount: basketTotal, itemCount, removeItem } = useBasket();
   const stripe = useStripe();
   const elements = useElements();
 
@@ -88,10 +88,18 @@ function DonationStepPaymentForm({
   const [paymentRequest, setPaymentRequest] = useState<any>(null);
   const prInitialized = useRef(false);
 
+  // Optional fee opt-ins
+  const [coverStripeFee, setCoverStripeFee] = useState(false);
+  const [coverAdminFee, setCoverAdminFee] = useState(false);
+
   const donatedTotal = itemCount > 0 ? basketTotal : donationState.amount || 0;
   const giftAidAmt = donationState.giftAid ? donatedTotal * 0.25 : 0;
   const totalDonationValue = donatedTotal + giftAidAmt;
-  const amountToPay = donatedTotal;
+
+  // Fee calculations
+  const stripeFeeAmt = coverStripeFee ? parseFloat(((donatedTotal * 0.012) + 0.20).toFixed(2)) : 0;
+  const adminFeeAmt = coverAdminFee ? 1 : 0;
+  const amountToPay = parseFloat((donatedTotal + stripeFeeAmt + adminFeeAmt).toFixed(2));
 
   // Keep a ref of all values the PR event handler needs (avoids stale closures)
   const paymentValuesRef = useRef({
@@ -136,11 +144,10 @@ function DonationStepPaymentForm({
     const projectSummary =
       vals.itemCount > 0
         ? vals.items
-            .map((i) => `${i.projectName} (${i.projectItem || 'Donation'}) - £${i.amount}`)
-            .join(', ')
-        : `${vals.donationState.projectName || 'General'} (${
-            vals.donationState.donationItemTitle || 'Donation'
-          }) - £${vals.donationState.amount || 0}`;
+          .map((i) => `${i.projectName} (${i.projectItem || 'Donation'}) - £${i.amount}`)
+          .join(', ')
+        : `${vals.donationState.projectName || 'General'} (${vals.donationState.donationItemTitle || 'Donation'
+        }) - £${vals.donationState.amount || 0}`;
 
     return {
       donation_reference: ref,
@@ -178,8 +185,16 @@ function DonationStepPaymentForm({
       const metadata = buildMetadata(donationReference, vals);
 
       const isRecurring =
-        vals.donationState.type === 'monthly' || vals.donationState.type === 'friday';
-      const interval = vals.donationState.type === 'friday' ? 'week' : 'month';
+        vals.donationState.type === 'monthly' ||
+        vals.donationState.type === 'friday' ||
+        vals.donationState.type === 'weekly' ||
+        vals.donationState.type === 'daily';
+      const interval =
+        vals.donationState.type === 'daily'
+          ? 'day'
+          : vals.donationState.type === 'weekly' || vals.donationState.type === 'friday'
+            ? 'week'
+            : 'month';
       const donorEmail = ev.payerEmail || vals.email;
       const donorName = ev.payerName || `${vals.firstName} ${vals.lastName}`;
 
@@ -320,8 +335,16 @@ function DonationStepPaymentForm({
       }
 
       const isRecurring =
-        donationState.type === 'monthly' || donationState.type === 'friday';
-      const interval = donationState.type === 'friday' ? 'week' : 'month';
+        donationState.type === 'monthly' ||
+        donationState.type === 'friday' ||
+        donationState.type === 'weekly' ||
+        donationState.type === 'daily';
+      const interval =
+        donationState.type === 'daily'
+          ? 'day'
+          : donationState.type === 'weekly' || donationState.type === 'friday'
+            ? 'week'
+            : 'month';
 
       if (isRecurring) {
         const response = await fetch('/api/stripe/create-subscription', {
@@ -443,7 +466,7 @@ function DonationStepPaymentForm({
       {/* Basket / summary */}
       <div className="mb-8 flex flex-col gap-3">
         {itemCount > 0 ? (
-          items.map((item) => <BasketItemCard key={item.id} item={item} />)
+          items.map((item) => <BasketItemCard key={item.id} item={item} onRemove={removeItem} />)
         ) : (
           <div className="bg-brand-lgrey/75 border border-brand-lgrey rounded-sm p-4 text-sm text-brand-grey">
             <p>
@@ -451,8 +474,12 @@ function DonationStepPaymentForm({
               {donationState.type === "monthly"
                 ? "Monthly"
                 : donationState.type === "friday"
-                ? "Friday Giving"
-                : "One-off"}
+                  ? "Friday Giving"
+                  : donationState.type === "weekly"
+                    ? "Weekly"
+                    : donationState.type === "daily"
+                      ? "Daily"
+                      : "One-off"}
             </p>
             {donationState.projectName && (
               <p className="mt-2">
@@ -482,10 +509,44 @@ function DonationStepPaymentForm({
         )}
       </div>
 
+      {/* Optional fee checkboxes */}
+      <div className="flex flex-col gap-3 mb-6">
+        <label className="flex gap-3 items-start cursor-pointer group p-4 border border-brand-lgrey rounded-sm bg-brand-white hover:border-purple/40 transition-colors">
+          <input
+            type="checkbox"
+            id="coverStripeFee"
+            className="mt-0.5 w-4 h-4 accent-purple shrink-0 cursor-pointer"
+            checked={coverStripeFee}
+            onChange={(e) => setCoverStripeFee(e.target.checked)}
+          />
+          <span className="text-sm font-semibold text-brand-black leading-snug">
+            We are charged a small fee of 1.2% + 20p on every transaction by our payment provider.
+            Would you like to cover the transaction fee of{" "}
+            <span className="text-purple">£{formatMoney((donatedTotal * 0.012) + 0.2)}</span> so that
+            we receive your full donation?
+          </span>
+        </label>
+
+        <label className="flex gap-3 items-start cursor-pointer group p-4 border border-brand-lgrey rounded-sm bg-brand-white hover:border-purple/40 transition-colors">
+          <input
+            type="checkbox"
+            id="coverAdminFee"
+            className="mt-0.5 w-4 h-4 accent-purple shrink-0 cursor-pointer"
+            checked={coverAdminFee}
+            onChange={(e) => setCoverAdminFee(e.target.checked)}
+          />
+          <span className="text-sm font-semibold text-brand-black leading-snug">
+            Would you like to help with our Admin costs by donating just a{" "}
+            <span className="text-purple">£1</span>? This will help the charity produce more
+            projects that will help humanity!
+          </span>
+        </label>
+      </div>
+
       {/* Totals */}
       <div className="bg-brand-lgrey/75 p-6 rounded-sm mb-8 space-y-3">
         <div className="flex justify-between items-center gap-4">
-          <span className="text-sm font-bold text-brand-black">Total</span>
+          <span className="text-sm font-bold text-brand-black">Donation</span>
           <span className="font-bold text-brand-black">£{formatMoney(donatedTotal)}</span>
         </div>
 
@@ -503,10 +564,24 @@ function DonationStepPaymentForm({
           </div>
         )}
 
+        {coverStripeFee && (
+          <div className="flex justify-between items-center gap-4">
+            <span className="text-sm text-brand-grey">Transaction fee (1.2%)</span>
+            <span className="text-sm font-semibold text-brand-black">+ £{formatMoney(stripeFeeAmt)}</span>
+          </div>
+        )}
+
+        {coverAdminFee && (
+          <div className="flex justify-between items-center gap-4">
+            <span className="text-sm text-brand-grey">Admin fee</span>
+            <span className="text-sm font-semibold text-brand-black">+ £1.00</span>
+          </div>
+        )}
+
         <hr className="text-brand-grey/50 mt-5" />
 
         <div className="border-t border-brand-lgrey pt-3 flex justify-between items-end">
-          <span className="font-bold text-lg text-brand-black">Total to donate</span>
+          <span className="font-bold text-lg text-brand-black">Total to pay</span>
           <span className="font-bold text-2xl text-brand-black">
             £{formatMoney(amountToPay)}
           </span>
@@ -550,11 +625,10 @@ function DonationStepPaymentForm({
             key={method.name}
             role="button"
             tabIndex={0}
-            className={`p-4 rounded-sm border flex flex-col items-center gap-2 cursor-pointer transition-all font-bold text-[0.85rem] ${
-              payMethod === method.name
-                ? "border-purple bg-purple-faint text-purple scale-[1.02]"
-                : "border-brand-lgrey bg-brand-white text-brand-black hover:border-purple/30"
-            }`}
+            className={`p-4 rounded-sm border flex flex-col items-center gap-2 cursor-pointer transition-all font-bold text-[0.85rem] ${payMethod === method.name
+              ? "border-purple bg-purple-faint text-purple scale-[1.02]"
+              : "border-brand-lgrey bg-brand-white text-brand-black hover:border-purple/30"
+              }`}
             onClick={() => setPayMethod(method.name)}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") setPayMethod(method.name);

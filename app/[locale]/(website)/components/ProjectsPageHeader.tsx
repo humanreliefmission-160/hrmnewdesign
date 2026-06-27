@@ -95,6 +95,7 @@ export default function ProjectsPageHeader({
       amount: effectiveAmount,
       intention: intentionFromZakat(isZakat),
       isZakat,
+      frequency: "oneoff",
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);

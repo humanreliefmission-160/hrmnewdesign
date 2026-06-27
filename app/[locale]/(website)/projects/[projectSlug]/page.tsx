@@ -33,6 +33,7 @@ const PROJECT_QUERY = `
         itemSubtext,
         price,
         donationType,
+        frequency,
         donationItemBody,
         amounts[] {
           _key,

@@ -59,6 +59,7 @@ function ProjectDonationCard({ project }: { project: StageProject }) {
       amount: effectiveAmount,
       intention: intentionFromZakat(isZakat),
       isZakat,
+      frequency: "oneoff",
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
@@ -198,6 +199,7 @@ function StageFallbackDonate({ stage }: { stage: SanityEcosystemStage }) {
       amount: effectiveAmount,
       intention: intentionFromZakat(isZakat),
       isZakat,
+      frequency: "oneoff",
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);

@@ -54,7 +54,7 @@ export default function DonationStepFundAmount({
   selectDurationMonths,
   goStep,
 }: DonationStepFundAmountProps) {
-  const { addItem } = useBasket();
+  const { items, addItem } = useBasket();
   const [basketAdded, setBasketAdded] = useState(false);
 
   if (currentStep !== 2) return null;
@@ -96,6 +96,7 @@ export default function DonationStepFundAmount({
       amount: donationState.amount,
       intention,
       isZakat: intention.toLowerCase() === 'zakat',
+      frequency: donationState.type,
     });
     setBasketAdded(true);
     setTimeout(() => setBasketAdded(false), 2000);
@@ -142,7 +143,15 @@ export default function DonationStepFundAmount({
         {publishedProjects.length === 0 ? (
           <p className="text-sm text-brand-grey mb-8">
             No projects are available for{' '}
-            {donationState.type === 'monthly' ? 'monthly' : 'one-off'} giving right now.
+            {donationState.type === 'oneoff'
+              ? 'one-off'
+              : donationState.type === 'daily'
+                ? 'daily'
+                : donationState.type === 'weekly'
+                  ? 'weekly'
+                  : donationState.type === 'monthly'
+                    ? 'monthly'
+                    : 'Friday'} giving right now.
             Please try another donation type or check back later.
           </p>
         ) : (
@@ -338,9 +347,28 @@ export default function DonationStepFundAmount({
         </div>
       )}
 
+      <DonationBasketTotal />
+
       <DonationStepFooter
         onBack={() => goStep(1)}
-        onNext={() => goStep(3)}
+        onNext={() => {
+          const intention =
+            donationState.intention ||
+            (intentions.length > 0 ? '' : 'Sadaqah');
+
+          const alreadyInBasket = items.some(
+            (item) =>
+              item.donationItemKey === donationState.donationItemKey &&
+              item.projectName === donationState.projectName &&
+              item.amount === donationState.amount &&
+              item.intention === intention
+          );
+
+          if (!alreadyInBasket) {
+            handleAddToBasket();
+          }
+          goStep(3);
+        }}
         nextDisabled={isNextDisabled}
       />
     </div>

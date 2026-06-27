@@ -24,6 +24,7 @@ interface DonationItemData {
   itemSubtext?: string;
   price?: number;
   donationType?: 'one-off' | 'monthly';
+  frequency?: string | string[];
   amounts?: DonationAmount[];
   donationItemBody?: any[];
   intentions?: any[];
@@ -66,6 +67,7 @@ function DonationCard({
       amount: effectiveAmount,
       intention: intentionFromZakat(isZakat),
       isZakat,
+      frequency: 'oneoff',
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
@@ -74,7 +76,7 @@ function DonationCard({
   const amountsToRender = item.amounts ? item.amounts.map(a => a.amount) : [5, 10, 20];
 
   return (
-    <div className="shadow-md bg-brand-white rounded-sm border border-gray-100 p-7 flex flex-col gap-4 hover:shadow-xl transition-shadow duration-300 justify-between w-full max-w-[23.75em]">
+    <div className="shadow-md bg-brand-white rounded-sm border border-gray-100 p-7 flex flex-col gap-4 hover:shadow-xl transition-shadow duration-300 justify-between w-full max-w-[23em]">
       <div className="flex gap-4 items-center">
         <div className="bg-purple-faint p-3 rounded-sm">
           <span className="text-4xl">
@@ -93,7 +95,21 @@ function DonationCard({
             £{item.price || 0}
           </h2>
           <span className="text-[10px] text-brand-white rounded-sm capitalize">
-            {item.donationType === "one-off" ? "One Off" : "Monthly"}
+            {(() => {
+              const freq = item.frequency;
+              if (Array.isArray(freq)) {
+                if (freq.length === 0) return "Monthly";
+                return freq.map(f => {
+                  if (f === 'one-off') return 'One Off';
+                  if (f === 'friday') return 'Friday Giving';
+                  return f.charAt(0).toUpperCase() + f.slice(1);
+                }).join(', ');
+              }
+              const f = freq ?? item.donationType ?? 'monthly';
+              if (f === 'one-off') return 'One Off';
+              if (f === 'friday') return 'Friday Giving';
+              return f.charAt(0).toUpperCase() + f.slice(1);
+            })()}
           </span>
         </div>
       </div>

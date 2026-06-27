@@ -45,7 +45,7 @@ export type DonationPortalItem = {
   itemSubtext?: string
   price: number
   donationType?: 'one-off' | 'monthly'
-  frequency?: 'one-off' | 'daily' | 'weekly' | 'monthly'
+  frequency?: string | string[]
   amounts?: DonationPortalAmount[]
   intentions?: DonationPortalIntention[]
   additionalFields?: Array<{ label: string }>
@@ -65,16 +65,13 @@ export function getProjectDonationItems(
   donationType: string
 ): DonationPortalItem[] {
   const items = project?.donationSection?.donationItems ?? []
-  if (donationType === 'oneoff') {
-    return items.filter(
-      (item) => (item.frequency ?? item.donationType ?? 'monthly') === 'one-off'
-    )
-  }
-  // monthly or friday (friday is weekly/recurring)
-  return items.filter(
-    (item) => {
-      const freq = item.frequency ?? item.donationType ?? 'monthly'
-      return freq === 'monthly' || freq === 'weekly' || freq === 'daily'
+  const targetFrequency = donationType === 'oneoff' ? 'one-off' : donationType
+
+  return items.filter((item) => {
+    if (Array.isArray(item.frequency)) {
+      return item.frequency.includes(targetFrequency)
     }
-  )
+    const freq = item.frequency ?? item.donationType ?? 'monthly'
+    return freq === targetFrequency
+  })
 }

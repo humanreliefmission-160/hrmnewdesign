@@ -1,17 +1,43 @@
-"use client";
-
-import Link from "next/link";
+import { sanityFetch } from "@/app/[locale]/lib/sanity/client";
+import DynamicIcon from "./DynamicIcon";
 import YellowCTA from "./YellowCTA";
-import { FaBriefcaseMedical, FaUtensils } from "react-icons/fa";
-import { BiSolidBackpack } from "react-icons/bi";
-import { GiWaterDrop } from "react-icons/gi";
-export default function Impact() {
+
+const HOMEPAGE_IMPACT_QUERY = `
+  *[_type == "aboutUs"][0] {
+    impactSection {
+      title,
+      items[] {
+        icon,
+        figure,
+        description
+      }
+    }
+  }
+`;
+
+const defaultItems = [
+  { icon: "FaUtensils", figure: "500M", description: "Hot Meals Served" },
+  { icon: "BiSolidBackpack", figure: "50K+", description: "Student Bags Delivered" },
+  { icon: "GiWaterDrop", figure: "200K", description: "Families with Clean Water" },
+  { icon: "FaBriefcaseMedical", figure: "150K", description: "Medical Treatments Given" },
+];
+
+export default async function Impact() {
+  const data = await sanityFetch<any>(HOMEPAGE_IMPACT_QUERY);
+  const impactData = data?.impactSection;
+
+  const items = impactData?.items?.length ? impactData.items : defaultItems;
+  const sectionTitle = impactData?.title || "Our Track Record";
+
   return (
     <section className="py-20 px-4 md:px-8 bg-brand-white">
       <div className="max-w-[1140px] mx-auto">
-        <div className="inline-block bg-purple-faint text-purple font-bold text-[0.75rem] tracking-widest uppercase px-4 py-1.5 mb-4">Our Track Record</div>
+        <div className="inline-block bg-purple-faint text-purple font-bold text-[0.75rem] tracking-widest uppercase px-4 py-1.5 mb-4">
+          {sectionTitle}
+        </div>
         <div className="mb-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-brand-black capitalize">This is how we&apos;ve made a difference{" "}
+          <h2 className="text-4xl md:text-5xl font-bold text-brand-black capitalize">
+            This is how we&apos;ve made a difference{" "}
             <span className="font-medium italic text-2xl text-brand-grey">so far.</span>
           </h2>
         </div>
@@ -20,37 +46,20 @@ export default function Impact() {
           people who need it most.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
-          <div className="bg-brand-white rounded-xl p-8 text-center shadow-card hover:-translate-y-1 transition-transform duration-300 flex flex-col items-center justify-between gap-3">
-            <div className="h-24"><FaUtensils fill="#650199" stroke="none" size={90} strokeWidth={1.5} /></div>
-            <div>
-              <div className="text-[2.2rem] font-bold text-purple leading-none">500M</div>
-              <div className="text-[0.875rem] text-brand-grey font-medium">Hot Meals Served</div>
+          {items.map((item: any, idx: number) => (
+            <div
+              key={idx}
+              className="bg-brand-white rounded-sm p-8 text-center shadow-card hover:-translate-y-1 transition-transform duration-300 flex flex-col items-center justify-between gap-3"
+            >
+              <div className="h-24 flex items-center justify-center">
+                <DynamicIcon name={item.icon} size={90} fill="#650199" />
+              </div>
+              <div>
+                <div className="text-[2.2rem] font-bold text-purple leading-none">{item.figure}</div>
+                <div className="text-[0.875rem] text-brand-grey font-medium">{item.description}</div>
+              </div>
             </div>
-          </div>
-          <div className="bg-brand-white rounded-xl p-8 text-center shadow-card hover:-translate-y-1 transition-transform duration-300 flex flex-col items-center justify-between gap-3">
-            <div className="h-24"><BiSolidBackpack fill="#650199" stroke="#f5f5f5" size={90} /></div>
-            <div>
-              <div className="text-[2.2rem] font-bold text-purple leading-none">50K+</div>
-              <div className="text-[0.875rem] text-brand-grey font-medium">Student Bags Delivered</div>
-            </div>
-
-          </div>
-          <div className="bg-brand-white rounded-xl p-8 text-center shadow-card hover:-translate-y-1 transition-transform duration-300 flex flex-col items-center justify-between gap-3">
-            <div className="h-24 w-auto"><GiWaterDrop fill="#650199" stroke="#f5f5f5" size={90} /></div>
-            <div>
-              <div className="text-[2.2rem] font-bold text-purple leading-none">200K</div>
-              <div className="text-[0.875rem] text-brand-grey font-medium">Families with Clean Water</div>
-            </div>
-
-          </div>
-          <div className="bg-brand-white rounded-xl p-8 text-center shadow-card hover:-translate-y-1 transition-transform duration-300 flex flex-col items-center justify-between gap-3">
-            <div className="h-24 w-auto"><FaBriefcaseMedical fill="#650199" stroke="#f5f5f5" size={90} /></div>
-            <div>
-              <div className="text-[2.2rem] font-bold text-purple leading-none">150K</div>
-              <div className="text-[0.875rem] text-brand-grey font-medium">Medical Treatments Given</div>
-            </div>
-
-          </div>
+          ))}
         </div>
         <div className="mt-10">
           <YellowCTA text="Donate Now" href="/donate" />

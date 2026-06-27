@@ -48,8 +48,8 @@ export default async function Impact() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
           {items.map((item: any, idx: number) => (
             <div
-              key={idx}
-              className="bg-brand-white rounded-xl p-8 text-center shadow-card hover:-translate-y-1 transition-transform duration-300 flex flex-col items-center justify-between gap-3"
+              key={`impact-${idx}`}
+              className="bg-brand-white rounded-sm p-8 text-center shadow-card hover:-translate-y-1 transition-transform duration-300 flex flex-col items-center justify-between gap-3"
             >
               <div className="h-24 flex items-center justify-center">
                 <DynamicIcon name={item.icon} size={90} fill="#650199" />

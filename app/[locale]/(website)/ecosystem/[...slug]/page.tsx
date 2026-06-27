@@ -92,6 +92,7 @@ const STAGE_PROJECTS_QUERY = `
         itemSubtext,
         price,
         donationType,
+        frequency,
         amounts[] {
           _key,
           amount,
