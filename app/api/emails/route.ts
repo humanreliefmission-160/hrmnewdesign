@@ -1,18 +1,19 @@
 import DonationReceipt from '@/app/[locale]/(website)/components/emails/DonationReceipt';
 import { Resend } from 'resend';
 
-const apiKey = process.env.RESEND_API_KEY;
-
-if (!apiKey) {
-  // This throws at build/cold-start time with a clear message instead of
-  // the opaque Resend constructor error, making future misconfigurations
-  // easier to diagnose in Vercel's logs.
-  throw new Error('Missing environment variable.');
-}
-
-const resend = new Resend(apiKey);
-
 export async function POST() {
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (!apiKey) {
+    console.error('[emails/route] Missing RESEND_API_KEY environment variable.');
+    return Response.json(
+      { error: 'Email service is not configured.' },
+      { status: 500 }
+    );
+  }
+
+  const resend = new Resend(apiKey);
+
   try {
     const { data, error } = await resend.emails.send({
       from: 'onboarding@resend.dev',
@@ -23,9 +24,7 @@ export async function POST() {
       // Using <DonationReceipt /> creates an actual React element, which is
       // what Resend's `react` field and @react-email/render expect.
       react: DonationReceipt()
-    });
-
-    if (error) {
+    }); if (error) {
       console.error('[emails/route]', error);
       return Response.json({ error: error.message }, { status: 502 });
     }
