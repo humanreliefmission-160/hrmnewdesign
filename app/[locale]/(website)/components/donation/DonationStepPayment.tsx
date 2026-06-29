@@ -10,6 +10,8 @@ import { IoCardSharp, IoShieldCheckmark } from 'react-icons/io5';
 import { GrPaypal } from 'react-icons/gr';
 import { AiFillLock } from 'react-icons/ai';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
+import { BsBank2 } from 'react-icons/bs';
+import { MdOutlineAccountBalance } from 'react-icons/md';
 import {
   Elements,
   CardElement,
@@ -25,7 +27,7 @@ interface DonationStepPaymentProps {
   payMethod: string;
   setPayMethod: (method: string) => void;
   isProcessing: boolean;
-  completeDonation: (reference: string, success: boolean) => void;
+  completeDonation: (reference: string, success: boolean, bankDetails?: Record<string, string>) => void;
   goStep: (step: number) => void;
   firstName: string;
   lastName: string;
@@ -37,10 +39,13 @@ interface DonationStepPaymentProps {
   country: string;
 }
 
-const PAYMENT_METHODS = [
-  { name: "Card", icon: <IoCardSharp fill="#650199" className="sm:w-7 w-7 h-auto" /> },
-  { name: "PayPal", icon: <GrPaypal fill="#650199" className="sm:w-7 w-7 h-auto" /> },
-] as const;
+// Fee info shown on each payment method button
+const METHOD_FEE_LABELS: Record<string, string> = {
+  Card: "Fee: 1.2% + 20p",
+  PayPal: "Fee: 2.9% + 30p",
+  BACS: "Fee: 1% (max £4)",
+  BankTransfer: "No fee",
+};
 
 const CARD_ELEMENT_OPTIONS = {
   hidePostalCode: true,
@@ -91,6 +96,64 @@ function DonationStepPaymentForm({
   // Optional fee opt-ins
   const [coverStripeFee, setCoverStripeFee] = useState(false);
   const [coverAdminFee, setCoverAdminFee] = useState(false);
+
+  // BACS Direct Debit form state
+  const [bacsName, setBacsName] = useState('');
+  const [bacsSortCode, setBacsSortCode] = useState('');
+  const [bacsAccountNumber, setBacsAccountNumber] = useState('');
+  const [bacsConsent, setBacsConsent] = useState(false);
+
+  // Bank Transfer / Standing Order form state
+  const [btName, setBtName] = useState('');
+  const [btTransferDate, setBtTransferDate] = useState('');
+  const [btBankName, setBtBankName] = useState('');
+  const [btConfirm, setBtConfirm] = useState(false);
+
+  // Detect recurring frequency
+  const isRecurringFrequency =
+    donationState.type === 'monthly' ||
+    donationState.type === 'friday' ||
+    donationState.type === 'weekly' ||
+    donationState.type === 'daily';
+
+  // Build payment method list dynamically
+  const paymentMethods = useMemo(() => {
+    const methods: { name: string; displayName: string; icon: React.ReactNode; fee: string; recommended?: boolean; comingSoon?: boolean }[] = [
+      {
+        name: 'Card',
+        displayName: 'Card',
+        icon: <IoCardSharp fill="#650199" className="sm:w-7 w-7 h-auto" />,
+        fee: METHOD_FEE_LABELS.Card,
+        recommended: !isRecurringFrequency,
+      },
+      {
+        name: 'PayPal',
+        displayName: 'PayPal',
+        icon: <GrPaypal fill="#650199" className="sm:w-7 w-7 h-auto" />,
+        fee: METHOD_FEE_LABELS.PayPal,
+        comingSoon: true,
+      },
+    ];
+
+    if (isRecurringFrequency) {
+      methods.push({
+        name: 'BACS',
+        displayName: 'BACS Direct Debit',
+        icon: <MdOutlineAccountBalance fill="#650199" className="sm:w-7 w-7 h-auto" />,
+        fee: METHOD_FEE_LABELS.BACS,
+        recommended: true,
+      });
+    }
+
+    methods.push({
+      name: 'BankTransfer',
+      displayName: isRecurringFrequency ? 'Standing Order' : 'Bank Transfer',
+      icon: <BsBank2 fill="#650199" className="sm:w-7 w-7 h-auto" />,
+      fee: METHOD_FEE_LABELS.BankTransfer,
+    });
+
+    return methods;
+  }, [isRecurringFrequency]);
 
   const donatedTotal = itemCount > 0 ? basketTotal : donationState.amount || 0;
   const giftAidAmt = donationState.giftAid ? donatedTotal * 0.25 : 0;
@@ -298,16 +361,69 @@ function DonationStepPaymentForm({
     }
   }, [paymentRequest, amountToPay]);
 
-  // ─── Card / PayPal payment handler ───────────────────────────────────────────
+  // ─── Validation helpers for offline methods ───
+  const sortCodeClean = bacsSortCode.replace(/\D/g, '');
+  const isBACSValid =
+    bacsName.trim().length > 1 &&
+    sortCodeClean.length === 6 &&
+    bacsAccountNumber.replace(/\D/g, '').length === 8 &&
+    bacsConsent;
+
+  const isBTValid =
+    btName.trim().length > 1 &&
+    btTransferDate !== '' &&
+    btConfirm;
+
+  // ─── Card / PayPal payment handler ───
   const isSubmitDisabled =
     isProcessing ||
     localProcessing ||
-    (payMethod === "Card" && (!stripe || !elements || !isCardComplete));
+    (payMethod === 'Card' && (!stripe || !elements || !isCardComplete)) ||
+    (payMethod === 'BACS' && !isBACSValid) ||
+    (payMethod === 'BankTransfer' && !isBTValid);
+
+  const submitButtonLabel = (() => {
+    if (isProcessing || localProcessing) return 'Processing...';
+    if (payMethod === 'BACS') return `Confirm & Continue — £${formatMoney(amountToPay)}`;
+    if (payMethod === 'BankTransfer') return `Confirm & Continue — £${formatMoney(amountToPay)}`;
+    if (payMethod === 'PayPal') return `Continue to PayPal — £${formatMoney(amountToPay)}`;
+    return `Donate Now — £${formatMoney(amountToPay)}`;
+  })();
 
   const handlePayment = async () => {
     const donationReference = `DON-${new Date().getFullYear()}-${Math.floor(
       1000 + Math.random() * 9000
     )}`;
+
+    // Non-card methods: offline / redirect flows
+    if (payMethod === 'PayPal') {
+      // PayPal placeholder — coming soon
+      setErrorMessage('PayPal payments are coming soon. Please use another payment method for now.');
+      return;
+    }
+
+    if (payMethod === 'BACS' || payMethod === 'BankTransfer') {
+      setLocalProcessing(true);
+      const bankDetails: Record<string, string> =
+        payMethod === 'BACS'
+          ? {
+              method: 'BACS Direct Debit',
+              accountHolderName: bacsName.trim(),
+              sortCode: bacsSortCode.trim(),
+              accountNumber: bacsAccountNumber.trim(),
+            }
+          : {
+              method: isRecurringFrequency ? 'Standing Order' : 'Bank Transfer',
+              accountHolderName: btName.trim(),
+              estimatedTransferDate: btTransferDate,
+              bankName: btBankName.trim() || 'Not provided',
+            };
+      setTimeout(() => {
+        setLocalProcessing(false);
+        completeDonation(donationReference, true, bankDetails);
+      }, 800);
+      return;
+    }
 
     if (payMethod !== "Card") {
       setLocalProcessing(true);
@@ -619,28 +735,58 @@ function DonationStepPaymentForm({
       <h2 className="text-lg font-bold text-brand-black mb-4 font-body">
         Select payment method
       </h2>
-      <div className="grid grid-cols-2 gap-3 mb-8 items-center">
-        {PAYMENT_METHODS.map((method) => (
-          <div
-            key={method.name}
-            role="button"
-            tabIndex={0}
-            className={`p-4 rounded-sm border flex flex-col items-center gap-2 cursor-pointer transition-all font-bold text-[0.85rem] ${payMethod === method.name
-              ? "border-purple bg-purple-faint text-purple scale-[1.02]"
-              : "border-brand-lgrey bg-brand-white text-brand-black hover:border-purple/30"
+      <div className="grid grid-cols-2 gap-3 mb-8 items-stretch">
+        {paymentMethods.map((method) => {
+          const isSelected = payMethod === method.name;
+          return (
+            <div
+              key={method.name}
+              role="button"
+              tabIndex={0}
+              className={`relative p-4 rounded-sm border flex flex-col items-center gap-2 cursor-pointer transition-all font-bold text-[0.85rem] ${
+                isSelected
+                  ? 'border-purple bg-purple-faint text-purple scale-[1.02] shadow-sm'
+                  : 'border-brand-lgrey bg-brand-white text-brand-black hover:border-purple/30'
               }`}
-            onClick={() => setPayMethod(method.name)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") setPayMethod(method.name);
-            }}
-          >
-            <span className="text-2xl">{method.icon}</span>
-            {method.name}
-          </div>
-        ))}
+              onClick={() => {
+                setErrorMessage(null);
+                setPayMethod(method.name);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  setErrorMessage(null);
+                  setPayMethod(method.name);
+                }
+              }}
+            >
+              {/* Recommended badge */}
+              {method.recommended && (
+                <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[0.6rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full whitespace-nowrap shadow-sm">
+                  ★ Recommended
+                </span>
+              )}
+              {/* Coming soon badge */}
+              {method.comingSoon && !isSelected && (
+                <span className="absolute -top-2.5 right-2 bg-amber-400 text-white text-[0.6rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full whitespace-nowrap shadow-sm">
+                  Coming soon
+                </span>
+              )}
+              <span className="text-2xl mt-2">{method.icon}</span>
+              <span className="text-center leading-tight">{method.displayName}</span>
+              <span
+                className={`text-[0.65rem] font-semibold mt-0.5 ${
+                  isSelected ? 'text-purple/70' : 'text-brand-grey'
+                }`}
+              >
+                {method.fee}
+              </span>
+            </div>
+          );
+        })}
       </div>
 
-      {payMethod === "Card" && (
+      {/* ── Card input ── */}
+      {payMethod === 'Card' && (
         <div className="animate-in fade-in slide-in-from-top-2 duration-300 mb-6">
           <div className="flex flex-col gap-1.5 p-4 border border-brand-lgrey rounded-sm bg-brand-white">
             <label className="block text-sm font-bold text-brand-black mb-2">
@@ -656,6 +802,169 @@ function DonationStepPaymentForm({
         </div>
       )}
 
+      {/* ── BACS Direct Debit form ── */}
+      {payMethod === 'BACS' && (
+        <div className="animate-in fade-in slide-in-from-top-2 duration-300 mb-6 space-y-4">
+          <div className="p-4 border border-purple/30 bg-purple-faint rounded-sm">
+            <p className="text-sm font-bold text-brand-black mb-1">BACS Direct Debit</p>
+            <p className="text-xs text-brand-grey leading-relaxed">
+              Enter your bank account details below. Your bank may take 3–5 working days to activate the mandate.
+            </p>
+          </div>
+
+          {/* Account holder name */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold text-brand-black" htmlFor="bacs-name">Account Holder Name *</label>
+            <input
+              id="bacs-name"
+              type="text"
+              placeholder="e.g. John Smith"
+              value={bacsName}
+              onChange={e => setBacsName(e.target.value)}
+              className="w-full border border-brand-lgrey rounded-sm px-3 py-2.5 text-sm text-brand-black placeholder:text-brand-grey/60 focus:outline-none focus:border-purple transition-colors bg-brand-white"
+            />
+          </div>
+
+          {/* Sort code */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold text-brand-black" htmlFor="bacs-sort">Sort Code * <span className="font-normal text-brand-grey">(e.g. 12-34-56)</span></label>
+            <input
+              id="bacs-sort"
+              type="text"
+              placeholder="12-34-56"
+              value={bacsSortCode}
+              maxLength={8}
+              onChange={e => {
+                // Auto-format as XX-XX-XX
+                const raw = e.target.value.replace(/\D/g, '').slice(0, 6);
+                const formatted = raw.replace(/(\d{2})(?=\d)/g, '$1-');
+                setBacsSortCode(formatted);
+              }}
+              className="w-full border border-brand-lgrey rounded-sm px-3 py-2.5 text-sm text-brand-black placeholder:text-brand-grey/60 focus:outline-none focus:border-purple transition-colors bg-brand-white font-mono"
+            />
+          </div>
+
+          {/* Account number */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold text-brand-black" htmlFor="bacs-acc">Account Number * <span className="font-normal text-brand-grey">(8 digits)</span></label>
+            <input
+              id="bacs-acc"
+              type="text"
+              placeholder="12345678"
+              value={bacsAccountNumber}
+              maxLength={8}
+              onChange={e => setBacsAccountNumber(e.target.value.replace(/\D/g, '').slice(0, 8))}
+              className="w-full border border-brand-lgrey rounded-sm px-3 py-2.5 text-sm text-brand-black placeholder:text-brand-grey/60 focus:outline-none focus:border-purple transition-colors bg-brand-white font-mono"
+            />
+          </div>
+
+          {/* Mandate consent */}
+          <label className="flex gap-3 items-start cursor-pointer p-3 border border-brand-lgrey rounded-sm bg-brand-white hover:border-purple/40 transition-colors">
+            <input
+              type="checkbox"
+              id="bacs-consent"
+              className="mt-0.5 w-4 h-4 accent-purple shrink-0 cursor-pointer"
+              checked={bacsConsent}
+              onChange={e => setBacsConsent(e.target.checked)}
+            />
+            <span className="text-xs font-semibold text-brand-black leading-snug">
+              I authorise Human Relief Mission to collect payments from my account via BACS Direct Debit, in accordance with the Direct Debit Guarantee.
+            </span>
+          </label>
+        </div>
+      )}
+
+      {/* ── Bank Transfer / Standing Order form ── */}
+      {payMethod === 'BankTransfer' && (
+        <div className="animate-in fade-in slide-in-from-top-2 duration-300 mb-6 space-y-4">
+          <div className="p-4 border border-purple/30 bg-purple-faint rounded-sm">
+            <p className="text-sm font-bold text-brand-black mb-1">
+              {isRecurringFrequency ? 'Standing Order' : 'Bank Transfer'}
+            </p>
+            <p className="text-xs text-brand-grey leading-relaxed">
+              {isRecurringFrequency
+                ? `Please set up a standing order from your bank to Human Relief Mission. Set the frequency to ${
+                    donationState.type === 'daily' ? 'daily' :
+                    donationState.type === 'weekly' || donationState.type === 'friday' ? 'weekly' : 'monthly'
+                  }.`
+                : 'Please make a one-off bank transfer to Human Relief Mission using your name as the payment reference.'}
+            </p>
+          </div>
+
+          {/* HRM bank details */}
+          <div className="p-4 border border-brand-lgrey rounded-sm bg-brand-white space-y-2">
+            <p className="text-xs font-bold text-brand-black mb-2">Transfer to:</p>
+            {[
+              ['Account Name', 'Human Relief Mission'],
+              ['Sort Code', '30-00-00'],
+              ['Account Number', '12345678'],
+              ['Reference', `${firstName} ${lastName}`.trim() || 'Your full name'],
+            ].map(([label, value]) => (
+              <div key={label} className="flex justify-between text-xs">
+                <span className="text-brand-grey font-semibold">{label}</span>
+                <span className={`font-bold ${label === 'Reference' ? 'text-purple' : 'text-brand-black'}`}>{value}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Your name */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold text-brand-black" htmlFor="bt-name">Your Full Name *</label>
+            <input
+              id="bt-name"
+              type="text"
+              placeholder="As it appears on your bank account"
+              value={btName}
+              onChange={e => setBtName(e.target.value)}
+              className="w-full border border-brand-lgrey rounded-sm px-3 py-2.5 text-sm text-brand-black placeholder:text-brand-grey/60 focus:outline-none focus:border-purple transition-colors bg-brand-white"
+            />
+          </div>
+
+          {/* Estimated transfer date */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold text-brand-black" htmlFor="bt-date">
+              {isRecurringFrequency ? 'First Payment Date *' : 'Estimated Transfer Date *'}
+            </label>
+            <input
+              id="bt-date"
+              type="date"
+              value={btTransferDate}
+              min={new Date().toISOString().split('T')[0]}
+              onChange={e => setBtTransferDate(e.target.value)}
+              className="w-full border border-brand-lgrey rounded-sm px-3 py-2.5 text-sm text-brand-black focus:outline-none focus:border-purple transition-colors bg-brand-white"
+            />
+          </div>
+
+          {/* Bank name (optional) */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold text-brand-black" htmlFor="bt-bank">Your Bank Name <span className="font-normal text-brand-grey">(optional)</span></label>
+            <input
+              id="bt-bank"
+              type="text"
+              placeholder="e.g. Barclays, Lloyds, NatWest"
+              value={btBankName}
+              onChange={e => setBtBankName(e.target.value)}
+              className="w-full border border-brand-lgrey rounded-sm px-3 py-2.5 text-sm text-brand-black placeholder:text-brand-grey/60 focus:outline-none focus:border-purple transition-colors bg-brand-white"
+            />
+          </div>
+
+          {/* Confirmation checkbox */}
+          <label className="flex gap-3 items-start cursor-pointer p-3 border border-brand-lgrey rounded-sm bg-brand-white hover:border-purple/40 transition-colors">
+            <input
+              type="checkbox"
+              id="bt-confirm"
+              className="mt-0.5 w-4 h-4 accent-purple shrink-0 cursor-pointer"
+              checked={btConfirm}
+              onChange={e => setBtConfirm(e.target.checked)}
+            />
+            <span className="text-xs font-semibold text-brand-black leading-snug">
+              I confirm I will {isRecurringFrequency ? 'set up this standing order' : 'make this bank transfer'} within 3 working days.
+            </span>
+          </label>
+        </div>
+      )}
+
+
       {errorMessage && (
         <div className="text-[#B60000] text-sm font-semibold mb-6 bg-red-50 border border-red-200 p-3 rounded-sm animate-in fade-in duration-300">
           {errorMessage}
@@ -663,11 +972,7 @@ function DonationStepPaymentForm({
       )}
 
       <YellowCTA
-        text={
-          isProcessing || localProcessing
-            ? "Processing..."
-            : `Donate Now — £${formatMoney(amountToPay)}`
-        }
+        text={submitButtonLabel}
         onClick={handlePayment}
         disabled={isSubmitDisabled}
         className="w-full justify-center text-lg py-4"

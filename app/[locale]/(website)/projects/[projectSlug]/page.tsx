@@ -19,6 +19,7 @@ const PROJECT_QUERY = `
     name,
     tagline,
     "projectCategory": projectCategory->{ name },
+    "stageSlug": ecosystemSection.stage->slug.current,
     headerImage,
     introSection,
     caseStudies,
@@ -32,6 +33,7 @@ const PROJECT_QUERY = `
         itemTitle,
         itemSubtext,
         price,
+        contactForPricing,
         donationType,
         frequency,
         donationItemBody,
@@ -136,6 +138,7 @@ export default async function ProjectItem({
             data={project.donationSection}
             projectSlug={projectSlug}
             projectName={project.name}
+            stageSlug={project.stageSlug}
           />
           <Impact data={project.impactSection} />
           <ImageCarousel

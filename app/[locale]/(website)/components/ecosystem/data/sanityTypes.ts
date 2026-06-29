@@ -113,6 +113,8 @@ export type StageProjectDonationItem = {
   itemTitle?: string;
   itemSubtext?: string;
   price?: number;
+  contactForPricing?: boolean;
+  slug?: string;
   donationType?: "one-off" | "monthly";
   frequency?: string | string[];
   amounts?: StageProjectDonationAmount[];

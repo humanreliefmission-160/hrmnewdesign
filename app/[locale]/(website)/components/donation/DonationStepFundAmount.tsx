@@ -199,7 +199,7 @@ export default function DonationStepFundAmount({
                     </span>
                   )}
                   <span className="block text-[0.7rem] font-semibold mt-2">
-                    Full price: £{item.price}
+                    {item.contactForPricing ? "Contact us for pricing" : `Full price: £${item.price}`}
                   </span>
                 </button>
               ))}

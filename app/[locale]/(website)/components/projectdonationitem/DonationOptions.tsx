@@ -78,6 +78,11 @@ export default function DonationOptions({ item, projectName, projectSlug }: Dona
     <div className="">
 
       <div className="mb-4">
+        {projectName && (
+          <span className="inline-block bg-purple/10 text-purple text-xs font-semibold px-2.5 py-1 rounded-sm mb-2">
+            Project: {projectName}
+          </span>
+        )}
         <h2 className="text-3xl sm:text-6xl font-bold text-brand-black mb-2 font-body leading-tight">
           {item.itemTitle}
         </h2>
@@ -89,27 +94,35 @@ export default function DonationOptions({ item, projectName, projectSlug }: Dona
       </div>
 
       <div className="flex">
-        <div className="flex flex-row items-end gap-1 bg-purple-dark px-4 py-2 text-brand-white rounded-sm">
-          <h2 className="text-xl font-bold">
-            £{item.price}
-          </h2>
-          <span className="text-[10px] text-brand-white rounded-sm">
-            {(() => {
-              const freq = item.frequency;
-              if (Array.isArray(freq)) {
-                if (freq.length === 0) return "Monthly";
-                return freq.map(f => {
+        <div className="flex flex-row items-center gap-1 bg-purple-dark px-4 py-2 text-brand-white rounded-sm">
+          {item.contactForPricing ? (
+            <h2 className="text-sm font-bold uppercase tracking-wider">
+              Contact Us for Pricing
+            </h2>
+          ) : (
+            <>
+              <h2 className="text-xl font-bold">
+                £{item.price}
+              </h2>
+              <span className="text-[10px] text-brand-white rounded-sm">
+                {(() => {
+                  const freq = item.frequency;
+                  if (Array.isArray(freq)) {
+                    if (freq.length === 0) return "Monthly";
+                    return freq.map(f => {
+                      if (f === 'one-off') return 'One Off';
+                      if (f === 'friday') return 'Friday Giving';
+                      return f.charAt(0).toUpperCase() + f.slice(1);
+                    }).join(', ');
+                  }
+                  const f = freq ?? item.donationType ?? 'monthly';
                   if (f === 'one-off') return 'One Off';
                   if (f === 'friday') return 'Friday Giving';
                   return f.charAt(0).toUpperCase() + f.slice(1);
-                }).join(', ');
-              }
-              const f = freq ?? item.donationType ?? 'monthly';
-              if (f === 'one-off') return 'One Off';
-              if (f === 'friday') return 'Friday Giving';
-              return f.charAt(0).toUpperCase() + f.slice(1);
-            })()}
-          </span>
+                })()}
+              </span>
+            </>
+          )}
         </div>
       </div>
 

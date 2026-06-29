@@ -192,7 +192,7 @@ export default function DonateClient({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const completeDonation = (reference: string, success: boolean) => {
+  const completeDonation = (reference: string, success: boolean, bankDetails?: Record<string, string>) => {
     setIsProcessing(true);
 
     if (success && newsletterOptIn) {
@@ -238,7 +238,19 @@ export default function DonateClient({
       reference: reference || `DON-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`,
       date: new Date().toISOString(),
       success,
+      bankDetails: bankDetails ?? null,
     };
+
+    // Send confirmation email (fire-and-forget, non-blocking)
+    if (success && email) {
+      fetch('/api/emails', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(donationResult),
+      }).catch((err) => {
+        console.error('[DonateClient] Failed to send confirmation email:', err);
+      });
+    }
 
     setIsProcessing(false);
     try {

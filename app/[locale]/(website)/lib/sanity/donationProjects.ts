@@ -9,6 +9,7 @@ export const DONATION_PROJECTS_QUERY = `
         itemTitle,
         itemSubtext,
         price,
+        contactForPricing,
         donationType,
         frequency,
         amounts[] {
@@ -43,7 +44,8 @@ export type DonationPortalItem = {
   _key: string
   itemTitle: string
   itemSubtext?: string
-  price: number
+  price?: number | null
+  contactForPricing?: boolean
   donationType?: 'one-off' | 'monthly'
   frequency?: string | string[]
   amounts?: DonationPortalAmount[]

@@ -44,14 +44,42 @@ export const donationItem = defineType({
       },
       validation: (R) => R.required(),
     }),
+    defineField({
+      name: 'stage',
+      title: 'Ecosystem Stage',
+      description: 'Select which ecosystem stage this donation item belongs to.',
+      type: 'reference',
+      to: [{ type: 'ecosystemStage' }],
+    }),
 
     // ── Price ─────────────────────────────────────────────────
+    defineField({
+      name: 'contactForPricing',
+      title: 'Contact Us for Pricing',
+      description: 'Check this if there is no set price and you want to display "Contact us for pricing" instead.',
+      type: 'boolean',
+      initialValue: false,
+    }),
     defineField({
       name: 'price',
       title: 'Full Price',
       description: 'The complete cost shown on the detail page',
       type: 'number',
-      validation: (Rule) => Rule.required().positive(),
+      hidden: ({ parent }) => !!parent?.contactForPricing,
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const parent = context.parent as { contactForPricing?: boolean } | undefined;
+          if (parent?.contactForPricing) {
+            return true;
+          }
+          if (value === undefined || value === null) {
+            return 'Price is required when "Contact Us for Pricing" is not checked.';
+          }
+          if (value <= 0) {
+            return 'Price must be a positive number.';
+          }
+          return true;
+        }),
     }),
 
     // ── Donation Frequency ─────────────────────────────────────
