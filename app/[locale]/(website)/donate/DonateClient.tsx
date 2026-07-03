@@ -192,13 +192,15 @@ export default function DonateClient({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const completeDonation = (reference: string, success: boolean, bankDetails?: Record<string, string>) => {
+  const completeDonation = async (reference: string, success: boolean, bankDetails?: Record<string, string>) => {
     setIsProcessing(true);
 
     if (success && newsletterOptIn) {
-      subscribeNewsletter(firstName, lastName, email, "Donation Checkout Subscribe").catch((err) => {
+      try {
+        await subscribeNewsletter(firstName, lastName, email, "Donation Checkout Subscribe");
+      } catch (err) {
         console.error("Failed to subscribe user during checkout:", err);
-      });
+      }
     }
 
     // Build the donation summary to pass to the result pages
@@ -225,6 +227,8 @@ export default function DonateClient({
           ]
           : [];
 
+    const canonicalReference = reference || `DON-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+
     const donationResult = {
       firstName,
       lastName,
@@ -235,21 +239,60 @@ export default function DonateClient({
       giftAid: donationState.giftAid,
       type: donationState.type,
       lineItems,
-      reference: reference || `DON-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`,
+      reference: canonicalReference,
       date: new Date().toISOString(),
       success,
       bankDetails: bankDetails ?? null,
     };
 
-    // Send confirmation email (fire-and-forget, non-blocking)
+    // 1. Save to Supabase DB on success
+    if (success) {
+      try {
+        const dbRes = await fetch('/api/donations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            email,
+            phone: phone || null,
+            address,
+            city,
+            postcode: postcode || null,
+            country: country || 'GB',
+            projectSlug: donationState.projectSlug || null,
+            donationItemTitle: donationState.donationItemTitle || null,
+            intention: donationState.intention || null,
+            amount: donatedTotal,
+            giftAid: donationState.giftAid,
+            donationType: donationState.type,
+            payMethod,
+            reference: canonicalReference,
+            newsletterOptIn,
+          }),
+        });
+        if (!dbRes.ok) {
+          console.error('[DonateClient] Failed to save donation to DB:', await dbRes.text());
+        }
+      } catch (dbErr) {
+        console.error('[DonateClient] DB save error:', dbErr);
+      }
+    }
+
+    // 2. Send confirmation email
     if (success && email) {
-      fetch('/api/emails', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(donationResult),
-      }).catch((err) => {
+      try {
+        const emailRes = await fetch('/api/emails', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(donationResult),
+        });
+        if (!emailRes.ok) {
+          console.error('[DonateClient] Failed to send confirmation email:', await emailRes.text());
+        }
+      } catch (err) {
         console.error('[DonateClient] Failed to send confirmation email:', err);
-      });
+      }
     }
 
     setIsProcessing(false);

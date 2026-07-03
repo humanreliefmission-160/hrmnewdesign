@@ -51,17 +51,17 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                       </Link>
-                      {project.category && (
+                      {/* {project.category && (
                         <Link
                           href={`/projects/${project.slug}`}
                           className="absolute bottom-0 left-0 right-0 bg-purple text-brand-white font-bold text-[0.8rem] tracking-widest uppercase py-2.5 px-6 no-underline"
                         >
                           {project.category}
                         </Link>
-                      )}
+                      )} */}
                     </div>
                     <div className="p-6">
-                      <h3 className="font-bold text-[1.1rem] text-brand-black mb-2.5">
+                      <h3 className="font-bold text-[1.5rem] text-brand-black mb-2.5">
                         <Link href={`/projects/${project.slug}`} className="hover:text-purple transition-colors">
                           {project.name}
                         </Link>

@@ -20,7 +20,8 @@ import { IoWomanSharp } from "react-icons/io5";
 import IconRenderer from "@/app/[locale]/lib/icons/IconRenderer";
 
 interface Project {
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
+  iconName?: string;
   name: string;
   category: string;
   desc: string;
@@ -120,28 +121,28 @@ export default function EcosystemDiagram({ stages }: { stages?: any[] }) {
 
   const resolvedPhases = stages && stages.length > 0
     ? stages.map((stage) => {
-        const stageSlug = stage.slug || stage.stageName?.toLowerCase() || stage.title?.toLowerCase() || "";
-        const flatItems = (stage.projects || []).flatMap((proj: any) =>
-          (proj.items || []).map((item: any) => ({
-            icon: <IconRenderer name={item.icon} size={13} />,
-            name: item.itemTitle || "",
-            category: item.projectCategoryName || "",
-            desc: item.itemSubtext || "",
-            link: item.slug ? `/ecosystem/${stageSlug}/${item.slug}` : "/projects",
-            projectType: "normal" as const,
-          }))
-        );
+      const stageSlug = stage.slug || stage.stageName?.toLowerCase() || stage.title?.toLowerCase() || "";
+      const flatItems = (stage.projects || []).flatMap((proj: any) =>
+        (proj.items || []).map((item: any) => ({
+          iconName: item.icon || "",
+          name: item.itemTitle || "",
+          category: item.projectCategoryName || "",
+          desc: item.itemSubtext || "",
+          link: item.slug ? `/projects/${proj.slug}/${item.slug}` : "/projects",
+          projectType: "normal" as const,
+        }))
+      );
 
-        return {
-          id: stage.stageNumber || stage.order || 1,
-          label: stage.stageName || stage.title || "",
-          subtitle: `Stage ${stage.stageNumber || stage.order || 1}`,
-          badge: stage.title || "",
-          description: stage.cardDescription || "",
-          slug: stageSlug,
-          projects: flatItems,
-        };
-      })
+      return {
+        id: stage.stageNumber || stage.order || 1,
+        label: stage.stageName || stage.title || "",
+        subtitle: `Stage ${stage.stageNumber || stage.order || 1}`,
+        badge: stage.title || "",
+        description: stage.cardDescription || "",
+        slug: stageSlug,
+        projects: flatItems,
+      };
+    })
     : phases;
 
   const handlePhaseClick = (id: number) => {
@@ -324,28 +325,22 @@ function PhaseDetailPanel({ phase, onClose }: any) {
               <Link
                 key={p.name}
                 href={p.link}
-                className={`flex items-start gap-2 px-3 py-2 rounded-sm cursor-pointer transition-all hover:scale-105 border ${borderClass} ${lightBgClass}`}
+                className="flex items-start gap-2 px-3 py-2 rounded-sm border border-purple bg-purple/10 cursor-pointer transition-all hover:scale-105"
               >
-                <span className={`mt-0.5 shrink-0 ${badgeTextClass}`}>
-                  {p.icon}
+                <span className="mt-0.5 shrink-0 text-purple">
+                  {p.iconName ? <IconRenderer name={p.iconName} size={13} /> : p.icon}
                 </span>
                 <div>
-                  {p.category && (
-                    <div className="text-[9px] uppercase tracking-wider font-semibold opacity-70 leading-none mb-1">
-                      {p.category}
-                    </div>
-                  )}
                   <div className="flex flex-row justify-between items-center">
-                    <div className={`text-xs font-bold ${badgeTextClass}`}>
+                    <div className="text-xs font-bold text-purple">
                       {p.name}
                     </div>
-                    <div>
-                      <FaChevronRight className="opacity-0 hover:opacity-100 ml-1.5" size={10} color="#650199" />
+                  </div>
+                  {p.desc && (
+                    <div className="text-[10px] mt-0.5 text-brand-grey">
+                      {p.desc}
                     </div>
-                  </div>
-                  <div className="text-[10px] mt-0.5 text-brand-grey">
-                    {p.desc}
-                  </div>
+                  )}
                 </div>
               </Link>
             ))}

@@ -31,6 +31,13 @@ export const donationItem = defineType({
       rows: 2,
     }),
     defineField({
+      name: 'cardImage',
+      title: 'Card Image',
+      description: 'Specifically shows on the project card in the project listing page.',
+      type: 'image',
+      options: { hotspot: true },
+    }),
+    defineField({
       name: 'slug',
       title: 'URL Slug',
       type: 'slug',
