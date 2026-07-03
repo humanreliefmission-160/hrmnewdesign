@@ -7,11 +7,13 @@ import { notFound } from 'next/navigation'
 import { urlFor } from '@/sanity/lib/image'
 import { sanityFetch } from "@/app/[locale]/lib/sanity/client";
 import PageHeader from "../../../components/PageHeader";
-import type { DonationItemData, GalleryImage } from "../../../types/donationItem";
+import type { DonationItemData, DonationItemImage, GalleryImage } from "../../../types/donationItem";
 
-const ITEM_QUERY = `
-  *[_type == "project" && slug.current == $projectSlug][0] {
+const ECOSYSTEM_ITEM_QUERY = `
+  *[_type == "project" && ecosystemSection.stage->slug.current == $stageSlug && count(donationSection.donationItems[slug.current == $donationitemSlug]) > 0][0] {
     name,
+    "projectSlug": slug.current,
+    "stageName": ecosystemSection.stage->stageName,
     "item": donationSection.donationItems[slug.current == $donationitemSlug][0] {
       icon,
       itemTitle,
@@ -46,23 +48,30 @@ const ITEM_QUERY = `
   }
 `;
 
-export default async function DonationItemPage({
+interface EcosystemItemResult {
+  name: string;
+  projectSlug: string;
+  stageName: string;
+  item: DonationItemData | null;
+}
+
+export default async function EcosystemDonationItemPage({
   params,
 }: {
-  params: Promise<{ projectSlug: string; donationitemSlug: string }>
+  params: Promise<{ stageSlug: string; donationitemSlug: string }>
 }) {
-  const { projectSlug, donationitemSlug } = await params
+  const { stageSlug, donationitemSlug } = await params
 
-  const data = await sanityFetch<{ name: string; item: DonationItemData | null }>(
-    ITEM_QUERY,
-    { projectSlug, donationitemSlug }
+  const data = await sanityFetch<EcosystemItemResult | null>(
+    ECOSYSTEM_ITEM_QUERY,
+    { stageSlug, donationitemSlug }
   );
 
   if (!data?.item) notFound()
 
-  const { item } = data;
+  const { item, projectSlug } = data;
 
-  const galleryImages: GalleryImage[] = (item.images ?? []).map((img) => ({
+  const galleryImages: GalleryImage[] = (item.images ?? []).map((img: DonationItemImage) => ({
     src: img.asset
       ? urlFor(img.asset).width(1200).height(900).fit('crop').url()
       : '/img-placeholder.JPG',
@@ -95,12 +104,12 @@ export default async function DonationItemPage({
                 Home
               </Link>
               <span className="text-purple">&gt;</span>
-              <Link href="/projects" className="hover:text-purple transition-colors">
-                Projects
+              <Link href="/ecosystem" className="hover:text-purple transition-colors">
+                Ecosystem
               </Link>
               <span className="text-purple">&gt;</span>
-              <Link href={`/projects/${projectSlug}`} className="hover:text-purple transition-colors">
-                {data.name}
+              <Link href={`/ecosystem/${stageSlug}`} className="hover:text-purple transition-colors">
+                {data.stageName || stageSlug}
               </Link>
               <span className="text-purple">&gt;</span>
               <span className="text-brand-black font-bold">

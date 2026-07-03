@@ -27,14 +27,26 @@ const FALLBACK_AMOUNTS: StageProjectDonationAmount[] = [
   { _key: "c", amount: 50, impactLabel: "" },
 ];
 
-// ── Per-project card (shown when projects are linked to this stage) ───────────
+interface StageDonationItemInfo {
+  _key: string;
+  icon?: string;
+  itemTitle: string;
+  itemSubtext?: string;
+  price?: number;
+  contactForPricing?: boolean;
+  slug?: string;
+  amounts?: StageProjectDonationAmount[];
+  projectName: string;
+  projectSlug: string;
+  projectIcon?: string;
+}
 
-function ProjectDonationCard({ project }: { project: StageProject }) {
+function ProjectDonationCard({ item, stageSlug }: { item: StageDonationItemInfo; stageSlug: string }) {
   const { addItem } = useBasket();
 
   const heroAmounts =
-    project.heroAmounts && project.heroAmounts.length > 0
-      ? project.heroAmounts
+    item.amounts && item.amounts.length > 0
+      ? item.amounts
       : FALLBACK_AMOUNTS;
 
   const defaultAmount = heroAmounts.length > 1 ? heroAmounts[1].amount : (heroAmounts[0]?.amount ?? 10);
@@ -51,11 +63,11 @@ function ProjectDonationCard({ project }: { project: StageProject }) {
   );
 
   const handleAdd = () => {
-    if (!effectiveAmount || !project.name) return;
+    if (!effectiveAmount || !item.itemTitle) return;
     addItem({
-      projectName: project.name,
-      projectSlug: project.slug,
-      projectItem: "",
+      projectName: item.projectName,
+      projectSlug: item.projectSlug,
+      projectItem: item.itemTitle,
       amount: effectiveAmount,
       intention: intentionFromZakat(isZakat),
       isZakat,
@@ -72,30 +84,41 @@ function ProjectDonationCard({ project }: { project: StageProject }) {
       <div className="flex gap-4 items-center">
         <div className="bg-purple-faint p-3 rounded-sm flex items-center justify-center">
           <span className="text-4xl">
-            <DynamicIcon name={project.cardIcon || ''} size={30} color="#650199" />
+            <DynamicIcon name={item.icon || item.projectIcon || ''} size={30} color="#650199" />
           </span>
         </div>
         <div>
           <h3 className="text-lg font-bold text-gray-900 leading-tight">
-            {project.name}
+            {item.itemTitle}
           </h3>
-        </div>
-      </div>
-
-      <div className="flex">
-        <div className="flex flex-row items-end gap-1 bg-purple-dark px-4 py-2 text-brand-white rounded-sm">
-          <h2 className="text-2xl font-bold">
-            £{project.donationSection?.donationItems?.[0]?.price || project.donationPrice || 0}
-          </h2>
-          <span className="text-[10px] text-brand-white rounded-sm capitalize">
-            One-off
+          <span className="text-xs text-purple font-semibold">
+            {item.projectName}
           </span>
         </div>
       </div>
 
-      {project.donationSection?.donationSubtext && (
+      <div className="flex">
+        <div className="flex flex-row items-center gap-1 bg-purple-dark px-4 py-2 text-brand-white rounded-sm">
+          {item.contactForPricing ? (
+            <h2 className="text-sm font-bold uppercase tracking-wider">
+              Contact Us for Pricing
+            </h2>
+          ) : (
+            <div className="flex items-baseline gap-1">
+              <h2 className="text-2xl font-bold">
+                £{item.price || 0}
+              </h2>
+              <span className="text-[10px] text-brand-white rounded-sm capitalize">
+                per {item.itemTitle}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {item.itemSubtext && (
         <div className="text-sm text-brand-black/75 leading-relaxed portable-text space-y-2">
-          {project.donationSection.donationSubtext}
+          {item.itemSubtext}
         </div>
       )}
 
@@ -134,7 +157,7 @@ function ProjectDonationCard({ project }: { project: StageProject }) {
       {/* Zakat Donation Option */}
       <div className="flex gap-2">
         <input
-          id={`eco-zakat-${project._id}`}
+          id={`eco-zakat-${item._key}`}
           name="zakat"
           type="checkbox"
           checked={isZakat}
@@ -142,7 +165,7 @@ function ProjectDonationCard({ project }: { project: StageProject }) {
           className="accent-purple cursor-pointer"
         />
         <label
-          htmlFor={`eco-zakat-${project._id}`}
+          htmlFor={`eco-zakat-${item._key}`}
           className="italic text-xs font-medium text-brand-grey cursor-pointer"
         >
           I want this to be treated as Zakat
@@ -157,12 +180,14 @@ function ProjectDonationCard({ project }: { project: StageProject }) {
             disabled={!effectiveAmount}
           />
         </div>
-        <Link
-          className="underline text-sm font-semibold text-purple mt-2"
-          href={`/projects/${project.slug}`}
-        >
-          Find out more
-        </Link>
+        {item.slug && (
+          <Link
+            className="underline text-sm font-semibold text-purple mt-2"
+            href={`/ecosystem/${stageSlug}/${item.slug}`}
+          >
+            Find out more
+          </Link>
+        )}
       </div>
     </div>
   );
@@ -294,7 +319,17 @@ function StageFallbackDonate({ stage }: { stage: SanityEcosystemStage }) {
 // ── Section wrapper ───────────────────────────────────────────────────────────
 
 export default function DonateSection({ stage, stageProjects }: Props) {
-  const hasProjects = stageProjects && stageProjects.length > 0;
+  const donationItems = stageProjects.flatMap((project) => {
+    const items = project.donationSection?.donationItems || [];
+    return items.map((item) => ({
+      ...item,
+      projectName: project.name,
+      projectSlug: project.slug,
+      projectIcon: project.cardIcon,
+    }));
+  });
+
+  const hasItems = donationItems.length > 0;
 
   return (
     <section className="bg-purple-dark py-16 px-6 md:px-12 lg:px-24">
@@ -304,7 +339,7 @@ export default function DonateSection({ stage, stageProjects }: Props) {
           <span className="inline-block bg-purple-light/50 text-brand-white text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-sm mb-3">
             Support This Stage
           </span>
-          {hasProjects && (
+          {hasItems && (
             <>
               <h2 className="text-3xl md:text-4xl font-bold text-brand-white mb-4">
                 Donate to a Project
@@ -318,11 +353,11 @@ export default function DonateSection({ stage, stageProjects }: Props) {
           )}
         </div>
 
-        {hasProjects ? (
-          /* Per-project cards */
+        {hasItems ? (
+          /* Per-item cards */
           <div className="flex flex-col sm:flex-row flex-wrap gap-6 items-start justify-center">
-            {stageProjects.map((project) => (
-              <ProjectDonationCard key={project._id} project={project} />
+            {donationItems.map((item) => (
+              <ProjectDonationCard key={item._key} item={item as any} stageSlug={stage.slug.current} />
             ))}
           </div>
         ) : (

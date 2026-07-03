@@ -30,13 +30,18 @@ const ECOSYSTEM_STAGES_QUERY = `
     stageName,
     cardImage,
     "slug": slug.current,
-    "projects": *[_type == "project" && ecosystemSection.stage._ref == ^._id] | order(name asc) {
+    "projects": *[_type == "project" && count(donationSection.donationItems[stage._ref == ^._id]) > 0] | order(name asc) {
       _id,
       name,
-      icon,
-      tagline,
       "slug": slug.current,
-      projectCategory->{ name }
+      "items": donationSection.donationItems[stage._ref == ^._id] {
+        icon,
+        itemTitle,
+        itemSubtext,
+        "slug": slug.current,
+        "projectName": ^.name,
+        "projectCategoryName": ^.projectCategory->name
+      }
     }
   }
 `;

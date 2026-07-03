@@ -119,22 +119,29 @@ export default function EcosystemDiagram({ stages }: { stages?: any[] }) {
   const [hovered, setHovered] = useState<number | null>(null);
 
   const resolvedPhases = stages && stages.length > 0
-    ? stages.map((stage) => ({
-      id: stage.stageNumber || stage.order || 1,
-      label: stage.stageName || stage.title || "",
-      subtitle: `Stage ${stage.stageNumber || stage.order || 1}`,
-      badge: stage.title || "",
-      description: stage.cardDescription || "",
-      slug: stage.slug || stage.stageName?.toLowerCase() || stage.title?.toLowerCase() || "",
-      projects: (stage.projects || []).map((p: any) => ({
-        icon: <IconRenderer name={p.icon} size={13} />,
-        name: p.name || "",
-        category: p.projectCategory?.name || "",
-        desc: p.tagline || "",
-        link: p.slug ? `/projects/${p.slug}` : "/projects",
-        projectType: "normal" as const,
-      }))
-    }))
+    ? stages.map((stage) => {
+        const stageSlug = stage.slug || stage.stageName?.toLowerCase() || stage.title?.toLowerCase() || "";
+        const flatItems = (stage.projects || []).flatMap((proj: any) =>
+          (proj.items || []).map((item: any) => ({
+            icon: <IconRenderer name={item.icon} size={13} />,
+            name: item.itemTitle || "",
+            category: item.projectCategoryName || "",
+            desc: item.itemSubtext || "",
+            link: item.slug ? `/ecosystem/${stageSlug}/${item.slug}` : "/projects",
+            projectType: "normal" as const,
+          }))
+        );
+
+        return {
+          id: stage.stageNumber || stage.order || 1,
+          label: stage.stageName || stage.title || "",
+          subtitle: `Stage ${stage.stageNumber || stage.order || 1}`,
+          badge: stage.title || "",
+          description: stage.cardDescription || "",
+          slug: stageSlug,
+          projects: flatItems,
+        };
+      })
     : phases;
 
   const handlePhaseClick = (id: number) => {
@@ -323,6 +330,11 @@ function PhaseDetailPanel({ phase, onClose }: any) {
                   {p.icon}
                 </span>
                 <div>
+                  {p.category && (
+                    <div className="text-[9px] uppercase tracking-wider font-semibold opacity-70 leading-none mb-1">
+                      {p.category}
+                    </div>
+                  )}
                   <div className="flex flex-row justify-between items-center">
                     <div className={`text-xs font-bold ${badgeTextClass}`}>
                       {p.name}

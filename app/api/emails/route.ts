@@ -1,30 +1,75 @@
 import DonationReceipt from '@/app/[locale]/(website)/components/emails/DonationReceipt';
 import { Resend } from 'resend';
 
-export async function POST() {
-  const apiKey = process.env.RESEND_API_KEY;
+export async function POST(request: Request) {
+  const apiKey = process.env.NEXT_RESEND_API_KEY;
 
   if (!apiKey) {
-    console.error('[emails/route] Missing RESEND_API_KEY environment variable.');
+    console.error('[emails/route] Missing NEXT_RESEND_API_KEY environment variable.');
     return Response.json(
       { error: 'Email service is not configured.' },
       { status: 500 }
     );
   }
 
+  let body: Record<string, any> = {};
+  try {
+    body = await request.json();
+  } catch {
+    // No body or malformed — fall through with empty body (still sends a basic receipt)
+  }
+
+  const {
+    firstName = '',
+    lastName = '',
+    email = '',
+    total = 0,
+    giftAidAmount = 0,
+    totalWithGiftAid = 0,
+    giftAid = false,
+    type = 'oneoff',
+    lineItems = [],
+    reference = '',
+    date,
+    bankDetails = null,
+  } = body;
+
+  if (!email) {
+    return Response.json({ error: 'Recipient email is required.' }, { status: 400 });
+  }
+
   const resend = new Resend(apiKey);
+
+  const donorName = [firstName, lastName].filter(Boolean).join(' ') || 'Donor';
+  const isOffline = bankDetails !== null;
+
+  const subject = isOffline
+    ? `Donation Intent Confirmed — ${reference} | Human Relief Mission`
+    : `Donation Receipt — ${reference} | Human Relief Mission`;
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: 'media@humanreliefmission.com',
-      subject: 'Welcome',
-      // Fix: DonationReceipt() called as a function returns whatever the
-      // component body returns as a plain object — it is not valid JSX.
-      // Using <DonationReceipt /> creates an actual React element, which is
-      // what Resend's `react` field and @react-email/render expect.
-      react: DonationReceipt()
-    }); if (error) {
+      from: 'Human Relief Mission <donations@humanreliefmission.com>',
+      to: email,
+      subject,
+      replyTo: "info@humanreliefmission.com",
+      react: DonationReceipt({
+        firstName,
+        lastName,
+        email,
+        total,
+        giftAidAmount,
+        totalWithGiftAid,
+        giftAid,
+        type,
+        lineItems,
+        reference,
+        date,
+        bankDetails,
+      }),
+    });
+
+    if (error) {
       console.error('[emails/route]', error);
       return Response.json({ error: error.message }, { status: 502 });
     }

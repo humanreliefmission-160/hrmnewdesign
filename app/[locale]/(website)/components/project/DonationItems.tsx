@@ -23,6 +23,7 @@ interface DonationItemData {
   itemTitle?: string;
   itemSubtext?: string;
   price?: number;
+  contactForPricing?: boolean;
   donationType?: 'one-off' | 'monthly';
   frequency?: string | string[];
   amounts?: DonationAmount[];
@@ -42,10 +43,12 @@ function DonationCard({
   item,
   projectSlug,
   projectName,
+  stageSlug,
 }: {
   item: DonationItemData;
   projectSlug: string;
   projectName: string;
+  stageSlug?: string;
 }) {
   const { addItem } = useBasket();
   const defaultAmount = item.amounts && item.amounts.length > 1 ? item.amounts[1].amount : (item.amounts?.[0]?.amount || 10);
@@ -90,27 +93,21 @@ function DonationCard({
       </div>
 
       <div className="flex">
-        <div className="flex flex-row items-end gap-1 bg-purple-dark px-4 py-2 text-brand-white rounded-sm">
-          <h2 className="text-2xl font-bold">
-            £{item.price || 0}
-          </h2>
-          <span className="text-[10px] text-brand-white rounded-sm capitalize">
-            {(() => {
-              const freq = item.frequency;
-              if (Array.isArray(freq)) {
-                if (freq.length === 0) return "Monthly";
-                return freq.map(f => {
-                  if (f === 'one-off') return 'One Off';
-                  if (f === 'friday') return 'Friday Giving';
-                  return f.charAt(0).toUpperCase() + f.slice(1);
-                }).join(', ');
-              }
-              const f = freq ?? item.donationType ?? 'monthly';
-              if (f === 'one-off') return 'One Off';
-              if (f === 'friday') return 'Friday Giving';
-              return f.charAt(0).toUpperCase() + f.slice(1);
-            })()}
-          </span>
+        <div className="flex flex-row items-center gap-1 bg-purple-dark px-4 py-2 text-brand-white rounded-sm">
+          {item.contactForPricing ? (
+            <h2 className="text-sm font-bold uppercase tracking-wider">
+              Contact Us for Pricing
+            </h2>
+          ) : (
+            <div className="flex items-baseline gap-1">
+              <h2 className="text-2xl font-bold">
+                £{item.price || 0}
+              </h2>
+              <span className="text-[10px] text-brand-white rounded-sm capitalize">
+                per {item.itemTitle}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -166,10 +163,10 @@ function DonationCard({
             disabled={!effectiveAmount}
           />
         </div>
-        {item.slug && (
+        {item.slug && stageSlug && (
           <Link
             className="underline text-sm font-semibold text-purple mt-2"
-            href={`/projects/${projectSlug}/${item.slug}`}
+            href={`/ecosystem/${stageSlug}/${item.slug}`}
           >
             Find out more
           </Link>
@@ -183,10 +180,12 @@ export default function DonationItems({
   data,
   projectSlug,
   projectName,
+  stageSlug,
 }: {
   data?: DonationSectionData;
   projectSlug: string;
   projectName: string;
+  stageSlug?: string;
 }) {
   if (!data || !data.donationItems || data.donationItems.length === 0) return null;
 
@@ -218,8 +217,8 @@ export default function DonationItems({
               item={item}
               projectSlug={projectSlug}
               projectName={projectName}
+              stageSlug={stageSlug}
             />
-
           ))}
         </div>
       </div>

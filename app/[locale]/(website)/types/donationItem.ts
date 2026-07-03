@@ -20,7 +20,8 @@ export type DonationItemData = {
   icon?: string
   itemTitle: string
   itemSubtext?: string
-  price: number
+  price?: number | null
+  contactForPricing?: boolean
   donationType: 'one-off' | 'monthly'
   frequency?: string | string[]
   donationItemBody?: any[]
