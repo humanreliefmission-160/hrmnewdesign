@@ -8,6 +8,7 @@ import { urlFor } from '@/sanity/lib/image'
 import { sanityFetch } from "@/app/[locale]/lib/sanity/client";
 import PageHeader from "../../../components/PageHeader";
 import type { DonationItemData, GalleryImage } from "../../../types/donationItem";
+import IconRenderer from "@/app/[locale]/lib/icons/IconRenderer";
 
 const ITEM_QUERY = `
   *[_type == "project" && slug.current == $projectSlug][0] {
@@ -106,6 +107,27 @@ export default async function DonationItemPage({
               <span className="text-brand-black font-bold">
                 {item.itemTitle}
               </span>
+            </div>
+
+            {/* PhaseDetailPanel-style icon + itemTitle badge */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              <div className="flex items-start gap-2 px-3 py-2 rounded-sm border border-purple bg-purple/10">
+                <span className="mt-0.5 shrink-0 text-purple">
+                  <IconRenderer name={item.icon ?? ''} size={13} />
+                </span>
+                <div>
+                  <div className="flex flex-row justify-between items-center">
+                    <div className="text-xs font-bold text-purple">
+                      {item.itemTitle}
+                    </div>
+                  </div>
+                  {item.itemSubtext && (
+                    <div className="text-[10px] mt-0.5 text-brand-grey">
+                      {item.itemSubtext}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             <ImageGallery images={galleryImages} />

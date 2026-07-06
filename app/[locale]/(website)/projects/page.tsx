@@ -3,50 +3,54 @@ import { urlFor } from "@/sanity/lib/image";
 import PageHeader from "../components/PageHeader";
 import YellowCTA from "../components/YellowCTA";
 import Link from "next/link";
-import { YouTubeEmbed } from "@next/third-parties/google";
-import ProjectPageVideo from "../components/project/ProjectPageVideo";
 
 export const revalidate = 60;
 
-// Fetch all project categories that have at least one project,
-// grouped so we can render a section per category.
-const PROJECTS_BY_CATEGORY_QUERY = `
-  *[_type == "projectCategory"] | order(name asc) {
+// Fetch all projects that have at least one donation item
+const PROJECTS_WITH_ITEMS_QUERY = `
+  *[_type == "project" && defined(slug.current) && count(donationSection.donationItems) > 0] | order(name asc) {
     _id,
     name,
-    "projects": *[_type == "project" && references(^._id)] | order(name asc) {
-      _id,
-      name,
-      tagline,
-      cardSummary,
+    "slug": slug.current,
+    headerImage,
+    "donationItems": donationSection.donationItems[] {
+      _key,
+      itemTitle,
+      itemSubtext,
       "slug": slug.current,
-      headerImage
+      price,
+      cardImage,
+      images[] {
+        asset,
+        altText
+      }
     }
   }
 `;
 
+type DonationItem = {
+  _key: string;
+  itemTitle: string;
+  itemSubtext?: string;
+  slug: string;
+  price?: number;
+  cardImage?: any;
+  images?: Array<{
+    asset: any;
+    altText: string;
+  }>;
+};
+
 type Project = {
   _id: string;
   name: string;
-  tagline?: string;
-  cardSummary?: string;
   slug: string;
   headerImage?: any;
-};
-
-type ProjectCategory = {
-  _id: string;
-  name: string;
-  projects: Project[];
+  donationItems: DonationItem[];
 };
 
 export default async function ProjectsPage() {
-  const categories: ProjectCategory[] = await sanityFetch(PROJECTS_BY_CATEGORY_QUERY);
-
-  // Filter out categories with no projects
-  const populatedCategories = (categories ?? []).filter(
-    (cat) => cat.projects && cat.projects.length > 0
-  );
+  const projects: Project[] = await sanityFetch(PROJECTS_WITH_ITEMS_QUERY);
 
   return (
     <div id="page-projects" className="block min-h-screen">
@@ -65,62 +69,76 @@ export default async function ProjectsPage() {
       {/* <ProjectPageVideo /> */}
 
       <section className="py-20 px-4 md:px-8 bg-brand-white">
-
         <div className="max-w-[1140px] mx-auto">
           {/* Projects */}
-          {populatedCategories.length === 0 ? (
+          {!projects || projects.length === 0 ? (
             <p className="text-brand-grey text-center py-20">
               No projects found. Check back soon.
             </p>
           ) : (
-            populatedCategories.map((category, catIdx) => (
-              <div key={category._id}>
-                {/* Category Header */}
+            projects.map((project, projIdx) => (
+              <div key={project._id}>
+                {/* Project Header (links to project detail page) */}
                 <div className="mb-4">
-                  <h2 className="text-4xl md:text-5xl font-bold text-brand-black mb-3">
-                    {category.name}
-                  </h2>
+                  <Link href={`/projects/${project.slug}`}>
+                    <h2 className="text-4xl md:text-5xl font-bold text-brand-black mb-3 hover:text-purple transition-colors cursor-pointer inline-block">
+                      {project.name}
+                    </h2>
+                  </Link>
                 </div>
 
-                {/* Project Cards */}
+                {/* Donation Item Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-                  {category.projects.map((project) => {
-                    const imageUrl = project.headerImage?.asset
-                      ? urlFor(project.headerImage).width(600).height(450).fit("crop").url()
-                      : "/img-placeholder.JPG";
+                  {(project.donationItems || []).map((item) => {
+                    // Safe image resolution: card image -> first gallery image -> project header image -> placeholder
+                    let imageUrl = "/img-placeholder.JPG";
+
+                    if (item.cardImage && item.cardImage.asset && item.cardImage.asset._ref) {
+                      imageUrl = urlFor(item.cardImage.asset).width(600).height(450).fit("crop").url();
+                    } else if (item.images?.[0] && item.images[0].asset && item.images[0].asset._ref) {
+                      imageUrl = urlFor(item.images[0].asset).width(600).height(450).fit("crop").url();
+                    } else if (project.headerImage && project.headerImage.asset && project.headerImage.asset._ref) {
+                      imageUrl = urlFor(project.headerImage).width(600).height(450).fit("crop").url();
+                    }
+
+                    const itemUrl = `/projects/${project.slug}/${item.slug}`;
 
                     return (
                       <div
-                        key={project._id}
+                        key={item._key}
                         className="bg-brand-white rounded-sm overflow-hidden shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover group"
                       >
-                        <div className="aspect-4/3 relative overflow-hidden">
-                          <img
-                            src={imageUrl}
-                            alt={project.name}
-                            loading="lazy"
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                          />
-                          <span className="absolute bottom-0 left-0 right-0 bg-purple text-brand-white font-bold text-[0.8rem] tracking-widest uppercase py-2.5 px-6">
-                            {category.name}
-                          </span>
-                        </div>
+                        <Link href={itemUrl}>
+                          <div className="aspect-4/3 relative overflow-hidden cursor-pointer">
+                            <img
+                              src={imageUrl}
+                              alt={item.itemTitle}
+                              loading="lazy"
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            />
+                            <span className="absolute bottom-0 left-0 right-0 bg-purple text-brand-white font-bold text-[0.8rem] tracking-widest uppercase py-2.5 px-6">
+                              {project.name}
+                            </span>
+                          </div>
+                        </Link>
                         <div className="p-6">
-                          <h3 className="font-bold text-[1.1rem] text-brand-black mb-2.5">
-                            {project.name}
-                          </h3>
-                          {project.cardSummary && (
-                            <p className="text-[0.875rem] text-brand-grey leading-[1.6] mb-4">
-                              {project.cardSummary}
+                          <Link href={itemUrl}>
+                            <h3 className="font-bold text-[1.1rem] text-brand-black mb-2.5 hover:text-purple transition-colors cursor-pointer">
+                              {item.itemTitle}
+                            </h3>
+                          </Link>
+                          {item.itemSubtext && (
+                            <p className="text-[0.875rem] text-brand-grey leading-[1.6] mb-4 line-clamp-3">
+                              {item.itemSubtext}
                             </p>
                           )}
                           <div className="flex justify-between items-center mt-6 pt-4 border-t border-brand-lgrey">
                             <YellowCTA
                               text="Find out more"
-                              href={`/projects/${project.slug}`}
+                              href={itemUrl}
                             />
                             <Link
-                              href={`/donate?project=${project.slug}`}
+                              href={itemUrl}
                               className="text-purple font-bold text-sm underline hover:text-brand-grey"
                             >
                               Donate Now
@@ -132,8 +150,8 @@ export default async function ProjectsPage() {
                   })}
                 </div>
 
-                {/* Divider between categories, not after the last one */}
-                {catIdx < populatedCategories.length - 1 && (
+                {/* Divider between projects, not after the last one */}
+                {projIdx < projects.length - 1 && (
                   <hr className="my-12 h-px border-t-0 bg-transparent bg-linear-to-r from-transparent via-purple/30 to-transparent" />
                 )}
               </div>
