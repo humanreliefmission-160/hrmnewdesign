@@ -6,7 +6,7 @@ const stripe = new Stripe(
   process.env.NEXTT_PUBLIC_STRIPE_SECRET_KEY ||
   '',
   {
-    apiVersion: '2022-11-15' as any,
+    apiVersion: '2026-05-27.dahlia',
   }
 );
 
