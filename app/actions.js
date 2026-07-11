@@ -6,7 +6,7 @@ import { createServerClient } from "@/app/[locale]/lib/supabase/server";
 
 mailchimp.setConfig({
   apiKey: process.env.MAILCHIMP_API_KEY,
-  server: process.env.MAILCHIMP_SERVER_PREFIX,
+  server: 'us8',
 });
 
 const LIST_ID = "e9938aafc4";
