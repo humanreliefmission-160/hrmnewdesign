@@ -67,6 +67,7 @@ function DonationCard({
       projectSlug,
       projectItem: item.itemTitle,
       donationItemKey: item._key,
+      donationItemSlug: item.slug,
       amount: effectiveAmount,
       intention: intentionFromZakat(isZakat),
       isZakat,

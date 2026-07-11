@@ -8,6 +8,7 @@ export interface BasketItem {
   projectSlug?: string;
   projectItem: string;
   donationItemKey?: string;
+  donationItemSlug?: string;
   amount: number;
   intention: string;
   isZakat?: boolean;

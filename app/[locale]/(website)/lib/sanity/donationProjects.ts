@@ -6,6 +6,7 @@ export const DONATION_PROJECTS_QUERY = `
     donationSection {
       donationItems[] {
         _key,
+        "slug": slug.current,
         itemTitle,
         itemSubtext,
         price,
@@ -42,6 +43,7 @@ export type DonationPortalIntention = {
 
 export type DonationPortalItem = {
   _key: string
+  slug?: string
   itemTitle: string
   itemSubtext?: string
   price?: number | null

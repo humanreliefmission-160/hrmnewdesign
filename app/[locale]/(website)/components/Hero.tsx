@@ -46,7 +46,7 @@ export default async function Hero() {
   const imageUrl = desktopImageUrl || mobileImageUrl;
 
   return (
-    <section className="relative w-full lg:h-[92vh] flex flex-col md:h-[84vh] sm:h-[70vh] h-[75vh] lg:px-20 lg:py-20 sm:px-5 sm:py-10 px-5 py-10">
+    <section className="relative w-full lg:h-[92vh] flex flex-col md:h-[84vh] sm:h-[70vh] h-[89.5vh] lg:px-20 lg:py-20 sm:px-5 sm:py-10 px-5 py-10">
       <div className="absolute inset-0 z-0">
         {imageUrl && (
           <picture className="w-full h-full">

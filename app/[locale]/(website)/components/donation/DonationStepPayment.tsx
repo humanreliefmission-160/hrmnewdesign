@@ -27,7 +27,7 @@ interface DonationStepPaymentProps {
   payMethod: string;
   setPayMethod: (method: string) => void;
   isProcessing: boolean;
-  completeDonation: (reference: string, success: boolean, bankDetails?: Record<string, string>) => void;
+  completeDonation: (reference: string, success: boolean, bankDetails?: Record<string, string>, stripeFeeAmount?: number, adminFeeAmount?: number) => void;
   goStep: (step: number) => void;
   firstName: string;
   lastName: string;
@@ -289,7 +289,7 @@ function DonationStepPaymentForm({
           const data = await response.json();
           if (!response.ok || data.error || !data.clientSecret) {
             ev.complete('fail');
-            completeDonation(donationReference, false);
+            completeDonation(donationReference, false, undefined, stripeFeeAmt, adminFeeAmt);
             return;
           }
           clientSecret = data.clientSecret;
@@ -313,7 +313,7 @@ function DonationStepPaymentForm({
           const data = await response.json();
           if (!response.ok || data.error) {
             ev.complete('fail');
-            completeDonation(donationReference, false);
+            completeDonation(donationReference, false, undefined, stripeFeeAmt, adminFeeAmt);
             return;
           }
           clientSecret = data.clientSecret;
@@ -328,14 +328,14 @@ function DonationStepPaymentForm({
 
         if (confirmError) {
           ev.complete('fail');
-          completeDonation(donationReference, false);
+          completeDonation(donationReference, false, undefined, stripeFeeAmt, adminFeeAmt);
         } else {
           ev.complete('success');
-          completeDonation(donationReference, true);
+          completeDonation(donationReference, true, undefined, stripeFeeAmt, adminFeeAmt);
         }
       } catch (err: any) {
         ev.complete('fail');
-        completeDonation(donationReference, false);
+        completeDonation(donationReference, false, undefined, stripeFeeAmt, adminFeeAmt);
       }
     });
 
@@ -420,7 +420,7 @@ function DonationStepPaymentForm({
             };
       setTimeout(() => {
         setLocalProcessing(false);
-        completeDonation(donationReference, true, bankDetails);
+        completeDonation(donationReference, true, bankDetails, stripeFeeAmt, adminFeeAmt);
       }, 800);
       return;
     }
@@ -429,7 +429,7 @@ function DonationStepPaymentForm({
       setLocalProcessing(true);
       setTimeout(() => {
         setLocalProcessing(false);
-        completeDonation(donationReference, true);
+        completeDonation(donationReference, true, undefined, stripeFeeAmt, adminFeeAmt);
       }, 1500);
       return;
     }
@@ -487,7 +487,7 @@ function DonationStepPaymentForm({
         if (!response.ok || data.error) {
           setErrorMessage(data.error || 'Failed to create subscription.');
           setLocalProcessing(false);
-          completeDonation(donationReference, false);
+          completeDonation(donationReference, false, undefined, stripeFeeAmt, adminFeeAmt);
           return;
         }
 
@@ -506,13 +506,13 @@ function DonationStepPaymentForm({
               confirmError.message || 'Subscription confirmation failed.'
             );
             setLocalProcessing(false);
-            completeDonation(donationReference, false);
+            completeDonation(donationReference, false, undefined, stripeFeeAmt, adminFeeAmt);
             return;
           }
         }
 
         setLocalProcessing(false);
-        completeDonation(donationReference, true);
+        completeDonation(donationReference, true, undefined, stripeFeeAmt, adminFeeAmt);
       } else {
         const response = await fetch('/api/stripe/create-payment-intent', {
           method: 'POST',
@@ -535,7 +535,7 @@ function DonationStepPaymentForm({
         if (!response.ok || data.error) {
           setErrorMessage(data.error || 'Failed to initialize payment.');
           setLocalProcessing(false);
-          completeDonation(donationReference, false);
+          completeDonation(donationReference, false, undefined, stripeFeeAmt, adminFeeAmt);
           return;
         }
 
@@ -550,17 +550,17 @@ function DonationStepPaymentForm({
         if (confirmError) {
           setErrorMessage(confirmError.message || 'Payment confirmation failed.');
           setLocalProcessing(false);
-          completeDonation(donationReference, false);
+          completeDonation(donationReference, false, undefined, stripeFeeAmt, adminFeeAmt);
           return;
         }
 
         if (paymentIntent && paymentIntent.status === 'succeeded') {
           setLocalProcessing(false);
-          completeDonation(donationReference, true);
+          completeDonation(donationReference, true, undefined, stripeFeeAmt, adminFeeAmt);
         } else {
           setErrorMessage('Payment failed to authorize.');
           setLocalProcessing(false);
-          completeDonation(donationReference, false);
+          completeDonation(donationReference, false, undefined, stripeFeeAmt, adminFeeAmt);
         }
       }
     } catch (err: any) {
@@ -569,7 +569,7 @@ function DonationStepPaymentForm({
         err.message || 'An unexpected error occurred during payment.'
       );
       setLocalProcessing(false);
-      completeDonation(donationReference, false);
+      completeDonation(donationReference, false, undefined, stripeFeeAmt, adminFeeAmt);
     }
   };
 

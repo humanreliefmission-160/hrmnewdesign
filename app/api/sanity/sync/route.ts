@@ -7,10 +7,16 @@ export async function POST(request: Request) {
     const signature = request.headers.get(SIGNATURE_HEADER_NAME) || '';
     const secret = process.env.SANITY_WEBHOOK_SECRET;
 
-    // Verify signature if secret is configured
-    if (secret && !isValidSignature(rawBody, signature, secret)) {
-      console.warn('[Sanity Sync Webhook] Unauthorized request signature check failed.');
+    // Verify signature only when a real secret is configured.
+    // If SANITY_WEBHOOK_SECRET is absent, empty, or still the placeholder '#',
+    // skip validation so development / unconfigured environments still work.
+    const effectiveSecret = secret && secret !== '#' ? secret : null;
+    if (effectiveSecret && !isValidSignature(rawBody, signature, effectiveSecret)) {
+      console.warn('[Sanity Sync Webhook] Unauthorized — invalid request signature.');
       return Response.json({ message: 'Invalid signature' }, { status: 401 });
+    }
+    if (!effectiveSecret) {
+      console.warn('[Sanity Sync Webhook] No webhook secret configured — skipping signature check.');
     }
 
     const payload = JSON.parse(rawBody);
@@ -120,30 +126,64 @@ export async function POST(request: Request) {
         if (data) stageId = data.id;
       }
 
-      // Determine project_item
-      let projectItem = payload.name;
-      if (payload.donationSection?.donationItems && payload.donationSection.donationItems.length > 0) {
-        projectItem = payload.donationSection.donationItems[0].itemTitle || payload.name;
-      }
-
-      const { error } = await supabase
+      const { data: upsertedProject, error } = await supabase
         .from('project')
         .upsert(
           {
             name: payload.name,
             slug: payload.slug?.current || payload.slug || '',
-            project_item: projectItem,
             sanity_id: _id,
             category_id: categoryId,
             stage_id: stageId,
             is_active: true,
           },
           { onConflict: 'sanity_id' }
-        );
+        )
+        .select('id')
+        .single();
 
       if (error) {
         console.error('[Sanity Sync Webhook] Error upserting project:', error);
         return Response.json({ error: error.message }, { status: 500 });
+      }
+
+      // Upsert each donation item into project_item table
+      const projectDbId = upsertedProject?.id;
+      const donationItems = payload.donationSection?.donationItems ?? [];
+
+      if (projectDbId && donationItems.length > 0) {
+        for (const item of donationItems as Array<{
+          _key: string;
+          itemTitle?: string;
+          itemSubtext?: string;
+          price?: number;
+          frequency?: string | string[];
+          slug?: { current?: string };
+        }>) {
+          const compositeKey = `${_id}:${item._key}`;
+          const { error: itemErr } = await supabase
+            .from('project_item')
+            .upsert(
+              {
+                project_id: projectDbId,
+                sanity_id: compositeKey,
+                slug: item.slug?.current || null,
+                title: item.itemTitle || 'Untitled',
+                subtext: item.itemSubtext || null,
+                price: item.price ?? null,
+                frequency: Array.isArray(item.frequency)
+                  ? item.frequency
+                  : item.frequency ? [item.frequency] : null,
+                is_active: true,
+              },
+              { onConflict: 'sanity_id' }
+            );
+
+          if (itemErr) {
+            console.error(`[Sanity Sync Webhook] Error upserting project_item "${item.itemTitle}":`, itemErr);
+          }
+        }
+        console.log(`[Sanity Sync Webhook] Upserted ${donationItems.length} items for project ${_id}.`);
       }
     }
 

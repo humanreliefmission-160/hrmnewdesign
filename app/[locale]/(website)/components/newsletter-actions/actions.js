@@ -2,6 +2,7 @@
 
 import mailchimp from "@mailchimp/mailchimp_marketing";
 import crypto from "crypto";
+import { createClient } from "@supabase/supabase-js";
 
 mailchimp.setConfig({
   apiKey: process.env.MAILCHIMP_API_KEY,
@@ -47,6 +48,52 @@ export async function subscribeNewsletter(firstName, lastName, email, tagName = 
       ]
     });
 
+    // --- Supabase Dual-Write ---
+    try {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY;
+      if (supabaseUrl && supabaseKey) {
+        const supabase = createClient(supabaseUrl, supabaseKey, {
+          auth: { persistSession: false },
+        });
+        const cleanEmail = email.toLowerCase().trim();
+        const consentSource = tagName === "Donation Checkout Subscribe" ? "checkout" : "newsletter_form";
+
+        const { data: existing } = await supabase
+          .from('marketing_subscription')
+          .select('id')
+          .eq('email', cleanEmail)
+          .maybeSingle();
+
+        if (existing) {
+          await supabase
+            .from('marketing_subscription')
+            .update({
+              first_name: firstName || "",
+              last_name: lastName || "",
+              status: 'active',
+              consent_source: consentSource,
+              subscribed_at: new Date().toISOString()
+            })
+            .eq('id', existing.id);
+        } else {
+          await supabase
+            .from('marketing_subscription')
+            .insert({
+              email: cleanEmail,
+              first_name: firstName || "",
+              last_name: lastName || "",
+              status: 'active',
+              consent_source: consentSource,
+              subscribed_at: new Date().toISOString()
+            });
+        }
+      }
+    } catch (dbErr) {
+      console.error("Supabase marketing subscription error:", dbErr);
+      // Don't block success if Supabase write fails
+    }
+
     return { success: true, alreadyExists: !memberAdded };
   } catch (error) {
     console.error("Mailchimp error:", error);
@@ -57,3 +104,4 @@ export async function subscribeNewsletter(firstName, lastName, email, tagName = 
     return { success: false, error: errorMessage };
   }
 }
+

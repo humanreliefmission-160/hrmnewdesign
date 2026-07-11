@@ -26,6 +26,11 @@ interface DonationResult {
   reference: string;
   date: string;
   success: boolean;
+  stripeFeeApplied?: boolean;
+  stripeFeeAmount?: number;
+  adminFeeApplied?: boolean;
+  adminFeeAmount?: number;
+  totalCharged?: number;
 }
 
 function fmt(value: number) {
@@ -142,10 +147,26 @@ export default function DonationSuccess() {
                 </div>
               )}
 
+              {/* Fee breakdown */}
+              {data?.stripeFeeApplied && (
+                <div className="flex justify-between items-center mt-2 px-3">
+                  <p className="text-brand-black/60 text-sm">Stripe Processing Fee</p>
+                  <p className="text-brand-black/80 font-medium text-sm">+ £{fmt(data.stripeFeeAmount ?? 0)}</p>
+                </div>
+              )}
+              {data?.adminFeeApplied && (
+                <div className="flex justify-between items-center mt-2 px-3">
+                  <p className="text-brand-black/60 text-sm">Admin / Platform Fee</p>
+                  <p className="text-brand-black/80 font-medium text-sm">+ £{fmt(data.adminFeeAmount ?? 0)}</p>
+                </div>
+              )}
+
               <div className="flex justify-between items-end mt-6">
-                <p className="text-brand-black text-xl font-bold">Total</p>
+                <p className="text-brand-black text-xl font-bold">
+                  {(data?.stripeFeeApplied || data?.adminFeeApplied) ? 'Total Charged' : 'Total'}
+                </p>
                 <p className="text-purple text-4xl font-bold">
-                  £{fmt(data?.total ?? 0)}
+                  £{fmt(data?.totalCharged ?? data?.total ?? 0)}
                 </p>
               </div>
             </div>
