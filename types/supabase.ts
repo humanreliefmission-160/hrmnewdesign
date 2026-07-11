@@ -23,7 +23,7 @@ export type Database = {
           gift_aid: boolean
           id: string
           intention: string | null
-          project_id: string | null
+          project_item_id: string | null
           reference: string
           status: string
           stripe_sub_id: string | null
@@ -37,7 +37,7 @@ export type Database = {
           gift_aid?: boolean
           id?: string
           intention?: string | null
-          project_id?: string | null
+          project_item_id?: string | null
           reference?: string
           status?: string
           stripe_sub_id?: string | null
@@ -51,7 +51,7 @@ export type Database = {
           gift_aid?: boolean
           id?: string
           intention?: string | null
-          project_id?: string | null
+          project_item_id?: string | null
           reference?: string
           status?: string
           stripe_sub_id?: string | null
@@ -66,10 +66,10 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "donation_project_id_fkey"
-            columns: ["project_id"]
+            foreignKeyName: "donation_project_item_id_fkey"
+            columns: ["project_item_id"]
             isOneToOne: false
-            referencedRelation: "project"
+            referencedRelation: "project_item"
             referencedColumns: ["id"]
           },
         ]
@@ -313,7 +313,6 @@ export type Database = {
           is_active: boolean
           location_id: string | null
           name: string
-          project_item: string
           sanity_id: string | null
           slug: string
           stage_id: string | null
@@ -326,7 +325,6 @@ export type Database = {
           is_active?: boolean
           location_id?: string | null
           name: string
-          project_item: string
           sanity_id?: string | null
           slug: string
           stage_id?: string | null
@@ -339,7 +337,6 @@ export type Database = {
           is_active?: boolean
           location_id?: string | null
           name?: string
-          project_item?: string
           sanity_id?: string | null
           slug?: string
           stage_id?: string | null
@@ -367,6 +364,56 @@ export type Database = {
             referencedRelation: "ecosystem_stage"
             referencedColumns: ["id"]
           },
+        ]
+      }
+      project_item: {
+        Row: {
+          id: string
+          project_id: string
+          sanity_id: string | null
+          slug: string | null
+          title: string
+          subtext: string | null
+          price: number | null
+          frequency: string[] | null
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          project_id: string
+          sanity_id?: string | null
+          slug?: string | null
+          title: string
+          subtext?: string | null
+          price?: number | null
+          frequency?: string[] | null
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          project_id?: string
+          sanity_id?: string | null
+          slug?: string | null
+          title?: string
+          subtext?: string | null
+          price?: number | null
+          frequency?: string[] | null
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_item_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "project"
+            referencedColumns: ["id"]
+          }
         ]
       }
       project_category: {

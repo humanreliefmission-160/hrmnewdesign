@@ -131,7 +131,14 @@ async function seed() {
         "slug": slug.current,
         "projectCategoryRef": projectCategory._ref,
         "stageRef": ecosystemSection.stage._ref,
-        "donationItems": donationSection.donationItems
+        "donationItems": donationSection.donationItems[] {
+          _key,
+          "slug": slug.current,
+          itemTitle,
+          itemSubtext,
+          price,
+          frequency
+        }
       }
     `);
     console.log(`Found ${sanityProjects.length} projects in Sanity. Syncing to Supabase...`);
@@ -142,7 +149,6 @@ async function seed() {
       if (proj.projectCategoryRef) {
         categoryId = categoryMap.get(proj.projectCategoryRef) || null;
         if (!categoryId) {
-          // Attempt lookup in DB if it was already seeded/exists
           const { data } = await supabase
             .from('project_category')
             .select('id')
@@ -157,7 +163,6 @@ async function seed() {
       if (proj.stageRef) {
         stageId = stageMap.get(proj.stageRef) || null;
         if (!stageId) {
-          // Attempt lookup in DB
           const { data } = await supabase
             .from('ecosystem_stage')
             .select('id')
@@ -167,23 +172,16 @@ async function seed() {
         }
       }
 
-      // Determine project_item
-      let projectItem = proj.name; // safe fallback
-      if (proj.donationItems && proj.donationItems.length > 0 && proj.donationItems[0].itemTitle) {
-        projectItem = proj.donationItems[0].itemTitle;
-      }
-
       const { data: upsertedProj, error: projErr } = await supabase
         .from('project')
         .upsert(
           {
             name: proj.name,
             slug: proj.slug,
-            project_item: projectItem,
             sanity_id: proj._id,
             category_id: categoryId,
             stage_id: stageId,
-            is_active: true, // Default to active when seeding
+            is_active: true,
           },
           { onConflict: 'sanity_id' }
         )
@@ -191,8 +189,38 @@ async function seed() {
 
       if (projErr) {
         console.error(`Error syncing project ${proj.name}:`, projErr);
-      } else {
-        console.log(`Synced project: ${proj.name} (Slug: ${proj.slug})`);
+        continue;
+      }
+
+      const projectDbId = upsertedProj?.[0]?.id;
+      console.log(`Synced project: ${proj.name} (Slug: ${proj.slug})`);
+
+      // Upsert each donation item into project_item table
+      if (projectDbId && proj.donationItems && proj.donationItems.length > 0) {
+        for (const item of proj.donationItems) {
+          const compositeKey = `${proj._id}:${item._key}`;
+          const { error: itemErr } = await supabase
+            .from('project_item')
+            .upsert(
+              {
+                project_id: projectDbId,
+                sanity_id: compositeKey,
+                slug: item.slug || null,
+                title: item.itemTitle || 'Untitled',
+                subtext: item.itemSubtext || null,
+                price: item.price ?? null,
+                frequency: Array.isArray(item.frequency) ? item.frequency : (item.frequency ? [item.frequency] : null),
+                is_active: true,
+              },
+              { onConflict: 'sanity_id' }
+            );
+
+          if (itemErr) {
+            console.error(`  Error syncing item "${item.itemTitle}" for project ${proj.name}:`, itemErr);
+          } else {
+            console.log(`  Synced item: ${item.itemTitle} (Key: ${compositeKey})`);
+          }
+        }
       }
     }
 

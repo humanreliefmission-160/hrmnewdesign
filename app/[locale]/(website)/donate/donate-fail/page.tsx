@@ -26,6 +26,11 @@ interface DonationResult {
   reference: string;
   date: string;
   success: boolean;
+  stripeFeeApplied?: boolean;
+  stripeFeeAmount?: number;
+  adminFeeApplied?: boolean;
+  adminFeeAmount?: number;
+  totalCharged?: number;
 }
 
 function fmt(value: number) {
@@ -150,6 +155,20 @@ export default function DonationFail() {
                     ))
                   ) : null}
                 </div>
+
+                {/* Fee breakdown */}
+                {data?.stripeFeeApplied && (
+                  <div className="flex justify-between items-center mt-2 px-3">
+                    <p className="text-brand-black/60 text-sm">Stripe Processing Fee</p>
+                    <p className="text-brand-black/80 font-medium text-sm">+ £{fmt(data.stripeFeeAmount ?? 0)}</p>
+                  </div>
+                )}
+                {data?.adminFeeApplied && (
+                  <div className="flex justify-between items-center mt-2 px-3">
+                    <p className="text-brand-black/60 text-sm">Admin / Platform Fee</p>
+                    <p className="text-brand-black/80 font-medium text-sm">+ £{fmt(data.adminFeeAmount ?? 0)}</p>
+                  </div>
+                )}
 
                 <div className="flex items-center gap-2 mt-6 align-center justify-center">
                   <div

@@ -49,10 +49,11 @@ export async function POST(request: Request) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Human Relief Mission <donations@humanreliefmission.com>',
+      from: 'Human Relief Mission <donations@notifications.humanreliefmission.com>',
       to: email,
+      bcc: 'donate@humanreliefmission.com',
       subject,
-      replyTo: "info@humanreliefmission.com",
+      replyTo: 'info@humanreliefmission.com',
       react: DonationReceipt({
         firstName,
         lastName,
@@ -70,7 +71,9 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      console.error('[emails/route]', error);
+      console.error('[emails/route] Resend error object:', JSON.stringify(error, null, 2));
+      console.error('[emails/route] Resend error name:', error.name);
+      console.error('[emails/route] Resend error message:', error.message);
       return Response.json({ error: error.message }, { status: 502 });
     }
 

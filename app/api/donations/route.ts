@@ -14,6 +14,7 @@ export async function POST(request: Request) {
       postcode,
       country,
       projectSlug,
+      donationItemSlug,
       donationItemTitle,
       intention,
       amount,
@@ -22,6 +23,7 @@ export async function POST(request: Request) {
       payMethod,
       reference,
       newsletterOptIn,
+      items,
     } = body;
 
     if (!email || !firstName || !lastName) {
@@ -126,75 +128,164 @@ export async function POST(request: Request) {
       }
     }
 
-    // 3. Resolve project_id from projectSlug
-    let projectId: string | null = null;
-    if (projectSlug) {
-      const { data: projectData, error: projectErr } = await supabase
-        .from('project')
+    // 3. Process each donation item (allows multiple projects in a basket)
+    const donationItems = (items && items.length > 0)
+      ? items
+      : [{
+          projectSlug,
+          donationItemSlug: donationItemSlug || null,
+          donationItemTitle,
+          intention,
+          amount,
+        }];
+
+    for (let i = 0; i < donationItems.length; i++) {
+      const item = donationItems[i];
+
+      // Resolve project_id from projectSlug
+      let itemProjectId: string | null = null;
+      if (item.projectSlug) {
+        const { data: projectData, error: projectErr } = await supabase
+          .from('project')
+          .select('id')
+          .eq('slug', item.projectSlug)
+          .maybeSingle();
+
+        if (projectErr) {
+          console.error('Error finding project by slug:', projectErr);
+        } else if (projectData) {
+          itemProjectId = projectData.id;
+        }
+      }
+
+      // Resolve project_item_id by slug or title within the resolved project
+      let itemProjectItemId: string | null = null;
+      if (itemProjectId) {
+        // 1. Try slug matching
+        if (item.donationItemSlug) {
+          const { data: piData } = await supabase
+            .from('project_item')
+            .select('id')
+            .eq('project_id', itemProjectId)
+            .eq('slug', item.donationItemSlug)
+            .maybeSingle();
+          if (piData) itemProjectItemId = piData.id;
+        }
+        // 2. Try title matching
+        if (!itemProjectItemId && item.donationItemTitle) {
+          const { data: piData } = await supabase
+            .from('project_item')
+            .select('id')
+            .eq('project_id', itemProjectId)
+            .eq('title', item.donationItemTitle)
+            .maybeSingle();
+          if (piData) itemProjectItemId = piData.id;
+        }
+        // 3. Fallback to first project item
+        if (!itemProjectItemId) {
+          const { data: piData } = await supabase
+            .from('project_item')
+            .select('id')
+            .eq('project_id', itemProjectId)
+            .limit(1)
+            .maybeSingle();
+          if (piData) itemProjectItemId = piData.id;
+        }
+      }
+
+      if (!itemProjectItemId) {
+        console.error(`Could not resolve project_item_id for item:`, item);
+        return Response.json(
+          { error: `Database error resolving project item for project: ${item.projectSlug || 'unknown'}` },
+          { status: 400 }
+        );
+      }
+
+      // Generate a unique reference for each donation record to satisfy unique constraint
+      const itemReference = donationItems.length > 1
+        ? `${reference}-${i + 1}`
+        : reference;
+
+      // Check if donation with this reference already exists to avoid duplication
+      const { data: existingDonation } = await supabase
+        .from('donation')
         .select('id')
-        .eq('slug', projectSlug)
+        .eq('reference', itemReference)
         .maybeSingle();
 
-      if (projectErr) {
-        console.error('Error finding project by slug:', projectErr);
-      } else if (projectData) {
-        projectId = projectData.id;
+      let donationId: string;
+
+      if (existingDonation) {
+        donationId = existingDonation.id;
+      } else {
+        // Normalise donation_type to values accepted by the DB constraint
+        const rawType = donationType || 'one_off';
+        const normalizedType =
+          rawType === 'monthly' || rawType === 'weekly' || rawType === 'friday' || rawType === 'daily'
+            ? 'monthly'
+            : 'one_off';
+
+        const { data: newDonation, error: donationInsertErr } = await supabase
+          .from('donation')
+          .insert({
+            donor_id: donorId,
+            project_item_id: itemProjectItemId,
+            amount_intended_gbp: item.amount,
+            donation_type: normalizedType,
+            gift_aid: !!giftAid,
+            intention: item.intention || null,
+            reference: itemReference,
+            status: 'completed',
+          })
+          .select('id')
+          .single();
+
+        if (donationInsertErr) {
+          console.error('Error inserting donation — code:', donationInsertErr.code);
+          console.error('Error inserting donation — message:', donationInsertErr.message);
+          return Response.json(
+            { error: 'Database error creating donation record.', detail: donationInsertErr.message },
+            { status: 500 }
+          );
+        }
+        donationId = newDonation.id;
       }
-    }
 
-    // 4. Insert Donation
-    // Check if donation with this reference already exists to avoid duplication
-    const { data: existingDonation } = await supabase
-      .from('donation')
-      .select('id')
-      .eq('reference', reference)
-      .maybeSingle();
+      // Insert Payment
+      const rawFreq = donationType || 'one_off';
+      const normalizedFreq =
+        rawFreq === 'monthly' || rawFreq === 'weekly' || rawFreq === 'friday' || rawFreq === 'daily'
+          ? 'monthly'
+          : 'one_off';
 
-    let donationId: string;
+      let normalizedPayMethod = 'card';
+      const pm = (payMethod || '').toLowerCase();
+      if (pm === 'paypal') {
+        normalizedPayMethod = 'paypal';
+      } else if (pm === 'bacs' || pm === 'banktransfer' || pm === 'bank_transfer') {
+        normalizedPayMethod = 'direct_debit';
+      } else if (pm === 'google_pay' || pm === 'googlepay') {
+        normalizedPayMethod = 'google_pay';
+      } else if (pm === 'apple_pay' || pm === 'applepay') {
+        normalizedPayMethod = 'apple_pay';
+      }
 
-    if (existingDonation) {
-      donationId = existingDonation.id;
-    } else {
-      const { data: newDonation, error: donationInsertErr } = await supabase
-        .from('donation')
+      const { error: paymentInsertErr } = await supabase
+        .from('payment')
         .insert({
-          donor_id: donorId,
-          project_id: projectId,
-          amount_intended_gbp: amount,
-          donation_type: donationType || 'oneoff',
-          gift_aid: !!giftAid,
-          intention: intention || null,
-          reference: reference,
+          donation_id: donationId,
+          amount_local: item.amount,
+          currency: 'GBP',
+          exchange_rate: 1.0,
+          frequency: normalizedFreq,
+          payment_method: normalizedPayMethod,
           status: 'completed',
-        })
-        .select('id')
-        .single();
+          paid_at: new Date().toISOString(),
+        });
 
-      if (donationInsertErr) {
-        console.error('Error inserting donation:', donationInsertErr);
-        return Response.json({ error: 'Database error creating donation record.' }, { status: 500 });
+      if (paymentInsertErr) {
+        console.error('Error inserting payment:', paymentInsertErr);
       }
-      donationId = newDonation.id;
-    }
-
-    // 5. Insert Payment
-    const { error: paymentInsertErr } = await supabase
-      .from('payment')
-      .insert({
-        donation_id: donationId,
-        amount_local: amount,
-        amount_gbp: amount,
-        currency: 'GBP',
-        exchange_rate: 1.0,
-        frequency: donationType || 'oneoff',
-        payment_method: payMethod || 'Card',
-        status: 'completed',
-        paid_at: new Date().toISOString(),
-      });
-
-    if (paymentInsertErr) {
-      console.error('Error inserting payment:', paymentInsertErr);
-      // Don't fail the request if payment record insert fails, since donation went through
     }
 
     // 6. Marketing Subscription if newsletterOptIn is true

@@ -192,7 +192,13 @@ export default function DonateClient({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const completeDonation = async (reference: string, success: boolean, bankDetails?: Record<string, string>) => {
+  const completeDonation = async (
+    reference: string,
+    success: boolean,
+    bankDetails?: Record<string, string>,
+    stripeFeeAmount?: number,
+    adminFeeAmount?: number
+  ) => {
     setIsProcessing(true);
 
     if (success && newsletterOptIn) {
@@ -243,6 +249,11 @@ export default function DonateClient({
       date: new Date().toISOString(),
       success,
       bankDetails: bankDetails ?? null,
+      stripeFeeApplied: (stripeFeeAmount ?? 0) > 0,
+      stripeFeeAmount: stripeFeeAmount ?? 0,
+      adminFeeApplied: (adminFeeAmount ?? 0) > 0,
+      adminFeeAmount: adminFeeAmount ?? 0,
+      totalCharged: parseFloat((donatedTotal + (stripeFeeAmount ?? 0) + (adminFeeAmount ?? 0)).toFixed(2)),
     };
 
     // 1. Save to Supabase DB on success
@@ -261,6 +272,7 @@ export default function DonateClient({
             postcode: postcode || null,
             country: country || 'GB',
             projectSlug: donationState.projectSlug || null,
+            donationItemSlug: donationState.donationItemKey || null,
             donationItemTitle: donationState.donationItemTitle || null,
             intention: donationState.intention || null,
             amount: donatedTotal,
@@ -269,6 +281,13 @@ export default function DonateClient({
             payMethod,
             reference: canonicalReference,
             newsletterOptIn,
+            items: itemCount > 0 ? items.map(item => ({
+              projectSlug: item.projectSlug || null,
+              donationItemSlug: item.donationItemSlug || item.donationItemKey || null,
+              donationItemTitle: item.projectItem || null,
+              intention: item.intention || null,
+              amount: item.amount,
+            })) : null,
           }),
         });
         if (!dbRes.ok) {
