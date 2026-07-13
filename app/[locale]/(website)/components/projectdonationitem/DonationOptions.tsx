@@ -80,7 +80,7 @@ export default function DonationOptions({ item, projectName, projectSlug }: Dona
       <div className="mb-4">
         {projectName && (
           <span className="inline-block bg-purple/10 text-purple text-xs font-semibold px-2.5 py-1 rounded-sm mb-2">
-            Project: {projectName}
+            {projectName}
           </span>
         )}
         <h2 className="text-3xl sm:text-6xl font-bold text-brand-black mb-2 font-body leading-tight">
@@ -104,7 +104,8 @@ export default function DonationOptions({ item, projectName, projectSlug }: Dona
               <h2 className="text-xl font-bold">
                 £{item.price}
               </h2>
-              <span className="text-[10px] text-brand-white rounded-sm">
+              <span className="text-[10px] text-brand-white rounded-sm">per {projectName}</span>
+              {/* <span className="text-[10px] text-brand-white rounded-sm">
                 {(() => {
                   const freq = item.frequency;
                   if (Array.isArray(freq)) {
@@ -120,7 +121,7 @@ export default function DonationOptions({ item, projectName, projectSlug }: Dona
                   if (f === 'friday') return 'Friday Giving';
                   return f.charAt(0).toUpperCase() + f.slice(1);
                 })()}
-              </span>
+              </span> */}
             </>
           )}
         </div>
