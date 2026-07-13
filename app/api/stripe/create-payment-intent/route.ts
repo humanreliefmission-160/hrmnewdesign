@@ -57,7 +57,8 @@ export async function POST(request: Request) {
       customer: customer.id,
       receipt_email: email,
       // 'card' covers all card-based payment methods incl. Google Pay & Apple Pay
-      payment_method_types: ['card'],
+      // payment_method_types: ['card'],
+      automatic_payment_methods: { enabled: true },   // ← replaces payment_method_types
       // description shows in the Stripe Dashboard payment row alongside the email
       description: donationRef
         ? `HRM Donation ${donationRef} — ${email}`
