@@ -104,7 +104,7 @@ export default function DonationOptions({ item, projectName, projectSlug }: Dona
               <h2 className="text-xl font-bold">
                 £{item.price}
               </h2>
-              <span className="text-[10px] text-brand-white rounded-sm">per {item}</span>
+              <span className="text-[10px] text-brand-white rounded-sm">per {item.itemTitle}</span>
               {/* <span className="text-[10px] text-brand-white rounded-sm">
                 {(() => {
                   const freq = item.frequency;
