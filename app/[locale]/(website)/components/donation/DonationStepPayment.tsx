@@ -1033,15 +1033,14 @@ export default function DonationStepPayment(props: DonationStepPaymentProps) {
       .catch((err) => console.error('Failed to create PaymentIntent:', err));
   }, [props.currentStep]);
 
+  if (props.currentStep !== 5) return null;
+
   if (!clientSecret) {
     return <div>Loading payment options…</div>;
   }
   // END OF NEW CODE
   
   return (
-    {/*<Elements stripe={stripePromise}>
-      <DonationStepPaymentForm {...props} />
-    </Elements> */}
     <Elements stripe={stripePromise} options={{ clientSecret }}>
       <DonationStepPaymentForm {...props} clientSecret={clientSecret} />
     </Elements>
