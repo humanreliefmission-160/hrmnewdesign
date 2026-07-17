@@ -1000,49 +1000,11 @@ function DonationStepPaymentForm({
 
 export default function DonationStepPayment(props: DonationStepPaymentProps) {
   const stripePromise = useMemo(() => getStripe(), []);
-
-  if (props.currentStep !== 5) return null;
-  
-  // NEW CODE for payment intent - Test if works
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (props.currentStep !== 5) return;
-  
-    fetch('/api/create-payment-intent', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        amount: props.amount,
-        currency: props.currency,
-        email: props.email,
-        name: props.name,
-        address: props.address,
-        city: props.city,
-        postcode: props.postcode,
-        phone: props.phone,
-        country: props.country,
-        metadata: props.metadata,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.clientSecret) setClientSecret(data.clientSecret);
-        else console.error('No clientSecret returned:', data.error);
-      })
-      .catch((err) => console.error('Failed to create PaymentIntent:', err));
-  }, [props.currentStep]);
-
   if (props.currentStep !== 5) return null;
 
-  if (!clientSecret) {
-    return <div>Loading payment options…</div>;
-  }
-  // END OF NEW CODE
-  
   return (
-    <Elements stripe={stripePromise} options={{ clientSecret }}>
-      <DonationStepPaymentForm {...props} clientSecret={clientSecret} />
+    <Elements stripe={stripePromise}>
+      <DonationStepPaymentForm {...props} />
     </Elements>
   );
 }
