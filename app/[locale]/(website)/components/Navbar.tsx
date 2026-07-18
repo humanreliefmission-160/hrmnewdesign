@@ -24,9 +24,15 @@ interface NavItem {
   subItems?: NavSubItem[];
 }
 
+interface DonationItem {
+  slug: string;
+  itemTitle: string;
+}
+
 interface Project {
   name: string;
   slug: string;
+  donationItems?: DonationItem[];
 }
 
 interface ProjectCategory {
@@ -122,29 +128,34 @@ export default function Navbar({
                     <div className="absolute left-0 top-[70px] w-full bg-white shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 pointer-events-none group-hover:pointer-events-auto border-t border-gray-100">
                       <div className="relative max-w-[1140px] mx-auto px-4 md:px-8 py-10">
 
-                        {/* Category grid — 4 columns */}
+                        {/* Project grid — each project is a column with donation item sub-links */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-10 my-8">
-                          {activeCategories.map((cat) => (
-                            <div key={cat._id} className="flex flex-col gap-3">
-                              {/* Category heading with red underline */}
+                          {activeCategories.flatMap((cat) => cat.projects).map((project) => (
+                            <div key={project.slug} className="flex flex-col gap-3">
+                              {/* Project name — bold heading, links to project page */}
                               <h3 className="text-[1rem] font-bold text-brand-black uppercase pb-1 w-fit">
-                                {cat.name}
+                                <Link
+                                  href={`/projects/${project.slug}`}
+                                  className="text-brand-black hover:text-purple transition-colors no-underline"
+                                >
+                                  {project.name}
+                                </Link>
                               </h3>
-                              <ul className="flex flex-col gap-3">
-                                {cat.projects.map((project) => (
-                                  <li key={project.slug}>
-                                    <Link
-                                      href={`/projects/${project.slug}`}
-                                      className="text-[0.88rem] text-brand-black hover:text-purple transition-colors no-underline"
-                                    >
-                                      {project.name}
-                                    </Link>
-                                  </li>
-                                ))}
-                                {/* {cat.projects.length === 0 && (
-                                  <li className="text-[0.8rem] text-gray-400 italic">No projects yet</li>
-                                )} */}
-                              </ul>
+                              {/* Donation items — sub-links to DonationItemPage */}
+                              {project.donationItems && project.donationItems.length > 0 && (
+                                <ul className="flex flex-col gap-2">
+                                  {project.donationItems.map((item) => (
+                                    <li key={item.slug}>
+                                      <Link
+                                        href={`/projects/${project.slug}/${item.slug}`}
+                                        className="text-[0.88rem] text-brand-black hover:text-purple transition-colors no-underline"
+                                      >
+                                        {item.itemTitle}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
                             </div>
                           ))}
                         </div>
@@ -230,7 +241,14 @@ export default function Navbar({
             if (hasSubItems || hasProjects) {
               const subLinks: { label: string; href: string }[] = hasProjects
                 ? activeCategories.flatMap((cat) =>
-                  cat.projects.map((p) => ({ label: p.name, href: `/projects/${p.slug}` }))
+                  cat.projects.flatMap((p) =>
+                    p.donationItems && p.donationItems.length > 0
+                      ? p.donationItems.map((item) => ({
+                          label: `${p.name} — ${item.itemTitle}`,
+                          href: `/projects/${p.slug}/${item.slug}`,
+                        }))
+                      : [{ label: p.name, href: `/projects/${p.slug}` }]
+                  )
                 )
                 : item.subItems!.map((sub) => ({ label: sub.label, href: resolveHref(sub) }));
 

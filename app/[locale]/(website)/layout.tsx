@@ -49,7 +49,11 @@ const PROJECT_CATEGORIES_QUERY = `
     name,
     "projects": *[_type == "project" && references(^._id)] | order(name asc) {
       name,
-      "slug": slug.current
+      "slug": slug.current,
+      "donationItems": donationSection.donationItems[] {
+        "slug": slug.current,
+        itemTitle
+      }
     }
   }
 `;
