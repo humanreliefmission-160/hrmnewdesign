@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import YellowCTA from "./YellowCTA";
 import DonationBasketButton from "./DonationBasketButton";
+import Image from "next/image";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -84,13 +85,15 @@ export default function Navbar({
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-start cursor-pointer no-underline relative w-[90px] h-[70px]"
+            className="flex items-start cursor-pointer no-underline relative w-[100px] h-[85px] lg:w-[115px] lg:h-[75px]"
             onClick={closeMenu}
           >
-            <img
+            <Image
               src="/logo.svg"
               alt="Human Relief Mission"
-              className="absolute top-0 left-0 h-[110px] w-auto z-1050 drop-shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
+              className="drop-shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
+              width={220}
+              height={120}
             />
           </Link>
 
@@ -244,9 +247,9 @@ export default function Navbar({
                   cat.projects.flatMap((p) =>
                     p.donationItems && p.donationItems.length > 0
                       ? p.donationItems.map((item) => ({
-                          label: `${p.name} — ${item.itemTitle}`,
-                          href: `/projects/${p.slug}/${item.slug}`,
-                        }))
+                        label: `${p.name} — ${item.itemTitle}`,
+                        href: `/projects/${p.slug}/${item.slug}`,
+                      }))
                       : [{ label: p.name, href: `/projects/${p.slug}` }]
                   )
                 )

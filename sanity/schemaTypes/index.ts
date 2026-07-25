@@ -30,6 +30,8 @@ import { navItem } from './objects/navItem'
 import { navSubItem } from './objects/navSubItem'
 import { SchemaTypeDefinition } from 'sanity'
 import { navigation } from './documents/navigation'
+import { headerNavigation } from './documents/headerNavigation'
+import { footerNavigation } from './documents/footerNavigation'
 import { lastMonthsImpact } from './documents/lastMonthsImpact'
 import { impactTicker } from './documents/impactTicker'
 
@@ -43,7 +45,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     project,
     donationIntention,
     fileCard,
-    navigation,
+    headerNavigation,
+    footerNavigation,
     lastMonthsImpact,
     impactTicker,
 
