@@ -21,7 +21,7 @@ export const sliderHero = defineType({
     defineField({
       name: 'image',
       title: 'Desktop Image',
-      description: '📐 Recommended: 1920×1080 px (16:9) landscape. Shown on desktop and tablet screens.',
+      description: 'Image for desktop and tablet screens (Landscape).',
       type: 'object',
       fields: [
         defineField({
@@ -40,37 +40,11 @@ export const sliderHero = defineType({
       ],
     }),
     defineField({
-      name: 'desktopVideoUrl',
-      title: 'Desktop Video (YouTube URL)',
-      description: '▶️ Optional. Paste a YouTube link to show a full-bleed background video on desktop. Recommended: 1920×1080 px (16:9). Takes priority over the Desktop Image if provided.',
-      type: 'url',
-    }),
-    defineField({
-      name: 'desktopVideoMute',
-      title: 'Mute Desktop Video',
-      description: 'If checked, the desktop video plays silently.',
-      type: 'boolean',
-      initialValue: true,
-    }),
-    defineField({
       name: 'mobileImage',
       title: 'Mobile Image (Optional)',
-      description: '📐 Recommended: 800×1200 px (2:3) portrait. If not provided, the Desktop Image will be cropped to fit.',
+      description: 'Image specifically for mobile screens (Portrait). If not provided, the Desktop Image will be cropped to fit.',
       type: 'image',
       options: { hotspot: true },
-    }),
-    defineField({
-      name: 'mobileVideoUrl',
-      title: 'Mobile Video (YouTube URL)',
-      description: '▶️ Optional. Paste a YouTube link for a mobile background video. Recommended: 720×1280 px (9:16) portrait. Takes priority over the Mobile Image if provided.',
-      type: 'url',
-    }),
-    defineField({
-      name: 'mobileVideoMute',
-      title: 'Mute Mobile Video',
-      description: 'If checked, the mobile video plays silently.',
-      type: 'boolean',
-      initialValue: true,
     }),
     defineField({
       name: 'title',

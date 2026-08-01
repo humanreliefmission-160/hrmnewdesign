@@ -3,6 +3,7 @@ import WhoWeAre from "../components/about/WhoWeAre";
 import Impact from "../components/about/Impact";
 import Values from "../components/about/values";
 import FinalCTA from "../components/FinalCTA";
+import PoliciesReports from "../components/about/PoliciesReports";
 import FundingDiagram from "../components/about/donationpolicy/FundingDiagram";
 import DonationPolicySection from "../components/about/donationpolicy/DonationPolicy";
 
@@ -14,6 +15,7 @@ export default function About() {
       <DonationPolicySection />
       <Impact />
       <Values />
+      <PoliciesReports />
       <FinalCTA />
     </div>
   );

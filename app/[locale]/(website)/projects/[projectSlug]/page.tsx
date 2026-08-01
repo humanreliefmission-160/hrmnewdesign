@@ -21,19 +21,8 @@ const PROJECT_QUERY = `
     "projectCategory": projectCategory->{ name },
     "stageSlug": ecosystemSection.stage->slug.current,
     headerImage,
-    headerVideoUrl,
-    headerVideoMute,
     introSection,
-    caseStudies[] {
-      _key,
-      title,
-      image,
-      videoUrl,
-      muteVideo,
-      quote,
-      body,
-      reference
-    },
+    caseStudies,
     donationSection {
       sectionTag,
       donationTitle,
@@ -47,16 +36,12 @@ const PROJECT_QUERY = `
         contactForPricing,
         donationType,
         frequency,
+        donationItemBody,
         amounts[] {
           _key,
           amount,
           label
         },
-        intentions[]->{
-          title,
-          description
-        },
-        additionalFields,
         "slug": slug.current
       }
     },
@@ -72,9 +57,7 @@ const PROJECT_QUERY = `
       "imageGallery": imageGallery[] {
         "_type": image._type,
         "asset": image.asset,
-        "alt": altText,
-        videoUrl,
-        muteVideo
+        "alt": altText
       }
     },
     impactSection,
@@ -142,8 +125,6 @@ export default async function ProjectItem({
         breadcrumb="PROJECTS"
         display={true}
         image={headerImageUrl}
-        videoUrl={project.headerVideoUrl}
-        videoMute={project.headerVideoMute}
         heroAmounts={project.heroAmounts}
         projectName={project.name}
         projectSlug={projectSlug}

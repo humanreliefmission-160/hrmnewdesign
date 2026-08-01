@@ -49,6 +49,7 @@ export const donationItem = defineType({
         // "cannot be automatically checked for uniqueness" warning.
         isUnique: () => true,
       },
+      validation: (R) => R.required(),
     }),
     defineField({
       name: 'stage',
