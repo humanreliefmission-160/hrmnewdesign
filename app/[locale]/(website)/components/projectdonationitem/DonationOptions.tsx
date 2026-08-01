@@ -118,21 +118,6 @@ export default function DonationOptions({ item, projectName, projectSlug }: Dona
                 £{item.price}
               </h2>
               <span className="text-[10px] -mb-2 text-brand-white rounded-sm">
-                {/* {(() => {
-                  const freq = item.frequency;
-                  if (Array.isArray(freq)) {
-                    if (freq.length === 0) return "Monthly";
-                    return freq.map(f => {
-                      if (f === 'one-off') return 'One Off';
-                      if (f === 'friday') return 'Friday Giving';
-                      return f.charAt(0).toUpperCase() + f.slice(1);
-                    }).join(', ');
-                  }
-                  const f = freq ?? item.donationType ?? 'monthly';
-                  if (f === 'one-off') return 'One Off';
-                  if (f === 'friday') return 'Friday Giving';
-                  return f.charAt(0).toUpperCase() + f.slice(1);
-                })()} */}
                 {item.itemTitle}
               </span>
             </>
