@@ -19,6 +19,7 @@ import {
   useElements,
   PaymentRequestButtonElement,
 } from '@stripe/react-stripe-js';
+// import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import getStripe from '@/app/api/stripe/stripejs';
 
 interface DonationStepPaymentProps {
@@ -999,7 +1000,6 @@ function DonationStepPaymentForm({
 
 export default function DonationStepPayment(props: DonationStepPaymentProps) {
   const stripePromise = useMemo(() => getStripe(), []);
-
   if (props.currentStep !== 5) return null;
 
   return (
