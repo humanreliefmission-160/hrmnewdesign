@@ -13,7 +13,14 @@ interface ImpactSectionData {
 }
 
 export default function Impact({ data }: { data?: ImpactSectionData }) {
-  if (!data) return null;
+  if (
+    !data ||
+    (!data.title &&
+      !data.bodyText &&
+      (!data.impactCards || data.impactCards.length === 0))
+  ) {
+    return null;
+  }
 
   return (
     <section className="bg-brand-white py-16 px-6 md:px-12 lg:px-24">

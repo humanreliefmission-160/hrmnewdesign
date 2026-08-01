@@ -71,11 +71,27 @@ export const project = defineType({
     defineField({
       name: 'headerImage',
       title: 'Header Image',
+      description: '📐 Recommended: 1200×800 px (3:2) for the image-half of the project header.',
       type: 'image',
       group: 'overview',
       options: {
         hotspot: true,
       },
+    }),
+    defineField({
+      name: 'headerVideoUrl',
+      title: 'Header Video (YouTube URL)',
+      description: '▶️ Optional. Paste a YouTube link to show a video instead of the image on the right-hand side of the project header. Recommended ratio: 16:9 (e.g. 1920×1080). If provided, this takes priority over the Header Image.',
+      type: 'url',
+      group: 'overview',
+    }),
+    defineField({
+      name: 'headerVideoMute',
+      title: 'Mute Header Video',
+      description: 'If checked, the video will play silently (recommended for autoplay).',
+      type: 'boolean',
+      initialValue: true,
+      group: 'overview',
     }),
     defineField({
       name: 'heroAmounts',

@@ -4,6 +4,7 @@ import { useRef, useEffect } from "react";
 import { createImageUrlBuilder } from "@sanity/image-url";
 import { client } from "@/sanity/lib/client"; // adjust to your Sanity client path
 import YellowCTA from "../YellowCTA";
+import { getYouTubeVideoId, getYouTubeEmbedUrl } from "@/app/[locale]/lib/youtubeHelpers";
 
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -35,6 +36,8 @@ type SanityImageSource = {
 type GalleryImage = SanityImageSource & {
 	alt: string;       // Required alt text — validated in Sanity schema
 	caption?: string;  // Optional caption (available but not used in this strip)
+	videoUrl?: string | null;  // Optional YouTube URL — renders instead of image when set
+	muteVideo?: boolean;       // Whether the carousel video is muted (default: true)
 };
 
 interface Props {
@@ -157,8 +160,6 @@ export default function ProjectGalleryStrip({ images, projectSlug }: Props) {
 				>
 					{allSlides.map((slide, i) => (
 						<div
-							// `i` is safe as a key here because allSlides is static for the
-							// lifetime of this render — it never reorders.
 							key={i}
 							className="shrink-0 overflow-hidden"
 							style={{
@@ -166,43 +167,30 @@ export default function ProjectGalleryStrip({ images, projectSlug }: Props) {
 								height: `${SLIDE_HEIGHT}px`,
 							}}
 						>
-							<img
-								/*
-								 * FIX — was: src={data.image}
-								 *
-								 * data.image is the raw Sanity array — passing it as src gives
-								 * "[object Object]" and breaks the image.
-								 *
-								 * CORRECT approach:
-								 *   - `slide` is the GalleryImage object for THIS slot (already
-								 *     the right item — no index arithmetic needed).
-								 *   - urlFor(slide) calls Sanity's image-url builder with the
-								 *     asset reference inside `slide`.
-								 *   - .width(SLIDE_WIDTH * 2) requests a 2× wide image from
-								 *     Sanity's CDN so it looks sharp on retina displays.
-								 *   - .url() returns the final string URL.
-								 */
-								src={urlFor(slide).width(SLIDE_WIDTH * 2).height(SLIDE_HEIGHT * 2).fit("crop").url()}
-
-								/*
-								 * FIX — was: alt={data.image?.[i].altText}
-								 *
-								 * Two problems with the original:
-								 *   1. `i` runs from 0 to allSlides.length-1, which is
-								 *      images.length * 2 - 1. When i >= images.length the
-								 *      index goes out of bounds → undefined alt text.
-								 *   2. The field name was .altText but the Sanity altImage
-								 *      object type uses .alt (as defined in the schema).
-								 *
-								 * CORRECT: read .alt directly from the current `slide` object.
-								 * No index needed — slide already IS the image for this slot.
-								 */
-								alt={slide.alt}
-
-								className="w-full h-full object-cover border border-brand-white/50"
-								// draggable false prevents ghost image on accidental drag
-								draggable={false}
-							/>
+							{(() => {
+								const videoId = getYouTubeVideoId(slide.videoUrl);
+								if (videoId) {
+									const embedUrl = getYouTubeEmbedUrl(videoId, { mute: slide.muteVideo !== false });
+									return (
+										<iframe
+											src={embedUrl}
+											allow="autoplay; encrypted-media"
+											allowFullScreen
+											title={slide.alt || 'Gallery video'}
+											className="w-full h-full border-brand-white/50 border"
+											style={{ border: 'none', pointerEvents: 'none' }}
+										/>
+									);
+								}
+								return (
+									<img
+										src={urlFor(slide).width(SLIDE_WIDTH * 2).height(SLIDE_HEIGHT * 2).fit("crop").url()}
+										alt={slide.alt}
+										className="w-full h-full object-cover border border-brand-white/50"
+										draggable={false}
+									/>
+								);
+							})()}
 						</div>
 					))}
 				</div>

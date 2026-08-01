@@ -24,7 +24,7 @@ export const lastMonthsImpact = defineType({
       of: [
         {
           type: 'object',
-          name: 'impactCard',
+          name: 'lastMonthsImpactCard',
           title: 'Impact Card',
           fields: [
             defineField({
@@ -38,9 +38,22 @@ export const lastMonthsImpact = defineType({
             defineField({
               name: 'image',
               title: 'Card Image',
+              description: '📐 Recommended: 480×320 px (3:2). Shown as the card background in the Last Month\'s Impact grid.',
               type: 'image',
               options: { hotspot: true },
-              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'videoUrl',
+              title: 'Card Video (YouTube URL)',
+              description: '▶️ Optional. Paste a YouTube link to show a video as the card background. Recommended ratio: 3:2 (e.g. 480×320). Takes priority over the image if provided.',
+              type: 'url',
+            }),
+            defineField({
+              name: 'muteVideo',
+              title: 'Mute Video',
+              description: 'If checked, the card video plays silently.',
+              type: 'boolean',
+              initialValue: true,
             }),
             defineField({
               name: 'impactNumber',

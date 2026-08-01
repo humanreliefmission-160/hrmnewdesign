@@ -4,11 +4,54 @@ import { FaFacebookF, FaLinkedinIn, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { BiLogoInstagramAlt } from "react-icons/bi";
 import { ImWhatsapp } from "react-icons/im";
+import { sanityFetch } from "../../lib/sanity/client";
 
-export default function Footer() {
+// ── GROQ Query ─────────────────────────────────────────────────────────────────────
+
+const FOOTER_NAV_QUERY = `
+  *[_type == "footerNavigation"][0] {
+    footerColumns[] {
+      columnTitle,
+      links[] {
+        label,
+        linkType,
+        internalLink,
+        externalLink,
+        isExternal
+      }
+    }
+  }
+`;
+
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+interface FooterLink {
+  label: string;
+  linkType: "internal" | "external";
+  internalLink?: string;
+  externalLink?: string;
+  isExternal?: boolean;
+}
+
+interface FooterColumn {
+  columnTitle: string;
+  links?: FooterLink[];
+}
+
+interface FooterProps { }
+
+function resolveHref(link: FooterLink): string {
+  return link.linkType === "external"
+    ? (link.externalLink ?? "#")
+    : (link.internalLink ?? "#");
+}
+
+export default async function Footer() {
+  const footerNav = await sanityFetch<any>(FOOTER_NAV_QUERY);
+  const footerColumns: FooterColumn[] = footerNav?.footerColumns ?? [];
   return (
     <footer className="bg-purple text-brand-white/70 py-16 px-4 md:px-8">
-      <div className="max-w-[1140px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 py-12 border-b border-brand-white/10">
+      <div className="max-w-285 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 py-12 border-b border-brand-white/10">
         <div>
           <div>
             <Link href="/" >
@@ -40,71 +83,37 @@ export default function Footer() {
             </Link>
           </div>
         </div>
-        <div>
-          <div className="text-brand-white font-bold text-[0.875rem] tracking-widest uppercase mb-6">Quick Links</div>
-          <ul className="list-none flex flex-col gap-2.5">
-            <li>
-              <Link href="/about" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">About Us</Link>
-            </li>
-            <li>
-              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Projects</Link>
-            </li>
-            <li>
-              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Locations</Link>
-            </li>
-            <li>
-              <Link href="/contact" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Contact Us</Link>
-            </li>
-            <li>
-              <Link href="/donate" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Donate</Link>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <div className="text-brand-white font-bold text-[0.875rem] tracking-widest uppercase mb-6">Our Work</div>
-          <ul className="list-none flex flex-col gap-2.5">
-            <li>
-              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Food Relief</Link>
-            </li>
-            <li>
-              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Education</Link>
-            </li>
-            <li>
-              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Water & Sanitation</Link>
-            </li>
-            <li>
-              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Emergency Aid</Link>
-            </li>
-            <li>
-              <Link href="/" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Orphan Support</Link>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <div className="text-brand-white font-bold text-[0.875rem] tracking-widest uppercase mb-6">Giving</div>
-          <ul className="list-none flex flex-col gap-2.5">
-            <li>
-              <Link href="/donate" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">One-Off Donation</Link>
-            </li>
-            <li>
-              <Link href="/donate" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Monthly Giving</Link>
-            </li>
-            <li>
-              <Link href="/donate" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Zakat</Link>
-            </li>
-            <li>
-              <Link href="/donate" className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white">Sadaqah</Link>
-            </li>
-          </ul>
-        </div>
+        {footerColumns.map((col, colIdx) => (
+          <div key={colIdx}>
+            <div className="text-brand-white font-bold text-[0.875rem] tracking-widest uppercase mb-6">
+              {col.columnTitle}
+            </div>
+            {col.links && col.links.length > 0 && (
+              <ul className="list-none flex flex-col gap-2.5">
+                {col.links.map((link, linkIdx) => (
+                  <li key={linkIdx}>
+                    <Link
+                      href={resolveHref(link)}
+                      target={link.isExternal ? "_blank" : undefined}
+                      rel={link.isExternal ? "noopener noreferrer" : undefined}
+                      className="text-[0.875rem] text-brand-white/60 no-underline cursor-pointer transition-colors hover:text-brand-white"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
       </div>
-      <div className="max-w-[1140px] mx-auto pt-8 flex items-center justify-between flex-wrap gap-4">
+      <div className="max-w-285 mx-auto pt-8 flex items-center justify-between flex-wrap gap-4">
         <div>
-          <p className="text-[0.8rem] text-brand-white">Copyright &copy; Human Relief Mission 2026.<br />All Rights Reserved</p>
+          <p className="text-[0.8rem] text-brand-white">Copyright &copy; Human Relief Mission 2026. All Rights Reserved</p>
           <p className="text-[0.8rem] text-brand-white opacity-80">Charity No. 1160380</p>
-          <div className="max-w-[1140px] mx-auto pt-2 text-[0.6rem] text-brand-white/40 italic">
+          <div className="max-w-285 mx-auto pt-2 text-[0.6rem] text-brand-white/40 italic">
             Developed by {""}
-            <Link href="http://buildingblocks.digital" className="hover:underline cursor-pointer">Building Blocks</Link>
+            <Link href="https://buildingblocks.digital" className="hover:underline cursor-pointer">Building Blocks</Link>
           </div>
         </div>
         <Image src="/donation-policy-icon.svg" alt="Helping Box" width={75} height={75} loading="eager" />

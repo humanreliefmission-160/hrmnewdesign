@@ -95,7 +95,7 @@ export default async function PoliciesReports() {
 
   return (
     <section className="bg-purple w-full py-16 px-4 sm:px-6">
-      <div className="max-w-[1140px] mx-auto">
+      <div className="max-w-285 mx-auto">
 
         {/* Main Heading */}
         <h1 className="text-4xl sm:text-5xl font-bold text-brand-white mb-10">
