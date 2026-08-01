@@ -8,7 +8,6 @@ import {
   intentionFromZakat,
   resolveSelectedAmount,
 } from '../lib/donation/basketHelpers';
-import { getYouTubeVideoId, getYouTubeEmbedUrl } from '@/app/[locale]/lib/youtubeHelpers';
 
 export type HeroAmount = {
   amount: number;
@@ -28,10 +27,6 @@ interface PageHeaderProps {
   projectCategory?: string;
   breadcrumb?: string;
   image?: string;
-  /** Optional YouTube URL — renders a looping iframe instead of the image when provided */
-  videoUrl?: string | null;
-  /** Whether the video should be muted (defaults to true) */
-  videoMute?: boolean;
   display?: boolean;
   heroAmounts?: HeroAmount[];
   projectName?: string;
@@ -43,16 +38,12 @@ export default function ProjectsPageHeader({
   subtitle,
   projectCategory,
   breadcrumb = "PROJECTS",
-  image = "/img-placeholder.JPG",
-  videoUrl,
-  videoMute = true,
+  image = "/img-placeholder.JPG", // default placeholder based on screenshot
   display = true,
   heroAmounts,
   projectName,
   projectSlug,
 }: PageHeaderProps) {
-  const videoId = getYouTubeVideoId(videoUrl);
-  const embedUrl = videoId ? getYouTubeEmbedUrl(videoId, { mute: videoMute }) : null;
   const { addItem } = useBasket();
   const categoryLabel = projectCategory ?? breadcrumb;
   const amounts =
@@ -226,24 +217,13 @@ export default function ProjectsPageHeader({
           </div>
         </div>
 
-        {/* Right Image / Video Half */}
-        <div className="w-full md:w-[50%] relative min-h-[300px] sm:min-h-[400px] md:min-h-auto flex items-stretch bg-brand-white overflow-hidden">
-          {embedUrl ? (
-            <iframe
-              src={embedUrl}
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-              title="Project header video"
-              className="absolute inset-0 w-full h-full"
-              style={{ border: 'none', pointerEvents: 'none' }}
-            />
-          ) : (
-            <img
-              src={image}
-              alt="Human Relief Mission Project header"
-              className="absolute inset-0 w-full h-full object-cover object-center lg:p-0"
-            />
-          )}
+        {/* Right Image Half */}
+        <div className="w-full md:w-[50%] relative min-h-[300px] sm:min-h-[400px] md:min-h-auto flex items-stretch bg-brand-white">
+          <img
+            src={image}
+            alt="Human Relief Mission Project header"
+            className="absolute inset-0 w-full h-full object-cover object-center lg:p-0"
+          />
         </div>
       </div>
 

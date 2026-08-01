@@ -6,8 +6,6 @@ import { projectCategory } from './documents/projectCategory'
 import { project } from './documents/project'
 import { donationIntention } from './documents/donationIntention'
 import { fileCard } from './documents/fileCard'
-import { policy } from './documents/policy'
-import { annualReportsPage } from './documents/annualReportsPage'
 
 // ── Objects ───────────────────────────────────────────────────
 
@@ -32,8 +30,6 @@ import { navItem } from './objects/navItem'
 import { navSubItem } from './objects/navSubItem'
 import { SchemaTypeDefinition } from 'sanity'
 import { navigation } from './documents/navigation'
-import { headerNavigation } from './documents/headerNavigation'
-import { footerNavigation } from './documents/footerNavigation'
 import { lastMonthsImpact } from './documents/lastMonthsImpact'
 import { impactTicker } from './documents/impactTicker'
 
@@ -47,10 +43,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     project,
     donationIntention,
     fileCard,
-    policy,
-    annualReportsPage,
-    headerNavigation,
-    footerNavigation,
+    navigation,
     lastMonthsImpact,
     impactTicker,
 

@@ -26,8 +26,6 @@ export default function FAQ({ data }: { data?: FaqData }) {
 
   const items = data?.cards ?? [];
 
-  if (!data || items.length === 0) return null;
-
   return (
     <>
       <hr className="h-px border-t-0 bg-transparent bg-linear-to-r from-transparent via-purple to-transparent dark:via-purple" />

@@ -13,15 +13,7 @@ interface IntroData {
 }
 
 export default function Intro({ data }: { data?: IntroData }) {
-  if (
-    !data ||
-    (!data.sectionTag &&
-      !data.title &&
-      !data.bodyText &&
-      (!data.stats || data.stats.length === 0))
-  ) {
-    return null;
-  }
+  if (!data) return null;
 
   return (
     <section className="pt-16 pb-0 sm:py-16 px-6 md:px-12 lg:px-24">

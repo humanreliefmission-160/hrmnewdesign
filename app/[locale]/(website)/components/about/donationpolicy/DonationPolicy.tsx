@@ -7,7 +7,7 @@ import { RiContractFill } from "react-icons/ri";
 
 export default function DonationPolicySection() {
   return (
-    <section id="about-page-donation-policy" className="w-full bg-purple py-12">
+    <section className="w-full bg-purple py-12">
       {/* ── Hero banner ─────────────────────────────────────────────── */}
       <div className="bg-purple py-14 px-6 text-center relative overflow-hidden">
         <div className="relative z-10 max-w-3xl mx-auto">
@@ -128,5 +128,73 @@ export default function DonationPolicySection() {
         </div>
       </div>
     </section >
+  );
+}
+
+/* ── Small inline SVG icons ─────────────────────────────────────────────── */
+
+function ShieldIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-full h-full"
+    >
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
+    </svg>
+  );
+}
+
+function ScaleIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-full h-full"
+    >
+      <path d="M12 3v18M3 6l9-3 9 3M5 10l-2 5h4L5 10Zm14 0-2 5h4l-2-5ZM3 21h18" />
+    </svg>
+  );
+}
+
+function LockIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-full h-full"
+    >
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
+  );
+}
+
+function CheckCircleIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-full h-full"
+    >
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+      <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
   );
 }
