@@ -119,6 +119,9 @@ export default function DonationOptions({ item, projectName, projectSlug }: Dona
               </h2>
               <span className="text-[10px] -mb-2 text-brand-white rounded-sm">
                 {/* {(() => {
+              <span className="text-[10px] text-brand-white rounded-sm">per {item.itemTitle}</span>
+              {/* <span className="text-[10px] text-brand-white rounded-sm">
+                {(() => {
                   const freq = item.frequency;
                   if (Array.isArray(freq)) {
                     if (freq.length === 0) return "Monthly";
@@ -135,6 +138,8 @@ export default function DonationOptions({ item, projectName, projectSlug }: Dona
                 })()} */}
                 {item.itemTitle}
               </span>
+                })()}
+              </span> */}
             </>
           )}
         </div>
