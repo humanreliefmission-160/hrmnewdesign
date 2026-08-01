@@ -19,9 +19,9 @@ export const caseStudy = defineType({
         defineField({
           name: 'asset',
           title: 'Image',
+          description: '📐 Recommended: 800×600 px (4:3). Shown as the left-hand visual in the Case Study section.',
           type: 'image',
           options: { hotspot: true },
-          validation: (Rule) => Rule.required(),
         }),
         defineField({
           name: 'altText',
@@ -35,6 +35,19 @@ export const caseStudy = defineType({
           type: 'string',
         }),
       ],
+    }),
+    defineField({
+      name: 'videoUrl',
+      title: 'Video (YouTube URL)',
+      description: '▶️ Optional. Paste a YouTube link to show a video in the Case Study left-side panel instead of the image. Recommended ratio: 4:3 (e.g. 800×600). Takes priority over the image if provided.',
+      type: 'url',
+    }),
+    defineField({
+      name: 'muteVideo',
+      title: 'Mute Video',
+      description: 'If checked, the case study video plays silently.',
+      type: 'boolean',
+      initialValue: true,
     }),
     defineField({
       name: 'quote',

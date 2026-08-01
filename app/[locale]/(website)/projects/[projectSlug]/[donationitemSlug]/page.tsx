@@ -1,4 +1,3 @@
-import AidItemDetails from "../../../components/projectdonationitem/AidItemDetails";
 import DonationOptions from "../../../components/projectdonationitem/DonationOptions";
 import ImageGallery from "../../../components/projectdonationitem/ImageGallary";
 import Link from "next/link";
@@ -87,56 +86,54 @@ export default async function DonationItemPage({
         display={false}
       />
 
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-24 mt-6">
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14 xl:grid-cols-[55fr_45fr]">
-          <div className="lg:sticky lg:top-24 lg:self-start">
-            {/* Breadcrumb Bar */}
-            <div className="flex flex-wrap items-center gap-2 text-[0.75rem] font-bold uppercase mb-6 text-brand-black/60">
-              <Link href="/" className="hover:text-purple transition-colors">
-                Home
-              </Link>
-              <span className="text-purple">&gt;</span>
-              <Link href="/projects" className="hover:text-purple transition-colors">
-                Projects
-              </Link>
-              <span className="text-purple">&gt;</span>
-              <Link href={`/projects/${projectSlug}`} className="hover:text-purple transition-colors">
-                {data.name}
-              </Link>
-              <span className="text-purple">&gt;</span>
-              <span className="text-brand-black font-bold">
-                {item.itemTitle}
-              </span>
-            </div>
+      <main className="mx-auto max-w-285 px-4 sm:px-6 lg:px-8 py-8 sm:py-16 mt-6">
+        <div className="flex flex-col gap-10">
 
-            {/* PhaseDetailPanel-style icon + itemTitle badge */}
-            <div className="flex flex-wrap gap-2 mb-6">
-              <div className="flex items-start gap-2 px-3 py-2 rounded-sm border border-purple bg-purple/10">
-                <span className="mt-0.5 shrink-0 text-purple">
-                  <IconRenderer name={item.icon ?? ''} size={13} />
-                </span>
-                <div>
-                  <div className="flex flex-row justify-between items-center">
-                    <div className="text-xs font-bold text-purple">
-                      {item.itemTitle}
-                    </div>
-                  </div>
-                  {item.itemSubtext && (
-                    <div className="text-[10px] mt-0.5 text-brand-grey">
-                      {item.itemSubtext}
-                    </div>
-                  )}
+          {/* Breadcrumb Bar */}
+          <div className="flex flex-wrap items-center gap-2 text-[0.75rem] font-bold uppercase text-brand-black/60 mt-10">
+            <Link href="/" className="hover:text-purple transition-colors">
+              Home
+            </Link>
+            <span className="text-purple">&gt;</span>
+            <Link href="/projects" className="hover:text-purple transition-colors">
+              Projects
+            </Link>
+            <span className="text-purple">&gt;</span>
+            <Link href={`/projects/${projectSlug}`} className="hover:text-purple transition-colors">
+              {data.name}
+            </Link>
+            <span className="text-purple">&gt;</span>
+            <span className="text-brand-black font-bold">
+              {item.itemTitle}
+            </span>
+          </div>
+
+          {/* Icon + itemTitle badge */}
+          {/* <div className="flex flex-wrap gap-2">
+            <div className="flex items-start gap-2 px-3 py-2 rounded-sm border border-purple bg-purple/10">
+              <span className="mt-0.5 shrink-0 text-purple">
+                <IconRenderer name={item.icon ?? ''} size={13} />
+              </span>
+              <div>
+                <div className="text-xs font-bold text-purple">
+                  {item.itemTitle}
                 </div>
+                {item.itemSubtext && (
+                  <div className="text-[10px] mt-0.5 text-brand-grey">
+                    {item.itemSubtext}
+                  </div>
+                )}
               </div>
             </div>
+          </div> */}
 
-            <ImageGallery images={galleryImages} />
-          </div>
-          <div>
-            <DonationOptions item={item} projectName={data.name} projectSlug={projectSlug} />
-          </div>
+          {/* Donation Options + Aid Item Details */}
+          <DonationOptions item={item} projectName={data.name} projectSlug={projectSlug} />
+
+          {/* Image Gallery */}
+          <ImageGallery images={galleryImages} />
+
         </div>
-        <AidItemDetails item={item} />
       </main>
     </div>
   );

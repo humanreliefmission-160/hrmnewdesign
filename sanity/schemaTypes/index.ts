@@ -6,6 +6,8 @@ import { projectCategory } from './documents/projectCategory'
 import { project } from './documents/project'
 import { donationIntention } from './documents/donationIntention'
 import { fileCard } from './documents/fileCard'
+import { policy } from './documents/policy'
+import { annualReportsPage } from './documents/annualReportsPage'
 
 // ── Objects ───────────────────────────────────────────────────
 
@@ -45,6 +47,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     project,
     donationIntention,
     fileCard,
+    policy,
+    annualReportsPage,
     headerNavigation,
     footerNavigation,
     lastMonthsImpact,

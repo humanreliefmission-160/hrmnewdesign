@@ -2,12 +2,15 @@ import Link from "next/link";
 import { FaArrowRightLong } from "react-icons/fa6";
 import YellowCTA from "./YellowCTA";
 import { urlFor } from "@/sanity/lib/image";
+import { getYouTubeVideoId, getYouTubeEmbedUrl } from "@/app/[locale]/lib/youtubeHelpers";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 interface ImpactCard {
   category: string | null;
   image: { asset: { _ref: string } } | null;
+  videoUrl?: string | null;
+  muteVideo?: boolean;
   impactNumber: string;
   secondaryText: string;
   description?: string;
@@ -101,12 +104,30 @@ export default function LastMonthImpact({ data }: Props) {
                   className="relative overflow-hidden rounded-sm group cursor-pointer"
                   style={{ height: "440px" }}
                 >
-                  {/* Background Image */}
-                  <img
-                    src={imgSrc}
-                    alt={`${card.impactNumber} ${card.secondaryText}`}
-                    className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-110"
-                  />
+                  {/* Background: video or image */}
+                  {(() => {
+                    const videoId = getYouTubeVideoId(card.videoUrl);
+                    if (videoId) {
+                      const embedUrl = getYouTubeEmbedUrl(videoId, { mute: card.muteVideo !== false });
+                      return (
+                        <iframe
+                          src={embedUrl}
+                          allow="autoplay; encrypted-media"
+                          allowFullScreen
+                          title={`${card.impactNumber} ${card.secondaryText} impact video`}
+                          className="absolute inset-0 w-full h-full pointer-events-none"
+                          style={{ border: 'none' }}
+                        />
+                      );
+                    }
+                    return (
+                      <img
+                        src={imgSrc}
+                        alt={`${card.impactNumber} ${card.secondaryText}`}
+                        className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-110"
+                      />
+                    );
+                  })()}
 
                   {/* Layered gradients for depth */}
                   <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent opacity-80" />

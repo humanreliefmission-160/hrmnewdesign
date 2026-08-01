@@ -37,6 +37,8 @@ const LAST_MONTHS_IMPACT_QUERY = `
     "impactCards": impactCards[] {
       "category": category->name,
       image,
+      videoUrl,
+      muteVideo,
       impactNumber,
       secondaryText,
       description,

@@ -38,7 +38,7 @@ interface FooterColumn {
   links?: FooterLink[];
 }
 
-interface FooterProps {}
+interface FooterProps { }
 
 function resolveHref(link: FooterLink): string {
   return link.linkType === "external"
@@ -51,7 +51,7 @@ export default async function Footer() {
   const footerColumns: FooterColumn[] = footerNav?.footerColumns ?? [];
   return (
     <footer className="bg-purple text-brand-white/70 py-16 px-4 md:px-8">
-      <div className="max-w-[1140px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 py-12 border-b border-brand-white/10">
+      <div className="max-w-285 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 py-12 border-b border-brand-white/10">
         <div>
           <div>
             <Link href="/" >
@@ -107,13 +107,13 @@ export default async function Footer() {
           </div>
         ))}
       </div>
-      <div className="max-w-[1140px] mx-auto pt-8 flex items-center justify-between flex-wrap gap-4">
+      <div className="max-w-285 mx-auto pt-8 flex items-center justify-between flex-wrap gap-4">
         <div>
-          <p className="text-[0.8rem] text-brand-white">Copyright &copy; Human Relief Mission 2026.<br />All Rights Reserved</p>
+          <p className="text-[0.8rem] text-brand-white">Copyright &copy; Human Relief Mission 2026. All Rights Reserved</p>
           <p className="text-[0.8rem] text-brand-white opacity-80">Charity No. 1160380</p>
-          <div className="max-w-[1140px] mx-auto pt-2 text-[0.6rem] text-brand-white/40 italic">
+          <div className="max-w-285 mx-auto pt-2 text-[0.6rem] text-brand-white/40 italic">
             Developed by {""}
-            <Link href="http://buildingblocks.digital" className="hover:underline cursor-pointer">Building Blocks</Link>
+            <Link href="https://buildingblocks.digital" className="hover:underline cursor-pointer">Building Blocks</Link>
           </div>
         </div>
         <Image src="/donation-policy-icon.svg" alt="Helping Box" width={75} height={75} loading="eager" />
