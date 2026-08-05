@@ -763,11 +763,11 @@ function DonationStepPaymentForm({
               }}
             >
               {/* Recommended badge */}
-              {method.recommended && (
-                <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[0.6rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full whitespace-nowrap shadow-sm">
+              {/*{method.recommended && (
+               <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[0.6rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full whitespace-nowrap shadow-sm">
                   ★ Recommended
-                </span>
-              )}
+                </span> 
+              )}*/}
               {/* Coming soon badge */}
               {method.comingSoon && !isSelected && (
                 <span className="absolute -top-2.5 right-2 bg-amber-400 text-white text-[0.6rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full whitespace-nowrap shadow-sm">
