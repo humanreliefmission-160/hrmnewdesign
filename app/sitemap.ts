@@ -9,7 +9,7 @@
 // each route across every supported locale.
 // ─────────────────────────────────────────────────────────────────────────────
 import { MetadataRoute } from 'next'
-import { sanityFetch } from '@/lib/sanity/client'
+import { sanityFetch } from '/lib/sanity/client'
 
 const BASE_URL = 'https://humanreliefmission.com'
 
