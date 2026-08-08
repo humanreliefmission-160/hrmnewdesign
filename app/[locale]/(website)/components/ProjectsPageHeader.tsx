@@ -120,7 +120,7 @@ export default function ProjectsPageHeader({
         {/* Left Content Half */}
         <div className="w-full md:w-[50%] flex justify-end">
           {/* Inner container to align with max-w grid, 570px + some padding */}
-          <div className="w-full max-w-[600px] px-6 py-12 md:px-8 md:py-24 lg:py-32 xl:pl-0 flex flex-col items-start text-left">
+          <div className="w-full max-w-150 px-6 py-12 md:px-8 md:py-24 lg:py-32 xl:pl-0 flex flex-col items-start text-left">
             <div className="text-[0.75rem] font-bold tracking-widest uppercase mb-2 text-brand-white">
               <Link href="/projects" className="hover:text-brand-lgrey/50 transition-colors">
                 {categoryLabel}
@@ -131,7 +131,7 @@ export default function ProjectsPageHeader({
               {title}
             </h1>
 
-            <p className="leading-[1.6] text-brand-white/85 text-[1.1rem] max-w-[500px] mb-8 text-left">
+            <p className="leading-[1.6] text-brand-white/85 text-[1.1rem] max-w-125 mb-8 text-left">
               {subtitle}
             </p>
 
@@ -147,7 +147,7 @@ export default function ProjectsPageHeader({
                       setSelectedAmount(hero.amount);
                       setIsOtherAmount(false);
                     }}
-                    className={`border-2 px-4 py-1.5 md:py-2 text-[0.95rem] font-semibold transition-all rounded-[2px] ${isSelected
+                    className={`border-2 px-4 py-1.5 md:py-2 text-[0.95rem] font-semibold transition-all rounded-xs ${isSelected
                       ? "border-purple text-white bg-purple"
                       : "border-purple-light/50 text-brand-white/90 hover:bg-purple hover:border-purple hover:text-white"
                       }`}
@@ -167,7 +167,7 @@ export default function ProjectsPageHeader({
                     autoFocus
                     value={customAmount}
                     onChange={(e) => setCustomAmount(e.target.value)}
-                    className="border-2 border-purple-light bg-transparent text-brand-white/90 px-4 py-1.5 md:py-2 pl-7 w-32 text-[0.95rem] font-semibold outline-none rounded-[2px] transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    className="border-2 border-purple-light bg-transparent text-brand-white/90 px-4 py-1.5 md:py-2 pl-7 w-32 text-[0.95rem] font-semibold outline-none rounded-xs transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     placeholder="Amount"
                   />
                   <button
@@ -185,7 +185,7 @@ export default function ProjectsPageHeader({
                     setIsOtherAmount(true);
                     setSelectedAmount(null);
                   }}
-                  className="border-2 border-purple-light/50 text-brand-white/90 px-4 py-1.5 md:py-2 text-[0.95rem] font-semibold hover:bg-purple hover:border-purple hover:text-white transition-all rounded-[2px]"
+                  className="border-2 border-purple-light/50 text-brand-white/90 px-4 py-1.5 md:py-2 text-[0.95rem] font-semibold hover:bg-purple hover:border-purple hover:text-white transition-all rounded-xs"
                 >
                   Other Amount
                 </button>
@@ -193,7 +193,7 @@ export default function ProjectsPageHeader({
             </div>
 
             {showImpactMessage && selectedHero && (
-              <div className="mb-4 w-full max-w-[500px] flex items-start gap-2">
+              <div className="mb-4 w-full max-w-125 flex items-start gap-2">
                 <p className="text-brand-white bg-purple-light/50 font-medium text-xs leading-relaxed px-2.5 py-0.5 rounded-sm">
                   {selectedHero.impactLabel}
                 </p>
@@ -227,7 +227,7 @@ export default function ProjectsPageHeader({
         </div>
 
         {/* Right Image / Video Half */}
-        <div className="w-full md:w-[50%] relative min-h-[300px] sm:min-h-[400px] md:min-h-auto flex items-stretch bg-brand-white overflow-hidden">
+        <div className="w-full md:w-[50%] relative min-h-75 sm:min-h-100 md:min-h-auto flex items-stretch bg-brand-white overflow-hidden">
           {embedUrl ? (
             <iframe
               src={embedUrl}
@@ -249,7 +249,7 @@ export default function ProjectsPageHeader({
 
       {/* Breadcrumb Bar */}
       <div className="bg-brand-white border-b border-purple-faint py-3.5">
-        <div className="max-w-[1280px] mx-auto md:px-8 flex items-center justify-center md:justify-start gap-2 text-[0.75rem] font-bold tracking-widest uppercase text-purple-faint">
+        <div className="max-w-7xl mx-auto md:px-8 flex items-center justify-center md:justify-start gap-2 text-[0.75rem] font-bold tracking-widest uppercase text-purple-faint">
           {breadcrumbLinks.map((link, idx) => {
             const isLast = idx === breadcrumbLinks.length - 1;
             return (
