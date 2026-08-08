@@ -8,7 +8,8 @@
     "build": "next build",
     "lint": "eslint",
     "dev:studio": "sanity dev",
-    "build:studio": "sanity build"
+    "build:studio": "sanity build",
+    "seed:supabase": "node scripts/seed-supabase.js"
   },
   "dependencies": {
     "@mailchimp/mailchimp_marketing": "^3.0.80",

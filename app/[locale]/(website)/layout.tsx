@@ -8,6 +8,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import Providers from "./components/Providers";
 import { sanityFetch } from "../lib/sanity/client";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 // Load Rubik via next/font — font-face is inlined at build time,
 // eliminating the external Google Fonts round-trip and render-blocking stylesheet.
@@ -55,6 +56,9 @@ export default async function LocaleLayout({
           </Providers>
         </NextIntlClientProvider>
       </body>
+      {process.env.NEXT_PUBLIC_GA_ID && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+      )}
     </html>
   );
 }
