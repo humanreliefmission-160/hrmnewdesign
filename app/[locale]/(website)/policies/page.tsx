@@ -3,11 +3,30 @@ import PageHeader from "../components/PageHeader";
 import YellowCTA from "../components/YellowCTA";
 import Link from "next/link";
 import { Metadata } from "next";
+import JsonLd from "../components/JsonLd";
+import { BASE_URL, buildWebPage, buildBreadcrumb } from "../lib/jsonld";
 
 export const metadata: Metadata = {
   title: "Policies | Human Relief Mission",
   description:
-    "Explore our organizational policies, governance standards, safeguarding guidelines, and operational procedures.",
+    "Explore our organisational policies, governance standards, safeguarding guidelines and operational procedures.",
+  alternates: {
+    canonical: `${BASE_URL}/policies`,
+  },
+  openGraph: {
+    title: "Policies | Human Relief Mission",
+    description:
+      "Explore our organisational policies, governance standards, safeguarding guidelines and operational procedures.",
+    url: `${BASE_URL}/policies`,
+    siteName: "Human Relief Mission",
+    locale: "en_GB",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Policies | Human Relief Mission",
+    description: "Explore our organisational policies and governance standards.",
+  },
 };
 
 // ── Sanity Queries ────────────────────────────────────────────────────────────
@@ -118,6 +137,10 @@ export default async function PoliciesPage() {
 
   return (
     <main id="page-policies" className="block">
+      <JsonLd data={[
+        buildWebPage({ title: "Policies | Human Relief Mission", description: "Explore our organisational policies, governance standards, safeguarding guidelines, and operational procedures.", url: `${BASE_URL}/policies` }),
+        buildBreadcrumb([{ name: "Home", url: BASE_URL }, { name: "Policies", url: `${BASE_URL}/policies` }]),
+      ]} />
       {/* ── Page Header ───────────────────────────────────────── */}
       <div className="bg-purple-dark pt-24">
         <PageHeader

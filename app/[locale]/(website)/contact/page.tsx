@@ -1,172 +1,44 @@
-"use client";
+import type { Metadata } from "next";
+import ContactClient from "./ContactClient";
+import JsonLd from "../components/JsonLd";
+import { BASE_URL, buildContactPage, buildBreadcrumb } from "../lib/jsonld";
 
-import { useState } from "react";
-import PageHeader from "../components/PageHeader";
-import YellowCTA from "../components/YellowCTA";
-import { FaLocationArrow, FaPhoneAlt } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
-import { IoTime } from "react-icons/io5";
+export const metadata: Metadata = {
+  title: "Contact Us | Human Relief Mission",
+  description:
+    "Get in touch with Human Relief Mission. Have a question, donation enquiry, or volunteer application? Contact our team in Leeds, UK.",
+  alternates: {
+    canonical: `${BASE_URL}/contact`,
+  },
+  openGraph: {
+    title: "Contact Us | Human Relief Mission",
+    description:
+      "Get in touch with Human Relief Mission. Have a question, donation enquiry, or volunteer application? Contact our team in Leeds, UK.",
+    url: `${BASE_URL}/contact`,
+    siteName: "Human Relief Mission",
+    locale: "en_GB",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact Us | Human Relief Mission",
+    description: "Get in touch with our team in Leeds, UK.",
+  },
+};
 
-export default function Contact() {
-  const [contactSuccess, setContactSuccess] = useState(false);
-
-  const submitContact = () => {
-    setContactSuccess(true);
-    setTimeout(() => {
-      const el = document.getElementById("contactSuccess");
-      if (el) {
-        window.scrollTo({ top: el.offsetTop - 100, behavior: "smooth" });
-      }
-    }, 100);
-  };
-
+export default function ContactPage() {
   return (
-    <div id="page-contact" className="block min-h-screen">
-      <PageHeader
-        title="Get In Touch"
-        subtitle={<>Have a question, want to volunteer, or need to reach our team? We'd love to hear from you.</>}
-        breadcrumb="Contact Us"
-        display={true}
+    <>
+      <JsonLd
+        data={[
+          buildContactPage(),
+          buildBreadcrumb([
+            { name: "Home", url: BASE_URL },
+            { name: "Contact", url: `${BASE_URL}/contact` },
+          ]),
+        ]}
       />
-
-      <section className="py-10 sm:py-20 px-4 md:px-8 bg-brand-white">
-        <div className="max-w-[1140px] mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_1.5fr] gap-8 mt-3 sm:mt-12 items-start">
-            <div>
-              <div className="bg-brand-white p-8 rounded-sm shadow-card border border-brand-lgrey">
-                <div className="font-bold text-[1.1rem] mb-6 text-brand-black">
-                  Contact Information
-                </div>
-                <div className="flex gap-4 mb-6 last:mb-0">
-                  <div className="w-10 h-10 bg-purple-faint rounded-full flex items-center justify-center text-xl shrink-0">
-                    <FaLocationArrow fill='#650199' className='w-4 h-auto' />
-                  </div>
-                  <div>
-                    <div className="text-[0.75rem] font-bold text-purple uppercase tracking-widest mb-1">Address</div>
-                    <div className="text-brand-black font-medium leading-relaxed">
-                      160 Harehills Lane, Leeds, LS8 5JP
-                    </div>
-                  </div>
-                </div>
-                <div className="flex gap-4 mb-6 last:mb-0">
-                  <div className="w-10 h-10 bg-purple-faint rounded-full flex items-center justify-center text-xl shrink-0">
-                    <FaPhoneAlt fill='#650199' className='w-4 h-auto' />
-                  </div>
-                  <div>
-                    <div className="text-[0.75rem] font-bold text-purple uppercase tracking-widest mb-1">Phone</div>
-                    <div className="text-brand-black font-medium leading-relaxed">
-                      <a href="tel:+443000300160" className="hover:underline">+44 (0) 300 0300 160</a>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex gap-4 mb-6 last:mb-0">
-                  <div className="w-10 h-10 bg-purple-faint rounded-full flex items-center justify-center text-xl shrink-0">
-                    <MdEmail fill='#650199' className='w-4 h-auto' />
-                  </div>
-                  <div>
-                    <div className="text-[0.75rem] font-bold text-purple uppercase tracking-widest mb-1">Email</div>
-                    <div className="text-brand-black font-medium leading-relaxed">
-                      <a href="mailto:info@humanreliefmission.com" className="hover:underline">info@humanreliefmission.com</a>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex gap-4 mb-6 last:mb-0">
-                  <div className="w-10 h-10 bg-purple-faint rounded-full flex items-center justify-center text-xl shrink-0">
-                    <IoTime fill='#650199' className='w-4 h-auto' />
-                  </div>
-                  <div>
-                    <div className="text-[0.75rem] font-bold text-purple uppercase tracking-widest mb-1">Office Hours</div>
-                    <div className="text-brand-black font-medium leading-relaxed">Mon–Sat: 10am – 6pm</div>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-6 p-6 bg-purple rounded-sm text-brand-white">
-                <div className="font-bold text-base mb-2 font-body">
-                  Want to Volunteer?
-                </div>
-                <p className="text-sm text-brand-white/80 leading-[1.6] mb-4">
-                  Join our global network of volunteers and help us deliver aid
-                  to those who need it most.<br /><br />
-                  Fill out the form on this page and select <span className="font-semibold">"Volunteer Application"</span> in the subject dropdown.
-                  You can also reach out to our team directly via email or phone.
-                </p>
-                {/* <YellowCTA
-                  text="Apply to Volunteer"
-                  className="w-full justify-center py-3"
-                /> */}
-              </div>
-            </div>
-            <div className="bg-brand-white p-8 md:p-10 rounded-sm shadow-card border border-brand-lgrey">
-              <div className="font-bold text-[1.4rem] mb-2 font-body text-brand-black">
-                Send Us a Message
-              </div>
-              <p className="text-sm text-brand-grey mb-8">
-                We aim to respond within 2&ndash;4 business days.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div className="flex flex-col gap-1.5">
-                  <label className="block text-sm font-bold text-brand-black">First Name *</label>
-                  <input className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 bg-brand-white" type="text" placeholder="John" />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="block text-sm font-bold text-brand-black">Last Name *</label>
-                  <input
-                    className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 bg-brand-white"
-                    type="text"
-                    placeholder="Smith"
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col gap-1.5 mb-4">
-                <label className="block text-sm font-bold text-brand-black">Email Address *</label>
-                <input
-                  className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 bg-brand-white"
-                  type="email"
-                  placeholder="john@example.com"
-                />
-              </div>
-              <div className="flex flex-col gap-1.5 mb-4">
-                <label className="block text-sm font-bold text-brand-black">Phone Number</label>
-                <input
-                  className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 bg-brand-white"
-                  type="tel"
-                  placeholder="+44 7700 000000"
-                />
-              </div>
-              <div className="flex flex-col gap-1.5 mb-4">
-                <label className="block text-sm font-bold text-brand-black">Subject *</label>
-                <select className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all bg-brand-white">
-                  <option value="">Select a subject...</option>
-                  <option>General Enquiry</option>
-                  <option>Donation Query</option>
-                  <option>Volunteer Application</option>
-                  <option>Partnership</option>
-                  <option>Media &amp; Press</option>
-                  <option>Other</option>
-                </select>
-              </div>
-              <div className="flex flex-col gap-1.5 mb-6">
-                <label className="block text-sm font-bold text-brand-black">Message *</label>
-                <textarea
-                  className="w-full px-4 py-3 border border-brand-lgrey rounded-sm focus:border-purple focus:ring-1 focus:ring-purple outline-none transition-all placeholder:text-brand-grey/50 min-h-[120px] bg-brand-white"
-                  placeholder="How can we help you?"></textarea>
-              </div>
-              <YellowCTA
-                text="Send Message →"
-                className="w-full justify-center py-3"
-              />
-
-              <div
-                className={`mt-6 p-4 bg-purple-faint border border-purple text-brand-black rounded-sm text-sm font-medium ${contactSuccess ? "block" : "hidden"}`}
-                id="contactSuccess"
-              >
-                Thank you! Your message has been sent. {"We'll"} be in touch shortly.
-              </div>
-            </div>
-          </div>
-        </div>
-      </section >
-    </div >
+      <ContactClient />
+    </>
   );
 }
-

@@ -7,6 +7,11 @@ export const ecosystemStage = defineType({
   type: 'document',
   icon: () => '🌱',
   fields: [
+    defineField({
+      name: 'seo',
+      title: 'SEO & Social Sharing',
+      type: 'seo',
+    }),
     // ── Page Header ──────────────────────────────────────────────
     defineField({
       name: 'title',

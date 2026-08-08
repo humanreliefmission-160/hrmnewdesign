@@ -182,14 +182,14 @@ export default function ProjectGalleryStrip({ images, projectSlug }: Props) {
 										/>
 									);
 								}
-								return (
 									<img
-										src={urlFor(slide).width(SLIDE_WIDTH * 2).height(SLIDE_HEIGHT * 2).fit("crop").url()}
+										src={urlFor(slide).width(SLIDE_WIDTH * 2).height(SLIDE_HEIGHT * 2).fit("crop").auto("format").quality(80).url()}
 										alt={slide.alt}
+										loading="lazy"
+										decoding="async"
 										className="w-full h-full object-cover border border-brand-white/50"
 										draggable={false}
 									/>
-								);
 							})()}
 						</div>
 					))}

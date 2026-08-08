@@ -18,12 +18,12 @@ interface ProjectsGridProps {
 export default function ProjectsGrid({ projects }: ProjectsGridProps) {
   return (
     <section className="py-20 px-4 md:px-8 bg-brand-white">
-      <div className="max-w-[1140px] mx-auto">
+      <div className="max-w-285 mx-auto">
         <div className="flex flex-wrap items-end justify-between gap-4 mb-4">
           <div>
             <div className="inline-block bg-purple-faint text-purple font-bold text-[0.75rem] tracking-widest uppercase px-4 py-1.5 mb-4">How To Help</div>
             <h2 className="text-4xl md:text-5xl font-bold text-brand-black mb-[1.2rem]">Our Projects</h2>
-            <p className="text-[1.05rem] text-brand-grey leading-[1.7] max-w-[600px]">
+            <p className="text-[1.05rem] text-brand-grey leading-[1.7] max-w-150">
               From emergency food aid to long term education, our projects create lasting change.
             </p>
           </div>
@@ -34,7 +34,7 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
           {projects && projects.length > 0 ? (
             projects.map((project) => {
               const headerImageUrl = project.headerImage?.asset
-                ? urlFor(project.headerImage.asset).url()
+                ? urlFor(project.headerImage.asset).width(640).height(480).fit("crop").auto("format").quality(80).url()
                 : "/img-placeholder.JPG";
 
               return (
@@ -48,6 +48,8 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
                         <img
                           src={headerImageUrl}
                           alt={project.name}
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                       </Link>

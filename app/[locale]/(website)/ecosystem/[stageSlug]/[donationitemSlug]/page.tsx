@@ -73,7 +73,7 @@ export default async function EcosystemDonationItemPage({
 
   const galleryImages: GalleryImage[] = (item.images ?? []).map((img: DonationItemImage) => ({
     src: img.asset
-      ? urlFor(img.asset).width(1200).height(900).fit('crop').url()
+      ? urlFor(img.asset).width(1200).height(900).fit('crop').auto('format').quality(80).url()
       : '/img-placeholder.JPG',
     altText: img.altText,
     caption: img.caption,

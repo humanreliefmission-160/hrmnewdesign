@@ -1,8 +1,35 @@
+import type { Metadata } from "next";
 import { sanityFetch } from "../../lib/sanity/client";
 import { urlFor } from "@/sanity/lib/image";
 import PageHeader from "../components/PageHeader";
 import YellowCTA from "../components/YellowCTA";
 import Link from "next/link";
+import JsonLd from "../components/JsonLd";
+import { BASE_URL, buildItemList, buildBreadcrumb } from "../lib/jsonld";
+
+export const metadata: Metadata = {
+  title: "Our Projects | Human Relief Mission",
+  description:
+    "Explore active humanitarian projects including emergency aid, food packages, clean water wells, healthcare and education.",
+  alternates: {
+    canonical: `${BASE_URL}/projects`,
+  },
+  openGraph: {
+    title: "Our Projects | Human Relief Mission",
+    description:
+      "Explore active humanitarian projects including emergency aid, food packages, clean water wells, healthcare and education.",
+    url: `${BASE_URL}/projects`,
+    siteName: "Human Relief Mission",
+    locale: "en_GB",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Our Projects | Human Relief Mission",
+    description:
+      "Explore active humanitarian projects run by Human Relief Mission.",
+  },
+};
 
 export const revalidate = 60;
 
@@ -54,6 +81,10 @@ export default async function ProjectsPage() {
 
   return (
     <div id="page-projects" className="block min-h-screen">
+      <JsonLd data={[
+        buildItemList((projects || []).map((p) => ({ name: p.name, url: `${BASE_URL}/projects/${p.slug}` }))),
+        buildBreadcrumb([{ name: "Home", url: BASE_URL }, { name: "Projects", url: `${BASE_URL}/projects` }]),
+      ]} />
       <PageHeader
         title="Projects"
         subtitle={
@@ -69,7 +100,7 @@ export default async function ProjectsPage() {
       {/* <ProjectPageVideo /> */}
 
       <section className="py-20 px-4 md:px-8 bg-brand-white">
-        <div className="max-w-[1140px] mx-auto">
+        <div className="max-w-285 mx-auto">
           {/* Projects */}
           {!projects || projects.length === 0 ? (
             <p className="text-brand-grey text-center py-20">
@@ -94,11 +125,11 @@ export default async function ProjectsPage() {
                     let imageUrl = "/img-placeholder.JPG";
 
                     if (item.cardImage && item.cardImage.asset && item.cardImage.asset._ref) {
-                      imageUrl = urlFor(item.cardImage.asset).width(600).height(450).fit("crop").url();
+                      imageUrl = urlFor(item.cardImage.asset).width(600).height(450).fit("crop").auto("format").quality(80).url();
                     } else if (item.images?.[0] && item.images[0].asset && item.images[0].asset._ref) {
-                      imageUrl = urlFor(item.images[0].asset).width(600).height(450).fit("crop").url();
+                      imageUrl = urlFor(item.images[0].asset).width(600).height(450).fit("crop").auto("format").quality(80).url();
                     } else if (project.headerImage && project.headerImage.asset && project.headerImage.asset._ref) {
-                      imageUrl = urlFor(project.headerImage).width(600).height(450).fit("crop").url();
+                      imageUrl = urlFor(project.headerImage).width(600).height(450).fit("crop").auto("format").quality(80).url();
                     }
 
                     const itemUrl = `/projects/${project.slug}/${item.slug}`;

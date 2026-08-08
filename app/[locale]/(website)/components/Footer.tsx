@@ -63,22 +63,45 @@ export default async function Footer() {
             </div>
           </div>
           <div className="flex gap-3">
-            <Link href={`${process.env.FACEBOOK_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+            <Link href={`${process.env.FACEBOOK_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline"
+              aria-label="Human Relief Mission on Facebook"
+              target="_blank"
+              rel="noopener noreferrer">
               <FaFacebookF fill="#f5f5f5" size={18} />
             </Link>
-            <Link href={`${process.env.LINKEDIN_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+
+            <Link href={`${process.env.LINKEDIN_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline"
+              aria-label="Human Relief Mission on Linkedin"
+              target="_blank"
+              rel="noopener noreferrer">
               <FaLinkedinIn fill="#F5F5F5" size={18} />
             </Link>
-            <Link href={`${process.env.YOUTUBE_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+
+            <Link href={`${process.env.YOUTUBE_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline"
+              aria-label="Human Relief Mission on YouTube"
+              target="_blank"
+              rel="noopener noreferrer">
               <FaYoutube fill="#F5F5F5" size={18} />
             </Link>
-            <Link href={`${process.env.X_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+
+            <Link href={`${process.env.X_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline"
+              aria-label="Human Relief Mission on X (Formally Twitter)"
+              target="_blank"
+              rel="noopener noreferrer">
               <FaXTwitter fill="#F5F5F5" size={18} />
             </Link>
-            <Link href={`${process.env.INSTAGRAM_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+
+            <Link href={`${process.env.INSTAGRAM_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline"
+              aria-label="Human Relief Mission on Instagram"
+              target="_blank"
+              rel="noopener noreferrer">
               <BiLogoInstagramAlt fill="#F5F5F5" size={18} />
             </Link>
-            <Link href={`${process.env.WHATSAPP_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline">
+
+            <Link href={`${process.env.WHATSAPP_LINK}`} className="w-10 h-10 p-3 bg-brand-white/10 rounded-full flex items-center justify-center text-brand-white text-[0.8rem] cursor-pointer transition-colors hover:bg-purple-light no-underline"
+              aria-label="Human Relief Mission on WhatsApp"
+              target="_blank"
+              rel="noopener noreferrer">
               <ImWhatsapp fill="#F5F5F5" size={18} />
             </Link>
           </div>

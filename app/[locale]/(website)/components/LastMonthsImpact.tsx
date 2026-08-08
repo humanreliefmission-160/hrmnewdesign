@@ -32,7 +32,7 @@ interface Props {
 function resolveImage(image: ImpactCard["image"]): string {
   if (image?.asset) {
     try {
-      return urlFor(image.asset).width(800).height(880).fit("crop").url();
+      return urlFor(image.asset).width(640).height(704).fit("crop").auto("format").quality(80).url();
     } catch {
       // fall through to placeholder
     }
