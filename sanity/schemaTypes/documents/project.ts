@@ -15,8 +15,15 @@ export const project = defineType({
     { name: 'impact', title: '📊 Impact' },
     { name: 'ecosystem', title: '🌱 Ecosystem' },
     { name: 'faq', title: '❓ FAQ' },
+    { name: 'seo', title: '🔍 SEO' },
   ],
   fields: [
+    defineField({
+      name: 'seo',
+      title: 'SEO & Social Sharing',
+      type: 'seo',
+      group: 'seo',
+    }),
     // ── Overview ────────────────────────────────────────────────
     defineField({
       name: 'icon',
@@ -53,6 +60,14 @@ export const project = defineType({
       name: 'cardSummary',
       title: 'Project Card Summary',
       description: 'Short summary shown on the project listing card',
+      type: 'text',
+      rows: 3,
+      group: 'overview',
+    }),
+    defineField({
+      name: 'llmsSummary',
+      title: 'AI & LLM Summary (llms.txt)',
+      description: 'Concise summary of this project specifically formatted for AI agents & LLMs in llms.txt. Falls back to card summary / tagline if empty.',
       type: 'text',
       rows: 3,
       group: 'overview',

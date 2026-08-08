@@ -5,6 +5,8 @@ import PortableTextRenderer from '../../components/PortableTextRenderer';
 import YellowCTA from '../../components/YellowCTA';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import JsonLd from '../../components/JsonLd';
+import { BASE_URL, buildWebPage, buildBreadcrumb } from '../../lib/jsonld';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface PolicyPageProps {
@@ -48,11 +50,28 @@ export async function generateMetadata({ params }: PolicyPageProps): Promise<Met
   if (!data) return { title: 'Policy | Human Relief Mission' };
 
   const headerTitle = data.pageHeader?.title || data.title;
-  const headerSubtitle = data.pageHeader?.subtitle || '';
+  const headerSubtitle = data.pageHeader?.subtitle || `Read the official ${headerTitle} of Human Relief Mission.`;
+  const canonicalUrl = `${BASE_URL}/policies/${policyslug}`;
 
   return {
     title: `${headerTitle} | Human Relief Mission`,
     description: headerSubtitle,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: `${headerTitle} | Human Relief Mission`,
+      description: headerSubtitle,
+      url: canonicalUrl,
+      siteName: 'Human Relief Mission',
+      locale: 'en_GB',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${headerTitle} | Human Relief Mission`,
+      description: headerSubtitle,
+    },
   };
 }
 
@@ -71,6 +90,14 @@ export default async function PolicyPage({ params }: PolicyPageProps) {
 
   return (
     <main id="page-policy" className="block">
+      <JsonLd data={[
+        buildWebPage({ title: `${headerTitle} | Human Relief Mission`, description: headerSubtitle || undefined, url: `${BASE_URL}/policies/${policyslug}` }),
+        buildBreadcrumb([
+          { name: "Home", url: BASE_URL },
+          { name: "Policies", url: `${BASE_URL}/policies` },
+          { name: headerTitle, url: `${BASE_URL}/policies/${policyslug}` },
+        ]),
+      ]} />
       {/* ── Page Header ───────────────────────────────────────── */}
       <div className='bg-purple-dark pt-24'>
         <PageHeader

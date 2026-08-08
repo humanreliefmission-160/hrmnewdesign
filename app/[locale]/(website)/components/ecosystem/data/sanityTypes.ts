@@ -60,6 +60,14 @@ export type SanityEcosystemStage = {
   _id: string;
   title: string;
   slug: { current: string };
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    ogImage?: SanityImage;
+    keywords?: string[];
+    canonicalUrl?: string;
+    noIndex?: boolean;
+  };
   order: number;
   stageNumber?: number;
   stageName?: string;

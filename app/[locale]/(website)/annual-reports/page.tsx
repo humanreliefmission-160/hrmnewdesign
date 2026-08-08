@@ -2,12 +2,31 @@ import { sanityFetch } from '@/app/[locale]/lib/sanity/client';
 import PageHeader from '../components/PageHeader';
 import AnnualReportCard from '../components/about/AnnualReportCard';
 import { Metadata } from 'next';
+import JsonLd from '../components/JsonLd';
+import { BASE_URL, buildWebPage, buildBreadcrumb } from '../lib/jsonld';
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
   title: 'Annual Reports | Human Relief Mission',
   description:
-    'Read our annual reports — a comprehensive overview of our programmes, financials and the impact your donations have had on communities around the world.',
+    'Read our annual reports — a comprehensive overview of our programmes, financials and the impact your donations have had on communities in Afghanistan.',
+  alternates: {
+    canonical: `${BASE_URL}/annual-reports`,
+  },
+  openGraph: {
+    title: 'Annual Reports | Human Relief Mission',
+    description:
+      'Read our annual reports — a comprehensive overview of our programmes, financials and the impact your donations have had on communities in Afghanistan.',
+    url: `${BASE_URL}/annual-reports`,
+    siteName: 'Human Relief Mission',
+    locale: 'en_GB',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Annual Reports | Human Relief Mission',
+    description: 'Read our annual reports and financial transparency overviews.',
+  },
 };
 
 // ── Sanity Queries ────────────────────────────────────────────────────────────
@@ -25,7 +44,7 @@ const REPORTS_QUERY = `
     title,
     body,
     "fileUrl": file.asset->url,
-    "coverImageUrl": coverImage.asset->url,
+    "coverImageUrl": select(defined(coverImage.asset) => coverImage.asset->url + "?w=800&h=600&fit=crop&auto=format&q=80", null),
     "coverImageAlt": coverImage.alt
   }
 `;
@@ -77,6 +96,10 @@ export default async function AnnualReportsPage() {
 
   return (
     <main id="page-annual-reports" className="block">
+      <JsonLd data={[
+        buildWebPage({ title: "Annual Reports | Human Relief Mission", description: "Read our annual reports — a comprehensive overview of our programmes, financials and the impact your donations have had on communities around the world.", url: `${BASE_URL}/annual-reports` }),
+        buildBreadcrumb([{ name: "Home", url: BASE_URL }, { name: "Annual Reports", url: `${BASE_URL}/annual-reports` }]),
+      ]} />
       {/* ── Page Header ───────────────────────────────────────── */}
       <div className='bg-purple-dark pt-24'>
         <PageHeader

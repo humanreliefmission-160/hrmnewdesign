@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { sanityFetch } from "@/app/[locale]/lib/sanity/client";
@@ -12,6 +13,8 @@ import DonateSection from "../../components/ecosystem/sections/ecosystempage/Don
 import AidItemDetails from "../../components/projectdonationitem/AidItemDetails";
 import DonationOptions from "../../components/projectdonationitem/DonationOptions";
 import ImageGallery from "../../components/projectdonationitem/ImageGallary";
+import JsonLd from "../../components/JsonLd";
+import { BASE_URL, buildWebPage, buildBreadcrumb, buildFAQ, buildDonateAction } from "../../lib/jsonld";
 
 import {
   type SanityEcosystemStage,
@@ -28,6 +31,14 @@ const STAGE_QUERY = `
   _id,
   title,
   slug,
+  seo {
+    metaTitle,
+    metaDescription,
+    ogImage,
+    keywords,
+    canonicalUrl,
+    noIndex
+  },
   order,
   stageNumber,
   stageName,
@@ -172,6 +183,93 @@ export async function generateStaticParams() {
   return paths;
 }
 
+// ─── Metadata ─────────────────────────────────────────────────────────────────
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string[] }>;
+}): Promise<Metadata> {
+  const { slug: slugParts } = await params;
+
+  if (slugParts.length === 2) {
+    const [stageSlug, donationitemSlug] = slugParts;
+    const data = await sanityFetch<EcosystemItemResult | null>(
+      ECOSYSTEM_ITEM_QUERY,
+      { stageSlug, donationitemSlug }
+    );
+
+    if (!data?.item) return { title: "Item Not Found | Human Relief Mission" };
+
+    const title = `${data.item.itemTitle} | Human Relief Mission`;
+    const description = data.item.itemSubtext || `Donate ${data.item.itemTitle} through Human Relief Mission.`;
+    const canonicalUrl = `${BASE_URL}/ecosystem/${stageSlug}/${donationitemSlug}`;
+
+    return {
+      title,
+      description,
+      alternates: { canonical: canonicalUrl },
+      openGraph: {
+        title,
+        description,
+        url: canonicalUrl,
+        siteName: "Human Relief Mission",
+        locale: "en_GB",
+        type: "website",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+      },
+    };
+  }
+
+  const stageSlug = slugParts[0];
+  const stage = await sanityFetch<SanityEcosystemStage | null>(STAGE_QUERY, {
+    slug: stageSlug,
+  });
+
+  if (!stage) return { title: "Stage Not Found | Human Relief Mission" };
+
+  const title = stage.seo?.metaTitle || `${stage.title} — Stage ${stage.stageNumber || ""} | Human Relief Mission`;
+  const description =
+    stage.seo?.metaDescription ||
+    stage.headerDescription ||
+    `Explore Stage ${stage.stageNumber || ""}: ${stage.title} in the Human Relief Mission 4-phase ecosystem model.`;
+
+  const ogImageUrl = stage.seo?.ogImage
+    ? urlFor(stage.seo.ogImage).width(1200).height(630).url()
+    : stage.headerImage
+    ? urlFor(stage.headerImage).width(1200).height(630).url()
+    : undefined;
+
+  const canonicalUrl = stage.seo?.canonicalUrl || `${BASE_URL}/ecosystem/${stageSlug}`;
+
+  return {
+    title,
+    description,
+    keywords: stage.seo?.keywords || undefined,
+    alternates: { canonical: canonicalUrl },
+    robots: stage.seo?.noIndex ? { index: false, follow: false } : undefined,
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: "Human Relief Mission",
+      locale: "en_GB",
+      type: "website",
+      images: ogImageUrl ? [{ url: ogImageUrl, width: 1200, height: 630, alt: title }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ogImageUrl ? [ogImageUrl] : undefined,
+    },
+  };
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function EcosystemPage({
@@ -195,7 +293,7 @@ export default async function EcosystemPage({
 
     const galleryImages: GalleryImage[] = (item.images ?? []).map((img: DonationItemImage) => ({
       src: img.asset
-        ? urlFor(img.asset).width(1200).height(900).fit('crop').url()
+        ? urlFor(img.asset).width(1200).height(900).fit('crop').auto('format').quality(80).url()
         : '/img-placeholder.JPG',
       altText: img.altText,
       caption: img.caption,
@@ -209,8 +307,31 @@ export default async function EcosystemPage({
       });
     }
 
+    const itemUrl = `${BASE_URL}/ecosystem/${stageSlug}/${donationitemSlug}`;
+
     return (
       <div className="min-h-screen bg-brand-white font-sans antialiased">
+        <JsonLd
+          data={[
+            buildWebPage({
+              title: `${item.itemTitle} | Human Relief Mission`,
+              description: item.itemSubtext || undefined,
+              url: itemUrl,
+              imageUrl: galleryImages[0]?.src !== '/img-placeholder.JPG' ? galleryImages[0].src : undefined,
+            }),
+            buildBreadcrumb([
+              { name: "Home", url: BASE_URL },
+              { name: "Ecosystem", url: `${BASE_URL}/ecosystem` },
+              { name: stageSlug.toUpperCase(), url: `${BASE_URL}/ecosystem/${stageSlug}` },
+              { name: item.itemTitle, url: itemUrl },
+            ]),
+            buildDonateAction({
+              name: `Donate ${item.itemTitle}`,
+              url: itemUrl,
+              description: item.itemSubtext || undefined,
+            }),
+          ]}
+        />
         <PageHeader
           title={item.itemTitle}
           subtitle={item.itemSubtext}
@@ -271,9 +392,9 @@ export default async function EcosystemPage({
   // Resolve hero image — prefer headerImage, fall back to cardImage
   const heroImageSrc =
     stage.headerImage?.asset
-      ? urlFor(stage.headerImage.asset).width(1400).height(900).fit("crop").url()
+      ? urlFor(stage.headerImage.asset).width(1400).height(900).fit("crop").auto("format").quality(80).url()
       : stage.cardImage?.asset
-        ? urlFor(stage.cardImage.asset).width(1400).height(900).fit("crop").url()
+        ? urlFor(stage.cardImage.asset).width(1400).height(900).fit("crop").auto("format").quality(80).url()
         : "/img-placeholder.JPG";
 
   // Map donationPrices from Sanity → heroAmounts expected by ProjectsPageHeader
@@ -285,8 +406,44 @@ export default async function EcosystemPage({
   const pageTitle = stage.stageName || stage.title;
   const pageSubtitle = stage.headerDescription || stage.cardDescription || "";
 
+  const stageSlug = slugParts[0];
+  const seoTitle = stage.seo?.metaTitle || `${pageTitle} — Stage ${stage.stageNumber || ""} | Human Relief Mission`;
+  const seoDesc = stage.seo?.metaDescription || pageSubtitle || undefined;
+  const seoOgImage = stage.seo?.ogImage
+    ? urlFor(stage.seo.ogImage).url()
+    : heroImageSrc !== "/img-placeholder.JPG"
+    ? heroImageSrc
+    : undefined;
+  const stageCanonicalUrl = stage.seo?.canonicalUrl || `${BASE_URL}/ecosystem/${stageSlug}`;
+
+  const schemas: object[] = [
+    buildWebPage({
+      title: seoTitle,
+      description: seoDesc,
+      url: stageCanonicalUrl,
+      imageUrl: seoOgImage,
+    }),
+    buildBreadcrumb([
+      { name: "Home", url: BASE_URL },
+      { name: "Ecosystem", url: `${BASE_URL}/ecosystem` },
+      { name: pageTitle, url: stageCanonicalUrl },
+    ]),
+  ];
+
+  if (stage.faqs?.length) {
+    schemas.push(
+      buildFAQ(
+        stage.faqs.map((f: { question: string; answer: string }) => ({
+          question: f.question,
+          answer: f.answer,
+        }))
+      )
+    );
+  }
+
   return (
     <>
+      <JsonLd data={schemas} />
       {/* Page Header with donation widget */}
       <ProjectsPageHeader
         title={pageTitle}

@@ -40,8 +40,12 @@ export default async function Hero() {
   const subtext = slide.subtext;
 
   // ── Image URLs ─────────────────────────────────────────────────────────────
-  const desktopImageUrl = slide.image?.asset ? urlFor(slide.image.asset).url() : null;
-  const mobileImageUrl = slide.mobileImage ? urlFor(slide.mobileImage).url() : null;
+  const desktopImageUrl = slide.image?.asset
+    ? urlFor(slide.image.asset).width(1600).height(1000).fit("crop").auto("format").quality(80).url()
+    : null;
+  const mobileImageUrl = slide.mobileImage
+    ? urlFor(slide.mobileImage).width(800).height(1200).fit("crop").auto("format").quality(80).url()
+    : null;
 
   // ── Video embed URLs ───────────────────────────────────────────────────────
   const desktopVideoId = getYouTubeVideoId(slide.desktopVideoUrl);

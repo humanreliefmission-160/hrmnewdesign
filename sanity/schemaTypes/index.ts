@@ -30,6 +30,7 @@ import { ecosystemQuoteCard } from './objects/ecosystemQuoteCard'
 import { faqCard } from './objects/faqCard'
 import { navItem } from './objects/navItem'
 import { navSubItem } from './objects/navSubItem'
+import { seo } from './objects/seo'
 import { SchemaTypeDefinition } from 'sanity'
 import { navigation } from './documents/navigation'
 import { headerNavigation } from './documents/headerNavigation'
@@ -55,6 +56,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     impactTicker,
 
     // Objects
+    seo,
     imageWithAlt,
     heroAmount,
     stat,
