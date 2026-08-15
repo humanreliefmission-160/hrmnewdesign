@@ -28,16 +28,20 @@ interface Props {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-/** Return a Sanity CDN URL or fall back to the placeholder. */
-function resolveImage(image: ImpactCard["image"]): string {
+/** Return Sanity CDN URLs at 1x and 2x, or fall back to the placeholder. */
+function resolveImage(image: ImpactCard["image"]): { src: string; srcSet: string } {
+  const placeholder = "/img-placeholder.JPG";
   if (image?.asset) {
     try {
-      return urlFor(image.asset).width(640).height(704).fit("crop").auto("format").quality(80).url();
+      const base = urlFor(image.asset).fit("crop").auto("format").quality(80);
+      const src = base.width(480).height(528).url();
+      const src2x = base.width(960).height(1056).url();
+      return { src, srcSet: `${src} 1x, ${src2x} 2x` };
     } catch {
       // fall through to placeholder
     }
   }
-  return "/img-placeholder.JPG";
+  return { src: placeholder, srcSet: placeholder };
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -96,7 +100,7 @@ export default function LastMonthImpact({ data }: Props) {
         {cards.length > 0 ? (
           <div className={`grid ${colClass} gap-3`}>
             {cards.map((card, index) => {
-              const imgSrc = resolveImage(card.image);
+              const { src: imgSrc, srcSet: imgSrcSet } = resolveImage(card.image);
 
               return (
                 <div
@@ -123,7 +127,11 @@ export default function LastMonthImpact({ data }: Props) {
                     return (
                       <img
                         src={imgSrc}
+                        srcSet={imgSrcSet}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         alt={`${card.impactNumber} ${card.secondaryText}`}
+                        loading="lazy"
+                        decoding="async"
                         className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-110"
                       />
                     );

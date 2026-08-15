@@ -33,8 +33,15 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
           {projects && projects.length > 0 ? (
             projects.map((project) => {
-              const headerImageUrl = project.headerImage?.asset
-                ? urlFor(project.headerImage.asset).width(640).height(480).fit("crop").auto("format").quality(80).url()
+              const base = project.headerImage?.asset
+                ? urlFor(project.headerImage.asset).fit("crop").auto("format").quality(80)
+                : null;
+
+              const headerImageUrl = base
+                ? base.width(364).height(273).url()
+                : "/img-placeholder.JPG";
+              const headerImageUrl2x = base
+                ? base.width(728).height(546).url()
                 : "/img-placeholder.JPG";
 
               return (
@@ -47,6 +54,8 @@ export default function ProjectsGrid({ projects }: ProjectsGridProps) {
                       <Link href={`/projects/${project.slug}`}>
                         <img
                           src={headerImageUrl}
+                          srcSet={`${headerImageUrl} 1x, ${headerImageUrl2x} 2x`}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                           alt={project.name}
                           loading="lazy"
                           decoding="async"

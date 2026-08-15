@@ -33,7 +33,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https://cdn.sanity.io https://www.google-analytics.com https://www.googletagmanager.com",
-              "connect-src 'self' https://api.stripe.com https://hooks.stripe.com https://*.supabase.co https://4gub4zfk.api.sanity.io https://www.google-analytics.com wss://*.supabase.co",
+              "connect-src 'self' https://api.stripe.com https://hooks.stripe.com https://*.supabase.co https://4gub4zfk.api.sanity.io https://www.google-analytics.com https://stats.g.doubleclick.net https://www.google.com https://www.googletagmanager.com wss://*.supabase.co",
               "frame-src https://js.stripe.com https://hooks.stripe.com",
               "worker-src 'self' blob:",
             ].join('; '),
