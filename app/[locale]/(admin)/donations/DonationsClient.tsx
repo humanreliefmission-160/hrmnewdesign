@@ -50,6 +50,17 @@ function formatAddress(d: DonationRow) {
     .join(", ");
 }
 
+function formatPaymentId(paymentId: string | null) {
+  if (!paymentId) return "—";
+  return `#${paymentId} - Stripe`;
+}
+
+function formatSubscriptionId(subscriptionId: string | null) {
+  if (!subscriptionId) return "—";
+  const suffix = subscriptionId.slice(-4).toUpperCase();
+  return `#${subscriptionId}-S${suffix} - Stripe`;
+}
+
 export default function DonationsClient({ donations }: { donations: DonationRow[] }) {
   const [search, setSearch] = useState("");
   const [projectFilter, setProjectFilter] = useState("All Projects");
@@ -77,7 +88,9 @@ export default function DonationsClient({ donations }: { donations: DonationRow[
         search === "" ||
         d.name.toLowerCase().includes(search.toLowerCase()) ||
         d.email.toLowerCase().includes(search.toLowerCase()) ||
-        d.reference.toLowerCase().includes(search.toLowerCase());
+        d.reference.toLowerCase().includes(search.toLowerCase()) ||
+        (d.paymentId && d.paymentId.toLowerCase().includes(search.toLowerCase())) ||
+        (d.subscriptionId && d.subscriptionId.toLowerCase().includes(search.toLowerCase()));
       const matchProject =
         projectFilter === "All Projects" || d.projectName === projectFilter;
       const matchType =
@@ -104,6 +117,8 @@ export default function DonationsClient({ donations }: { donations: DonationRow[
       "Gift Aid",
       "Country",
       "Address",
+      "Payment ID",
+      "Subscription ID",
       "Payment Method",
       "Date Donated",
     ];
@@ -120,6 +135,8 @@ export default function DonationsClient({ donations }: { donations: DonationRow[
       d.giftAid ? "Yes" : "No",
       d.country,
       formatAddress(d),
+      d.paymentId ? formatPaymentId(d.paymentId) : "",
+      d.subscriptionId ? formatSubscriptionId(d.subscriptionId) : "",
       formatPaymentMethod(d.paymentMethod),
       formatDate(d.createdAt),
     ]);
@@ -147,7 +164,9 @@ export default function DonationsClient({ donations }: { donations: DonationRow[
     "Gift Aid",
     "Country",
     "Address",
-    "Payment",
+    "Payment ID",
+    "Subscription ID",
+    "Payment Method",
     "Date",
   ];
 
@@ -317,7 +336,9 @@ export default function DonationsClient({ donations }: { donations: DonationRow[
                   )],
                   ["Country", donation.country || <span className="text-brand-black/40">—</span>],
                   ["Address", <span className="text-xs font-semibold">{formatAddress(donation) || <span className="text-brand-black/40 font-normal">—</span>}</span>],
-                  ["Payment", <span className="font-semibold">{formatPaymentMethod(donation.paymentMethod)}</span>],
+                  ["Payment ID", <span className="text-xs font-mono font-semibold">{formatPaymentId(donation.paymentId)}</span>],
+                  ["Subscription ID", <span className="text-xs font-mono font-semibold text-purple">{formatSubscriptionId(donation.subscriptionId)}</span>],
+                  ["Payment Method", <span className="font-semibold">{formatPaymentMethod(donation.paymentMethod)}</span>],
                   ["Date Donated", <span className="text-xs text-brand-black/70">{formatDate(donation.createdAt)}</span>],
                 ].map(([label, value]) => (
                   <div key={label as string} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
@@ -441,6 +462,16 @@ export default function DonationsClient({ donations }: { donations: DonationRow[
                         <span className="font-semibold text-xs">
                           {formatAddress(donation) || <span className="text-brand-black/40 font-normal">—</span>}
                         </span>
+                      </td>
+
+                      {/* Payment ID */}
+                      <td className="px-4 py-3 whitespace-nowrap text-xs font-mono text-brand-black">
+                        {formatPaymentId(donation.paymentId)}
+                      </td>
+
+                      {/* Subscription ID */}
+                      <td className="px-4 py-3 whitespace-nowrap text-xs font-mono text-purple font-semibold">
+                        {formatSubscriptionId(donation.subscriptionId)}
                       </td>
 
                       {/* Payment Method */}

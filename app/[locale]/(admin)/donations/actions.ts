@@ -26,6 +26,8 @@ export type DonationRow = {
   projectItemTitle: string | null;
   // Payment
   paymentMethod: string | null;
+  paymentId: string | null;
+  subscriptionId: string | null;
 };
 
 export async function getDonations(): Promise<DonationRow[]> {
@@ -61,7 +63,7 @@ export async function getDonations(): Promise<DonationRow[]> {
           name
         )
       ),
-      payment ( payment_method, frequency )
+      payment ( payment_method, frequency, payment_id, subscription_id )
     `)
     .order("created_at", { ascending: false });
 
@@ -70,7 +72,7 @@ export async function getDonations(): Promise<DonationRow[]> {
     return [];
   }
 
-  return (data ?? []).map((d) => {
+  return (data ?? []).map((d: any) => {
     const donor = Array.isArray(d.donor) ? d.donor[0] : d.donor;
     const addresses = donor?.donor_address ?? [];
     // Prefer the primary address, fall back to the first one
@@ -111,6 +113,8 @@ export async function getDonations(): Promise<DonationRow[]> {
       projectName: project?.name ?? null,
       projectItemTitle: projectItem?.title ?? null,
       paymentMethod: payment?.payment_method ?? null,
+      paymentId: payment?.payment_id ?? null,
+      subscriptionId: payment?.subscription_id ?? null,
     };
   });
 }

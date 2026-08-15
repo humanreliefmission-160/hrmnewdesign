@@ -22,6 +22,8 @@ export async function POST(request: Request) {
       donationType,
       payMethod,
       reference,
+      paymentId,
+      subscriptionId,
       newsletterOptIn,
       items,
     } = body;
@@ -281,7 +283,9 @@ export async function POST(request: Request) {
           payment_method: normalizedPayMethod,
           status: 'completed',
           paid_at: new Date().toISOString(),
-        });
+          payment_id: paymentId || null,
+          subscription_id: subscriptionId || null,
+        } as any);
 
       if (paymentInsertErr) {
         console.error('Error inserting payment:', paymentInsertErr);

@@ -25,6 +25,8 @@ export async function POST(request: Request) {
       country,
       interval,
       durationMonths,
+      dailyEndDate,
+      weeklyDurationWeeks,
       metadata,
     } = await request.json();
 
@@ -81,11 +83,20 @@ export async function POST(request: Request) {
     // 3. Define Stripe billing interval
     const stripeInterval = interval || 'month';
 
-    // 4. Calculate cancel_at if durationMonths is provided
+    // 4. Calculate cancel_at for subscription duration
     let cancelAt: number | undefined = undefined;
     if (stripeInterval === 'month' && durationMonths && durationMonths >= 1 && durationMonths <= 12) {
       const cancelDate = new Date();
       cancelDate.setMonth(cancelDate.getMonth() + durationMonths);
+      cancelDate.setHours(cancelDate.getHours() + 1);
+      cancelAt = Math.floor(cancelDate.getTime() / 1000);
+    } else if (stripeInterval === 'day' && dailyEndDate) {
+      const cancelDate = new Date(dailyEndDate);
+      cancelDate.setHours(23, 59, 59);
+      cancelAt = Math.floor(cancelDate.getTime() / 1000);
+    } else if (stripeInterval === 'week' && weeklyDurationWeeks && weeklyDurationWeeks >= 1 && weeklyDurationWeeks <= 52) {
+      const cancelDate = new Date();
+      cancelDate.setDate(cancelDate.getDate() + (weeklyDurationWeeks * 7));
       cancelDate.setHours(cancelDate.getHours() + 1);
       cancelAt = Math.floor(cancelDate.getTime() / 1000);
     }
@@ -132,6 +143,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       subscriptionId: subscription.id,
+      paymentIntentId: paymentIntent.id,
       clientSecret: paymentIntent.client_secret,
       status: subscription.status,
     });

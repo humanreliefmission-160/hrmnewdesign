@@ -1,4 +1,5 @@
 import DonationReceipt from '@/app/[locale]/(website)/components/emails/DonationReceipt';
+import DonationNotification from '@/app/[locale]/(website)/components/emails/DonationNotification';
 import { Resend } from 'resend';
 
 export async function POST(request: Request) {
@@ -16,7 +17,7 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    // No body or malformed — fall through with empty body (still sends a basic receipt)
+    // No body or malformed
   }
 
   const {
@@ -30,6 +31,9 @@ export async function POST(request: Request) {
     type = 'oneoff',
     lineItems = [],
     reference = '',
+    paymentId = null,
+    subscriptionId = null,
+    last4 = null,
     date,
     bankDetails = null,
   } = body;
@@ -39,20 +43,22 @@ export async function POST(request: Request) {
   }
 
   const resend = new Resend(apiKey);
-
-  const donorName = [firstName, lastName].filter(Boolean).join(' ') || 'Donor';
   const isOffline = bankDetails !== null;
 
-  const subject = isOffline
+  const donorSubject = isOffline
     ? `Donation Intent Confirmed — ${reference} | Human Relief Mission`
     : `Donation Receipt — ${reference} | Human Relief Mission`;
 
+  const orgSubject = `🎉 New Donation: ${reference} from ${firstName} ${lastName}`;
+  const orgEmail = process.env.CONTACT_TO_EMAIL || 'info@humanreliefmission.com';
+
   try {
-    const { data, error } = await resend.emails.send({
+    // 1. Send receipt to donor
+    const { data: donorResult, error: donorErr } = await resend.emails.send({
       from: 'Human Relief Mission <donations@notifications.humanreliefmission.com>',
       to: email,
       bcc: 'donate@humanreliefmission.com',
-      subject,
+      subject: donorSubject,
       replyTo: 'info@humanreliefmission.com',
       react: DonationReceipt({
         firstName,
@@ -70,17 +76,44 @@ export async function POST(request: Request) {
       }),
     });
 
-    if (error) {
-      console.error('[emails/route] Resend error object:', JSON.stringify(error, null, 2));
-      console.error('[emails/route] Resend error name:', error.name);
-      console.error('[emails/route] Resend error message:', error.message);
-      return Response.json({ error: error.message }, { status: 502 });
+    if (donorErr) {
+      console.error('[emails/route] Resend error sending to donor:', donorErr);
+      return Response.json({ error: donorErr.message }, { status: 502 });
     }
 
-    return Response.json({ success: true, id: data?.id });
+    // 2. Send notification to organization team (non-blocking failure)
+    try {
+      await resend.emails.send({
+        from: 'Human Relief Mission <donations@notifications.humanreliefmission.com>',
+        to: orgEmail,
+        subject: orgSubject,
+        replyTo: `${firstName} ${lastName} <${email}>`,
+        react: DonationNotification({
+          firstName,
+          lastName,
+          email,
+          total,
+          giftAidAmount,
+          totalWithGiftAid,
+          giftAid,
+          type,
+          lineItems,
+          reference,
+          paymentId,
+          subscriptionId,
+          last4,
+          date,
+          bankDetails,
+        }),
+      });
+    } catch (orgErr) {
+      console.error('[emails/route] Error sending org notification:', orgErr);
+    }
 
-  } catch (err) {
+    return Response.json({ success: true, id: donorResult?.id });
+
+  } catch (err: any) {
     console.error('[emails/route]', err);
-    return Response.json({ error: 'Failed to send email' }, { status: 500 });
+    return Response.json({ error: err?.message || 'Failed to send email' }, { status: 500 });
   }
 }

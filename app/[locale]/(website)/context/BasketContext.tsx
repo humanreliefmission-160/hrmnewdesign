@@ -13,6 +13,10 @@ export interface BasketItem {
   intention: string;
   isZakat?: boolean;
   frequency?: string;
+  dailyStartDate?: string | null;
+  dailyEndDate?: string | null;
+  weeklyDurationWeeks?: number | null;
+  durationMonths?: number | null;
 }
 
 interface BasketContextValue {

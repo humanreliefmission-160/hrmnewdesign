@@ -29,7 +29,15 @@ interface DonationStepPaymentProps {
   payMethod: string;
   setPayMethod: (method: string) => void;
   isProcessing: boolean;
-  completeDonation: (reference: string, success: boolean, bankDetails?: Record<string, string>, stripeFeeAmount?: number, adminFeeAmount?: number) => void;
+  completeDonation: (
+    reference: string,
+    success: boolean,
+    bankDetails?: Record<string, string>,
+    stripeFeeAmount?: number,
+    adminFeeAmount?: number,
+    paymentId?: string,
+    subscriptionId?: string
+  ) => void;
   goStep: (step: number) => void;
   firstName: string;
   lastName: string;
@@ -495,6 +503,8 @@ function DonationStepPaymentForm({
             interval,
             durationMonths:
               donationState.type === 'monthly' ? donationState.durationMonths : null,
+            dailyEndDate: donationState.dailyEndDate,
+            weeklyDurationWeeks: donationState.weeklyDurationWeeks,
             metadata,
           }),
         });
@@ -525,7 +535,15 @@ function DonationStepPaymentForm({
           }
         }
         setLocalProcessing(false);
-        completeDonation(donationReference, true, undefined, stripeFeeAmt, adminFeeAmt);
+        completeDonation(
+          donationReference,
+          true,
+          undefined,
+          stripeFeeAmt,
+          adminFeeAmt,
+          data.paymentIntentId,
+          data.subscriptionId
+        );
       } else {
         const response = await fetch('/api/stripe/create-payment-intent', {
           method: 'POST',
@@ -565,7 +583,15 @@ function DonationStepPaymentForm({
         }
         if (paymentIntent && paymentIntent.status === 'succeeded') {
           setLocalProcessing(false);
-          completeDonation(donationReference, true, undefined, stripeFeeAmt, adminFeeAmt);
+          completeDonation(
+            donationReference,
+            true,
+            undefined,
+            stripeFeeAmt,
+            adminFeeAmt,
+            paymentIntent.id || data.paymentIntentId,
+            undefined
+          );
         } else {
           setErrorMessage('Payment failed to authorize.');
           setLocalProcessing(false);
@@ -700,11 +726,52 @@ function DonationStepPaymentForm({
         )}
         <hr className="text-brand-grey/50 mt-5" />
         <div className="border-t border-brand-lgrey pt-3 flex justify-between items-end">
-          <span className="font-bold text-lg text-brand-black">Total to pay</span>
+          <span className="font-bold text-lg text-brand-black">
+            {isRecurringFrequency ? 'Total per payment' : 'Total to pay'}
+          </span>
           <span className="font-bold text-2xl text-brand-black">
             £{formatMoney(amountToPay)}
           </span>
         </div>
+
+        {isRecurringFrequency && (
+          <div className="mt-4 pt-3 border-t border-brand-lgrey/60 flex items-center gap-2.5 text-purple font-bold text-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>
+              {(() => {
+                if (donationState.type === 'daily') {
+                  if (!donationState.dailyStartDate || !donationState.dailyEndDate) {
+                    return `Amount taken every day: £${formatMoney(amountToPay)} / day`;
+                  }
+                  const s = new Date(donationState.dailyStartDate);
+                  const e = new Date(donationState.dailyEndDate);
+                  const days = Math.max(1, Math.floor((e.getTime() - s.getTime()) / (1000 * 60 * 60 * 24)) + 1);
+                  return `Amount taken every day: £${formatMoney(amountToPay)} for ${days} day${days > 1 ? 's' : ''} (Total: £${formatMoney(amountToPay * days)})`;
+                }
+                if (donationState.type === 'weekly') {
+                  const weeks = donationState.weeklyDurationWeeks || 1;
+                  return `Amount taken every week: £${formatMoney(amountToPay)} for ${weeks} week${weeks > 1 ? 's' : ''} (Total: £${formatMoney(amountToPay * weeks)})`;
+                }
+                if (donationState.type === 'friday') {
+                  const weeks = donationState.weeklyDurationWeeks || 1;
+                  return `Amount taken every Friday: £${formatMoney(amountToPay)} for ${weeks} Friday${weeks > 1 ? 's' : ''} (Total: £${formatMoney(amountToPay * weeks)})`;
+                }
+                if (donationState.type === 'monthly') {
+                  if (donationState.durationMonths) {
+                    return `Amount taken every month: £${formatMoney(amountToPay)} for ${donationState.durationMonths} month${donationState.durationMonths > 1 ? 's' : ''} (Total: £${formatMoney(amountToPay * donationState.durationMonths)})`;
+                  }
+                  return `Amount taken every month: £${formatMoney(amountToPay)} (Ongoing)`;
+                }
+                return null;
+              })()}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* ── Google Pay / Apple Pay ── */}
