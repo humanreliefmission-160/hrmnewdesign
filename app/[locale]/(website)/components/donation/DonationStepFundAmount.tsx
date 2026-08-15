@@ -271,27 +271,69 @@ export default function DonationStepFundAmount({
           )}
 
           {hasValidAmount && (
-            <div className="mb-4 bg-purple/5 border border-purple/20 p-3 rounded-sm flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-purple shrink-0"
-                aria-hidden
-              >
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 16v-4" />
-                <path d="M12 8h.01" />
-              </svg>
-              <p className="text-purple font-medium text-sm">
-                {getImpactMessage(donationState.amount)}
-              </p>
+            <div className="mb-4 space-y-2">
+              <div className="bg-purple/5 border border-purple/20 p-3 rounded-sm flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-purple shrink-0"
+                  aria-hidden
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 16v-4" />
+                  <path d="M12 8h.01" />
+                </svg>
+                <p className="text-purple font-medium text-sm">
+                  {getImpactMessage(donationState.amount)}
+                </p>
+              </div>
+
+              {donationState.type !== 'oneoff' && (
+                <div className="bg-purple-faint border border-purple/30 p-3.5 rounded-sm flex items-center gap-2 text-purple font-bold text-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <span>
+                    {(() => {
+                      const amount = donationState.amount || 0;
+                      if (donationState.type === 'daily') {
+                        if (!donationState.dailyStartDate || !donationState.dailyEndDate) {
+                          return `Amount taken every day: £${amount.toFixed(2)} / day`;
+                        }
+                        const s = new Date(donationState.dailyStartDate);
+                        const e = new Date(donationState.dailyEndDate);
+                        const days = Math.max(1, Math.floor((e.getTime() - s.getTime()) / (1000 * 60 * 60 * 24)) + 1);
+                        return `Amount taken every day: £${amount.toFixed(2)} for ${days} day${days > 1 ? 's' : ''} (Total: £${(amount * days).toFixed(2)})`;
+                      }
+                      if (donationState.type === 'weekly') {
+                        const weeks = donationState.weeklyDurationWeeks || 1;
+                        return `Amount taken every week: £${amount.toFixed(2)} for ${weeks} week${weeks > 1 ? 's' : ''} (Total: £${(amount * weeks).toFixed(2)})`;
+                      }
+                      if (donationState.type === 'friday') {
+                        const weeks = donationState.weeklyDurationWeeks || 1;
+                        return `Amount taken every Friday: £${amount.toFixed(2)} for ${weeks} Friday${weeks > 1 ? 's' : ''} (Total: £${(amount * weeks).toFixed(2)})`;
+                      }
+                      if (donationState.type === 'monthly') {
+                        if (donationState.durationMonths) {
+                          return `Amount taken every month: £${amount.toFixed(2)} for ${donationState.durationMonths} month${donationState.durationMonths > 1 ? 's' : ''} (Total: £${(amount * donationState.durationMonths).toFixed(2)})`;
+                        }
+                        return `Amount taken every month: £${amount.toFixed(2)} (Ongoing)`;
+                      }
+                      return null;
+                    })()}
+                  </span>
+                </div>
+              )}
             </div>
           )}
         </div>

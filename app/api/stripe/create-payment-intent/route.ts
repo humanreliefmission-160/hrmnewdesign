@@ -66,7 +66,10 @@ export async function POST(request: Request) {
       metadata: metadata || {},
     });
 
-    return NextResponse.json({ clientSecret: paymentIntent.client_secret });
+    return NextResponse.json({
+      clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id,
+    });
   } catch (error: any) {
     console.error('Stripe error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -187,6 +187,13 @@ export default function DonateClient({
   const setGiftAid = (giftAid: boolean) =>
     setDonationState((prev) => ({ ...prev, giftAid }));
 
+  const setDailyDates = (start: string, end: string) =>
+    setDonationState((prev) => ({ ...prev, dailyStartDate: start, dailyEndDate: end }));
+  const setWeeklyDuration = (weeks: number | null) =>
+    setDonationState((prev) => ({ ...prev, weeklyDurationWeeks: weeks }));
+  const setMonthlyMode = (mode: 'quantity' | 'full_year') =>
+    setDonationState((prev) => ({ ...prev, monthlyMode: mode }));
+
   const goStep = (step: number) => {
     setCurrentStep(step);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -197,7 +204,9 @@ export default function DonateClient({
     success: boolean,
     bankDetails?: Record<string, string>,
     stripeFeeAmount?: number,
-    adminFeeAmount?: number
+    adminFeeAmount?: number,
+    paymentId?: string,
+    subscriptionId?: string
   ) => {
     setIsProcessing(true);
 
@@ -246,6 +255,8 @@ export default function DonateClient({
       type: donationState.type,
       lineItems,
       reference: canonicalReference,
+      paymentId: paymentId || null,
+      subscriptionId: subscriptionId || null,
       date: new Date().toISOString(),
       success,
       bankDetails: bankDetails ?? null,
@@ -280,6 +291,8 @@ export default function DonateClient({
             donationType: donationState.type,
             payMethod,
             reference: canonicalReference,
+            paymentId: paymentId || null,
+            subscriptionId: subscriptionId || null,
             newsletterOptIn,
             items: itemCount > 0 ? items.map(item => ({
               projectSlug: item.projectSlug || null,
@@ -336,13 +349,17 @@ export default function DonateClient({
         display={false}
       />
 
-      <div className="max-w-[800px] mx-auto px-4 md:px-8 my-15 sm:my-20">
+      <div className="max-w-200 mx-auto px-4 md:px-8 my-15 sm:my-20">
         <DonationProgress currentStep={currentStep} />
 
         <DonationStepType
           currentStep={currentStep}
           donationState={donationState}
           setDonationType={setDonationType}
+          setDailyDates={setDailyDates}
+          setWeeklyDuration={setWeeklyDuration}
+          setMonthlyMode={setMonthlyMode}
+          selectDurationMonths={selectDurationMonths}
           goStep={goStep}
         />
 

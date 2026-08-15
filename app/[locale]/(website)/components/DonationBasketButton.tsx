@@ -58,7 +58,7 @@ export default function DonationBasketButton() {
 
           <span
             id="basket-count-badge"
-            className="absolute top-1.75 left-1.75 min-w-[18px] h-[18px] px-[4px] text-brand-black text-[12px] font-bold rounded-full flex items-center justify-center leading-none"
+            className="absolute top-1.75 left-1.75 min-w-4.5 h-4.5 px-1 text-brand-black text-[12px] font-bold rounded-full flex items-center justify-center leading-none"
           >
             {itemCount > 99 ? "99+" : itemCount}
           </span>
@@ -79,7 +79,7 @@ export default function DonationBasketButton() {
         role="dialog"
         aria-modal="true"
         aria-label="Donation basket"
-        className={`fixed top-0 right-0 h-full w-full max-w-[420px] bg-white z-1200 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${open ? "translate-x-0" : "translate-x-full"
+        className={`fixed top-0 right-0 h-full w-full max-w-105 bg-white z-1200 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${open ? "translate-x-0" : "translate-x-full"
           }`}
       >
         {/* Panel header */}

@@ -66,6 +66,7 @@ export default function Navbar({ navItems = [] }: NavbarProps) {
               className="drop-shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
               width={220}
               height={120}
+              priority
             />
           </Link>
 

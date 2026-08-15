@@ -20,6 +20,33 @@ export default function BasketItemCard({
 }: BasketItemCardProps) {
   const subtitle = getBasketLineSubtitle(item);
 
+  const scheduleText = (() => {
+    if (!item.frequency || item.frequency === 'oneoff') return null;
+    const amount = item.amount;
+    if (item.frequency === 'daily') {
+      if (!item.dailyStartDate || !item.dailyEndDate) return `£${amount.toFixed(2)} / day`;
+      const s = new Date(item.dailyStartDate);
+      const e = new Date(item.dailyEndDate);
+      const days = Math.max(1, Math.floor((e.getTime() - s.getTime()) / (1000 * 60 * 60 * 24)) + 1);
+      return `£${amount.toFixed(2)}/day for ${days} days (Total: £${(amount * days).toFixed(2)})`;
+    }
+    if (item.frequency === 'weekly') {
+      const weeks = item.weeklyDurationWeeks || 1;
+      return `£${amount.toFixed(2)}/week for ${weeks} weeks (Total: £${(amount * weeks).toFixed(2)})`;
+    }
+    if (item.frequency === 'friday') {
+      const weeks = item.weeklyDurationWeeks || 1;
+      return `£${amount.toFixed(2)}/Friday for ${weeks} Fridays (Total: £${(amount * weeks).toFixed(2)})`;
+    }
+    if (item.frequency === 'monthly') {
+      if (item.durationMonths) {
+        return `£${amount.toFixed(2)}/month for ${item.durationMonths} months (Total: £${(amount * item.durationMonths).toFixed(2)})`;
+      }
+      return `£${amount.toFixed(2)}/month (Ongoing)`;
+    }
+    return null;
+  })();
+
   return (
     <div
       id={`basket-item-${item.id}`}
@@ -70,6 +97,12 @@ export default function BasketItemCard({
           </span>
         )}
       </div>
+
+      {scheduleText && (
+        <p className="text-xs text-purple font-semibold mt-0.5">
+          📅 {scheduleText}
+        </p>
+      )}
     </div>
   );
 }
