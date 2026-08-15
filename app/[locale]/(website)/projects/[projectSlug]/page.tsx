@@ -190,7 +190,7 @@ export default async function ProjectItem({
   }
 
   const headerImageUrl = project.headerImage
-    ? urlFor(project.headerImage).width(1400).height(933).fit("crop").auto("format").quality(80).url()
+    ? urlFor(project.headerImage).width(1440).height(900).fit("crop").auto("format").quality(85).url()
     : "/img-placeholder.JPG";
 
   const seoTitle = project.seo?.metaTitle || `${project.name} | Human Relief Mission`;

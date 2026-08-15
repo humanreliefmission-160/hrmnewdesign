@@ -139,7 +139,7 @@ export default async function Footer() {
             <Link href="https://buildingblocks.digital" className="hover:underline cursor-pointer">Building Blocks</Link>
           </div>
         </div>
-        <Image src="/donation-policy-icon.svg" alt="Helping Box" width={75} height={75} loading="eager" />
+        <Image src="/donation-policy-icon.svg" alt="Helping Box" width={75} height={75} loading="lazy" />
       </div>
     </footer>
   );

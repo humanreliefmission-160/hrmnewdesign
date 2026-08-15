@@ -125,11 +125,14 @@ export default async function ProjectsPage() {
                     let imageUrl = "/img-placeholder.JPG";
 
                     if (item.cardImage && item.cardImage.asset && item.cardImage.asset._ref) {
-                      imageUrl = urlFor(item.cardImage.asset).width(600).height(450).fit("crop").auto("format").quality(80).url();
+                      const base = urlFor(item.cardImage.asset).fit("crop").auto("format").quality(80);
+                      imageUrl = base.width(400).height(300).url();
                     } else if (item.images?.[0] && item.images[0].asset && item.images[0].asset._ref) {
-                      imageUrl = urlFor(item.images[0].asset).width(600).height(450).fit("crop").auto("format").quality(80).url();
+                      const base = urlFor(item.images[0].asset).fit("crop").auto("format").quality(80);
+                      imageUrl = base.width(400).height(300).url();
                     } else if (project.headerImage && project.headerImage.asset && project.headerImage.asset._ref) {
-                      imageUrl = urlFor(project.headerImage).width(600).height(450).fit("crop").auto("format").quality(80).url();
+                      const base = urlFor(project.headerImage).fit("crop").auto("format").quality(80);
+                      imageUrl = base.width(400).height(300).url();
                     }
 
                     const itemUrl = `/projects/${project.slug}/${item.slug}`;
@@ -145,6 +148,7 @@ export default async function ProjectsPage() {
                               src={imageUrl}
                               alt={item.itemTitle}
                               loading="lazy"
+                              decoding="async"
                               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                             />
                             {/* <span className="absolute bottom-0 left-0 right-0 bg-purple text-brand-white font-bold text-[0.8rem] tracking-widest uppercase py-2.5 px-6">

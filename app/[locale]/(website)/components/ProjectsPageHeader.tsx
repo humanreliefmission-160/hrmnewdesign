@@ -238,9 +238,17 @@ export default function ProjectsPageHeader({
               style={{ border: 'none', pointerEvents: 'none' }}
             />
           ) : (
-            <img
+          <img
               src={image}
+              srcSet={
+                image && image.startsWith("https://cdn.sanity.io")
+                  ? undefined
+                  : undefined
+              }
               alt="Human Relief Mission Project header"
+              fetchPriority="high"
+              loading="eager"
+              decoding="async"
               className="absolute inset-0 w-full h-full object-cover object-center lg:p-0"
             />
           )}
