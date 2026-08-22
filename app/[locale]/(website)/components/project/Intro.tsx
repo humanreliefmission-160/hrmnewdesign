@@ -25,7 +25,7 @@ export default function Intro({ data }: { data?: IntroData }) {
 
   return (
     <section className="pt-16 pb-0 sm:py-16 px-6 md:px-12 lg:px-24">
-      <div className="max-w-5xl mx-auto text-center">
+      <div className="max-w-285 mx-auto text-center">
         {data.sectionTag && (
           <span className="inline-block bg-purple/10 text-purple text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-sm mb-4">
             {data.sectionTag}
@@ -37,12 +37,12 @@ export default function Intro({ data }: { data?: IntroData }) {
           </h2>
         )}
         {data.bodyText && (
-          <div className="text-brand-black text-base leading-relaxed max-w-2xl mx-auto space-y-4">
+          <div className="text-brand-black text-base leading-relaxed mx-auto space-y-4">
             <PortableText value={data.bodyText} />
           </div>
         )}
         {data.stats && (
-          <div className="mt-10 mb-20 flex flex-col sm:flex-row gap-6 align-middle justify-center">
+          <div className="mt-10 mb-20 max-w-285 flex flex-col sm:flex-row gap-6 align-middle align-center">
             {data.stats.map((stat, idx) => (
               <div key={idx} className="bg-purple/5 rounded-sm py-6 px-4 border border-purple-100 flex flex-col items-center justify-center">
                 <p className="text-2xl font-bold text-purple sm:text-3xl">{stat.title}</p>

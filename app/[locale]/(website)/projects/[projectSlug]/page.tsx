@@ -87,7 +87,15 @@ const PROJECT_QUERY = `
         muteVideo
       }
     },
-    impactSection,
+    impactSection {
+      title,
+      bodyText,
+      impactCards[] {
+        _key,
+        stat,
+        bodyText
+      }
+    },
 
     ecosystemSection {
       title,
