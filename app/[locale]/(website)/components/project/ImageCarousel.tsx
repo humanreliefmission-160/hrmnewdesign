@@ -1,21 +1,9 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { createImageUrlBuilder } from "@sanity/image-url";
-import { client } from "@/sanity/lib/client"; // adjust to your Sanity client path
+import { urlFor } from "@/sanity/lib/image";
 import YellowCTA from "../YellowCTA";
 import { getYouTubeVideoId, getYouTubeEmbedUrl } from "@/app/[locale]/lib/youtubeHelpers";
-
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  Sanity image URL builder
-//  urlFor(source) returns a builder you can call .url() on to get a string.
-// ─────────────────────────────────────────────────────────────────────────────
-const builder = createImageUrlBuilder(client);
-
-function urlFor(source: SanityImageSource) {
-	return builder.image(source);
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  Types
@@ -122,7 +110,7 @@ export default function ProjectGalleryStrip({ images, projectSlug }: Props) {
 			{/* ── Heading ── */}
 			<div className="flex items-center justify-center px-8">
 				<h2 className="text-brand-white text-3xl md:text-4xl font-bold text-center">
-					The impact of this project
+					The Impact of This Project
 				</h2>
 			</div>
 
@@ -182,14 +170,16 @@ export default function ProjectGalleryStrip({ images, projectSlug }: Props) {
 										/>
 									);
 								}
+								return (
 									<img
 										src={urlFor(slide).width(SLIDE_WIDTH * 2).height(SLIDE_HEIGHT * 2).fit("crop").auto("format").quality(80).url()}
-										alt={slide.alt}
+										alt={slide.alt || "Project gallery image"}
 										loading="lazy"
 										decoding="async"
 										className="w-full h-full object-cover border border-brand-white/50"
 										draggable={false}
 									/>
+								);
 							})()}
 						</div>
 					))}

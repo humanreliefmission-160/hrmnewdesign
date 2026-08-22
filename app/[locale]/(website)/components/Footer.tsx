@@ -136,7 +136,7 @@ export default async function Footer() {
           <p className="text-[0.8rem] text-brand-white opacity-80">Charity No. 1160380</p>
           <div className="max-w-285 mx-auto pt-2 text-[0.6rem] text-brand-white/40 italic">
             Developed by {""}
-            <Link href="https://buildingblocks.digital" className="hover:underline cursor-pointer">Building Blocks</Link>
+            <Link href="https://buildingblocks.digital" className="text-white underline cursor-pointer transition-colors duration-200">Building Blocks</Link>
           </div>
         </div>
         <Image src="/donation-policy-icon.svg" alt="Helping Box" width={75} height={75} loading="lazy" />

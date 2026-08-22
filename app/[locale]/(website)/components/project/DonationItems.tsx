@@ -383,7 +383,7 @@ export default function DonationItems({
 
   return (
     <section className="bg-purple-dark py-16 px-6 md:px-12 lg:px-24">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-285 mx-auto">
         <div className="text-center mb-12">
           {data.sectionTag && (
             <span className="inline-block bg-purple-light/50 text-brand-white text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-sm mb-3">
@@ -396,7 +396,7 @@ export default function DonationItems({
             </h2>
           )}
           {data.donationSubtext && (
-            <p className="text-brand-white max-w-2xl mx-auto text-base">
+            <p className="text-brand-white mx-auto text-base">
               {data.donationSubtext}
             </p>
           )}

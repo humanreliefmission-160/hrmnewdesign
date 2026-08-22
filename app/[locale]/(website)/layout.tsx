@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
+import Script from "next/script";
 import Footer from "./components/Footer";
 import ImpactTicker from "./components/ImpactTicker";
 import NavbarWrapper from "./components/NavbarWrapper";
@@ -8,7 +9,6 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import Providers from "./components/Providers";
 import { sanityFetch } from "../lib/sanity/client";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import JsonLd from "./components/JsonLd";
 import { buildOrganization, buildWebSite } from "./lib/jsonld";
 
@@ -47,6 +47,27 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={rubik.variable}>
       <body>
+        {/* GA4 Consent Mode v2 — defaults to denied until user consents */}
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <Script
+            id="ga-consent-defaults"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('consent', 'default', {
+                  'analytics_storage': 'denied',
+                  'ad_storage': 'denied',
+                  'ad_user_data': 'denied',
+                  'ad_personalization': 'denied',
+                  'wait_for_update': 500
+                });
+                gtag('js', new Date());
+              `,
+            }}
+          />
+        )}
         <JsonLd data={[buildOrganization(), buildWebSite()]} />
         <NextIntlClientProvider messages={messages}>
           <Providers>
@@ -57,9 +78,6 @@ export default async function LocaleLayout({
           </Providers>
         </NextIntlClientProvider>
       </body>
-      {process.env.NEXT_PUBLIC_GA_ID && (
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-      )}
     </html>
   );
 }
