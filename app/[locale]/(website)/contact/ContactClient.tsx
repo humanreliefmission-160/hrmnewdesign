@@ -1,11 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import Script from "next/script";
 import PageHeader from "../components/PageHeader";
 import YellowCTA from "../components/YellowCTA";
 import { FaLocationArrow, FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { IoTime } from "react-icons/io5";
+
+// Extend the Window type for the Cloudflare Turnstile API
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (container: string | HTMLElement, options: Record<string, any>) => string;
+      reset: (widgetId: string) => void;
+      remove: (widgetId: string) => void;
+    };
+  }
+}
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '';
 
 export default function ContactClient() {
   const [formData, setFormData] = useState({
@@ -22,6 +36,49 @@ export default function ContactClient() {
   const [submitting, setSubmitting] = useState(false);
   const [contactSuccess, setContactSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Anti-spam: record the exact time the form was rendered so the API can
+  // detect submissions that arrived suspiciously quickly (automated scripts).
+  const formRenderedAt = useRef<number>(0);
+  useEffect(() => {
+    formRenderedAt.current = Date.now();
+  }, []);
+
+  // Turnstile widget management
+  const turnstileContainerRef = useRef<HTMLDivElement>(null);
+  const turnstileWidgetId = useRef<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string>('');
+  const [turnstileReady, setTurnstileReady] = useState(false);
+
+  const renderTurnstile = useCallback(() => {
+    if (
+      !TURNSTILE_SITE_KEY ||
+      !window.turnstile ||
+      !turnstileContainerRef.current ||
+      turnstileWidgetId.current
+    ) return;
+
+    turnstileWidgetId.current = window.turnstile.render(turnstileContainerRef.current, {
+      sitekey: TURNSTILE_SITE_KEY,
+      theme: 'light',
+      callback: (token: string) => {
+        setTurnstileToken(token);
+      },
+      'expired-callback': () => {
+        setTurnstileToken('');
+      },
+      'error-callback': () => {
+        setTurnstileToken('');
+      },
+    });
+  }, []);
+
+  const resetTurnstile = useCallback(() => {
+    if (window.turnstile && turnstileWidgetId.current) {
+      window.turnstile.reset(turnstileWidgetId.current);
+      setTurnstileToken('');
+    }
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -53,6 +110,12 @@ export default function ContactClient() {
       return;
     }
 
+    // Require Turnstile token if the site key is configured
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      setErrorMessage("Please complete the security verification below.");
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -69,6 +132,10 @@ export default function ContactClient() {
           subject: finalSubject,
           donationReference: formData.donationReference,
           message: formData.message,
+          // Anti-spam fields — invisible to users
+          _hp_website: "",                              // Must remain empty (honeypot)
+          _form_rendered_at: formRenderedAt.current,   // Speed trap timestamp
+          turnstileToken,                        // Cloudflare challenge response
         }),
       });
 
@@ -89,6 +156,7 @@ export default function ContactClient() {
         donationReference: "",
         message: "",
       });
+      resetTurnstile();
 
       setTimeout(() => {
         const el = document.getElementById("contactSuccess");
@@ -98,6 +166,7 @@ export default function ContactClient() {
       }, 100);
     } catch (err: any) {
       setErrorMessage(err.message || "Something went wrong. Please try again later.");
+      resetTurnstile();
     } finally {
       setSubmitting(false);
     }
@@ -105,6 +174,18 @@ export default function ContactClient() {
 
   return (
     <div id="page-contact" className="block min-h-screen">
+      {/* Cloudflare Turnstile script — loaded once, renders widget on ready */}
+      {TURNSTILE_SITE_KEY && (
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          strategy="lazyOnload"
+          onReady={() => {
+            setTurnstileReady(true);
+            renderTurnstile();
+          }}
+        />
+      )}
+
       <PageHeader
         title="Get In Touch"
         subtitle={<>Have a question, want to volunteer or need to reach our team? We'd love to hear from you.</>}
@@ -185,6 +266,31 @@ export default function ContactClient() {
               </p>
 
               <form onSubmit={handleSubmit}>
+                {/*
+                  ── HONEYPOT FIELD ──────────────────────────────────────────
+                  This field is intentionally hidden from real users.
+                  Bots automatically fill fields named "website" / "_hp_website".
+                  If this field has any value when the form is submitted,
+                  the server silently discards the submission without sending any email.
+                  DO NOT remove this field or make it visible.
+                */}
+                <input
+                  type="text"
+                  name="_hp_website"
+                  autoComplete="off"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  style={{
+                    position: 'absolute',
+                    left: '-9999px',
+                    top: '-9999px',
+                    opacity: 0,
+                    pointerEvents: 'none',
+                    width: 0,
+                    height: 0,
+                  }}
+                />
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div className="flex flex-col gap-1.5">
                     <label htmlFor="firstName" className="block text-sm font-bold text-brand-black">First Name *</label>
@@ -315,6 +421,13 @@ export default function ContactClient() {
                   />
                 </div>
 
+                {/* Cloudflare Turnstile Widget — renders automatically when script loads */}
+                {TURNSTILE_SITE_KEY && (
+                  <div className="mb-6">
+                    <div ref={turnstileContainerRef} id="cf-turnstile-contact" />
+                  </div>
+                )}
+
                 {errorMessage && (
                   <div className="mb-6 p-4 bg-[#B60000]/25 border border-[#B60000] text-[#B60000] rounded-sm text-sm font-medium">
                     {errorMessage}
@@ -324,7 +437,7 @@ export default function ContactClient() {
                 <YellowCTA
                   text={submitting ? "Sending Message..." : "Send Message →"}
                   onClick={() => handleSubmit()}
-                  disabled={submitting}
+                  disabled={submitting || (!!TURNSTILE_SITE_KEY && !turnstileToken)}
                   className="w-full justify-center py-3"
                 />
               </form>
