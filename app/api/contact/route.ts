@@ -1,4 +1,10 @@
 import { Resend } from 'resend';
+import {
+  checkRateLimit,
+  verifyTurnstileToken,
+  isValidEmailDomain,
+  isSuspiciousContent,
+} from '@/lib/antiSpam';
 
 export async function POST(request: Request) {
   const apiKey = process.env.NEXT_RESEND_API_KEY;
@@ -11,6 +17,27 @@ export async function POST(request: Request) {
     );
   }
 
+  // ---------------------------------------------------------------------------
+  // 1. IP Rate Limiting
+  //    Reject rapid-fire requests from the same IP before we even parse the body.
+  //    This is the cheapest check — costs almost nothing server-side.
+  // ---------------------------------------------------------------------------
+  const ip =
+    request.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
+    request.headers.get('x-real-ip') ??
+    'unknown';
+
+  if (!checkRateLimit(ip, { max: 5, windowMs: 10 * 60 * 1000 })) {
+    console.warn(`[api/contact] Rate limit exceeded for IP: ${ip}`);
+    return Response.json(
+      { error: 'Too many requests. Please wait a few minutes and try again.' },
+      { status: 429 }
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // 2. Parse JSON body
+  // ---------------------------------------------------------------------------
   let body: Record<string, any> = {};
   try {
     body = await request.json();
@@ -26,24 +53,99 @@ export async function POST(request: Request) {
     subject = '',
     donationReference = '',
     message = '',
+    // Anti-spam fields sent by the client
+    _hp_website = '',                 // Honeypot field — must always be empty
+    _form_rendered_at = null,         // Timestamp (ms) when the form was first rendered
+    turnstileToken = '',              // Cloudflare Turnstile challenge token
   } = body;
 
-  // Basic field validations
-  if (!firstName.trim() || !lastName.trim() || !email.trim() || !subject.trim() || !message.trim()) {
+  // ---------------------------------------------------------------------------
+  // 3. Honeypot check
+  //    Bots auto-fill hidden fields. Humans never see or interact with this field.
+  //    Silently return 200 so bots believe they succeeded and don't adapt.
+  // ---------------------------------------------------------------------------
+  if (_hp_website) {
+    console.warn(`[api/contact] Honeypot triggered from IP: ${ip}`, { _hp_website });
+    return Response.json({ success: true }); // Fake success — no email sent
+  }
+
+  // ---------------------------------------------------------------------------
+  // 4. Speed trap check
+  //    Human form-filling takes at least 2.5 seconds. Script submissions are
+  //    near-instant. If the client sent a render timestamp, enforce this minimum.
+  // ---------------------------------------------------------------------------
+  if (_form_rendered_at && typeof _form_rendered_at === 'number') {
+    const elapsed = Date.now() - _form_rendered_at;
+    if (elapsed < 2500) {
+      console.warn(`[api/contact] Speed trap triggered from IP: ${ip}. Elapsed: ${elapsed}ms`);
+      return Response.json({ success: true }); // Fake success
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 5. Cloudflare Turnstile verification
+  //    Confirms a real browser completed the challenge — not a headless script.
+  // ---------------------------------------------------------------------------
+  const turnstileValid = await verifyTurnstileToken(turnstileToken, ip);
+  if (!turnstileValid) {
+    console.warn(`[api/contact] Turnstile verification failed from IP: ${ip}`);
+    return Response.json(
+      { error: 'Verification failed. Please refresh the page and try again.' },
+      { status: 400 }
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // 6. Required field validation
+  // ---------------------------------------------------------------------------
+  if (
+    !firstName.trim() ||
+    !lastName.trim() ||
+    !email.trim() ||
+    !subject.trim() ||
+    !message.trim()
+  ) {
     return Response.json(
       { error: 'Please fill in all required fields.' },
       { status: 400 }
     );
   }
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email.trim())) {
+  // ---------------------------------------------------------------------------
+  // 7. Email domain validation
+  //    Blocks disposable/throwaway providers and gibberish usernames.
+  // ---------------------------------------------------------------------------
+  if (!isValidEmailDomain(email.trim())) {
+    console.warn(`[api/contact] Rejected suspicious email: ${email} from IP: ${ip}`);
     return Response.json(
       { error: 'Please enter a valid email address.' },
       { status: 400 }
     );
   }
 
+  // ---------------------------------------------------------------------------
+  // 8. Suspicious content check
+  //    Detects gibberish, keyboard-walk patterns, URL injection, XSS probes.
+  // ---------------------------------------------------------------------------
+  if (isSuspiciousContent(message)) {
+    console.warn(`[api/contact] Suspicious message content from IP: ${ip}`, { message });
+    return Response.json(
+      { error: 'Your message could not be processed. Please write a clear message.' },
+      { status: 400 }
+    );
+  }
+
+  if (subject && isSuspiciousContent(subject)) {
+    console.warn(`[api/contact] Suspicious subject from IP: ${ip}`, { subject });
+    return Response.json(
+      { error: 'Your subject could not be processed. Please enter a valid subject.' },
+      { status: 400 }
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // All checks passed — proceed to send emails via Resend
+  // ---------------------------------------------------------------------------
   const resend = new Resend(apiKey);
   const fullName = `${firstName.trim()} ${lastName.trim()}`;
   const notificationEmail = process.env.CONTACT_TO_EMAIL || 'info@humanreliefmission.com';
@@ -109,7 +211,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // 2. Send confirmation auto-responder email to sender (fire & forget)
+    // 2. Send confirmation auto-responder to sender (fire & forget)
+    //    Only reaches this point because ALL anti-spam checks have passed.
     try {
       await resend.emails.send({
         from: 'Human Relief Mission <donations@notifications.humanreliefmission.com>',

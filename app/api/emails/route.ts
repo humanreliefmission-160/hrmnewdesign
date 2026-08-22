@@ -1,6 +1,7 @@
 import DonationReceipt from '@/app/[locale]/(website)/components/emails/DonationReceipt';
 import DonationNotification from '@/app/[locale]/(website)/components/emails/DonationNotification';
 import { Resend } from 'resend';
+import { checkRateLimit, isValidEmailDomain } from '@/lib/antiSpam';
 
 export async function POST(request: Request) {
   const apiKey = process.env.NEXT_RESEND_API_KEY;
@@ -11,6 +12,21 @@ export async function POST(request: Request) {
       { error: 'Email service is not configured.' },
       { status: 500 }
     );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Rate Limiting — donation receipt endpoint
+  // Generous limit (10 per 10 min) to account for bulk/group donations,
+  // but still prevents bots from exhausting Resend quota via direct API calls.
+  // ---------------------------------------------------------------------------
+  const ip =
+    request.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
+    request.headers.get('x-real-ip') ??
+    'unknown';
+
+  if (!checkRateLimit(ip, { max: 10, windowMs: 10 * 60 * 1000 })) {
+    console.warn(`[emails/route] Rate limit exceeded for IP: ${ip}`);
+    return Response.json({ error: 'Too many requests.' }, { status: 429 });
   }
 
   let body: Record<string, any> = {};
@@ -40,6 +56,12 @@ export async function POST(request: Request) {
 
   if (!email) {
     return Response.json({ error: 'Recipient email is required.' }, { status: 400 });
+  }
+
+  // Basic email domain sanity check — rejects obviously malformed addresses
+  if (!isValidEmailDomain(email)) {
+    console.warn(`[emails/route] Rejected invalid recipient email: ${email}`);
+    return Response.json({ error: 'Invalid recipient email address.' }, { status: 400 });
   }
 
   const resend = new Resend(apiKey);
