@@ -49,16 +49,13 @@ export async function GET() {
   // Core Static Pages
   markdown += `## Core Pages\n\n`;
   markdown += `- [Homepage](${BASE_URL}): Official website of Human Relief Mission, providing humanitarian aid and emergency relief.\n`;
-  markdown += `- [About Us](${BASE_URL}/about): Human Relief Mission’s mission, core values, 100% donation policy and governance structure.\n`;
+  markdown += `- [About Us](${BASE_URL}/about): Human Relief Mission's mission, core values, 100% donation policy and governance structure.\n`;
   markdown += `- [Our Projects](${BASE_URL}/projects): Browse active humanitarian and development projects.\n`;
   markdown += `- [4 Phase Ecosystem](${BASE_URL}/ecosystem): This model lifting families out of poverty from receiving Zakat to paying Zakat.\n`;
   markdown += `- [Donate](${BASE_URL}/donate): Donate online securely with Gift Aid, Zakat, and Sadaqah options.\n`;
   markdown += `- [Contact Us](${BASE_URL}/contact): Get in touch with our team in Leeds, UK, or submit a volunteer application.\n`;
   markdown += `- [Annual Reports](${BASE_URL}/annual-reports): Financial transparency, audited accounts and annual impact overviews.\n`;
   markdown += `- [Policies & Governance](${BASE_URL}/policies): Safeguarding, data protection, and operational policy standards.\n\n`;
-  markdown += `- [Terms of Use](${BASE_URL}/policies/terms-of-use): Safeguarding, data protection and operational policy standards.\n\n`;
-  markdown += `- [Privacy Policy](${BASE_URL}/policies/data-protection-policy): How we collect, use, and protect personal and donor data.\n\n`;
-  markdown += `- [Cookie Policy](${BASE_URL}/policies/cookie-policy): How cookies are used across the site, including payment processing.\n\n`;
 
   // Dynamic Sanity Projects
   if (projects && projects.length > 0) {
@@ -95,10 +92,7 @@ export async function GET() {
     markdown += `\n`;
   }
 
-  // Optional Section
-  markdown += `## Optional\n\n`;
-  markdown += `- [Terms of Use](${BASE_URL}/policies/terms-of-use): Terms governing website access and usage.\n`;
-  markdown += `- [Privacy Policy](${BASE_URL}/policies/data-protection-policy): Data privacy and UK GDPR compliance guidelines.\n`;
+
 
   return new Response(markdown, {
     status: 200,
