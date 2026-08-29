@@ -5,7 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaChevronDown } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
-import YellowCTA from "../../(website)/components/YellowCTA";
+import YellowCTA from "../../../(website)/components/YellowCTA";
+import { logoutAction } from "../auth-actions";
 import type { DonationRow } from "./actions";
 
 function formatDate(iso: string) {
@@ -182,7 +183,9 @@ export default function DonationsClient({ donations }: { donations: DonationRow[
               </Link>
             </div>
           </div>
-          <YellowCTA href="#" text="Logout" />
+          <form action={logoutAction}>
+            <YellowCTA text="Logout" />
+          </form>
         </div>
       </nav>
 
