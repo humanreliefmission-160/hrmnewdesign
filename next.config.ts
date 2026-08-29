@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from 'next-intl/plugin'
-
 const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_SANITY_PROJECT_ID: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -29,11 +28,11 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.googletagmanager.com https://*.google-analytics.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: blob: https://cdn.sanity.io https://*.google-analytics.com https://www.googletagmanager.com",
-              "connect-src 'self' https://api.stripe.com https://hooks.stripe.com https://*.supabase.co https://4gub4zfk.api.sanity.io https://*.google-analytics.com https://*.analytics.google.com https://stats.g.doubleclick.net https://www.google.com https://www.googletagmanager.com wss://*.supabase.co",
+              "img-src 'self' data: blob: https://cdn.sanity.io https://www.google-analytics.com https://www.googletagmanager.com",
+              "connect-src 'self' https://api.stripe.com https://hooks.stripe.com https://*.supabase.co https://4gub4zfk.api.sanity.io https://www.google-analytics.com https://stats.g.doubleclick.net https://www.google.com https://www.googletagmanager.com wss://*.supabase.co",
               "frame-src https://js.stripe.com https://hooks.stripe.com",
               "worker-src 'self' blob:",
             ].join('; '),
@@ -55,8 +54,5 @@ const nextConfig: NextConfig = {
     ];
   },
 };
-
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
-
 export default withNextIntl(nextConfig);
-
