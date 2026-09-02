@@ -217,12 +217,10 @@ function DonationCard({
   item,
   projectSlug,
   projectName,
-  stageSlug,
 }: {
   item: DonationItemData;
   projectSlug: string;
   projectName: string;
-  stageSlug?: string;
 }) {
   const { addItem } = useBasket();
   const defaultAmount =
@@ -352,10 +350,10 @@ function DonationCard({
             disabled={!effectiveAmount}
           />
         </div>
-        {item.slug && stageSlug && (
+        {item.slug && (
           <Link
             className="underline text-sm font-semibold text-purple mt-2"
-            href={`/ecosystem/${stageSlug}/${item.slug}`}
+            href={`/projects/${projectSlug}/${item.slug}`}
           >
             Find out more
           </Link>
@@ -370,12 +368,10 @@ export default function DonationItems({
   data,
   projectSlug,
   projectName,
-  stageSlug,
 }: {
   data?: DonationSectionData;
   projectSlug: string;
   projectName: string;
-  stageSlug?: string;
 }) {
   if (!data || !data.donationItems || data.donationItems.length === 0) return null;
 
@@ -416,7 +412,6 @@ export default function DonationItems({
                 item={item}
                 projectSlug={projectSlug}
                 projectName={projectName}
-                stageSlug={stageSlug}
               />
             ))}
           </div>
