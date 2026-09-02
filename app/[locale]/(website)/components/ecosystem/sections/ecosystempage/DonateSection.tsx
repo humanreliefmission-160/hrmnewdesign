@@ -252,7 +252,7 @@ function StageFallbackDonate({ stage }: { stage: SanityEcosystemStage }) {
                 setIsOtherAmount(false);
                 setCustomAmount("");
               }}
-              className={`border-2 px-6 py-2.5 text-base font-semibold transition-all rounded-[2px] ${isSelected
+              className={`border-2 px-6 py-2.5 text-base font-semibold transition-all rounded-xs ${isSelected
                 ? "border-purple text-white bg-purple"
                 : "border-brand-white/40 text-brand-white hover:bg-purple hover:border-purple"
                 }`}
@@ -270,7 +270,7 @@ function StageFallbackDonate({ stage }: { stage: SanityEcosystemStage }) {
               autoFocus
               value={customAmount}
               onChange={(e) => setCustomAmount(e.target.value)}
-              className="border-2 border-brand-white/40 bg-transparent text-brand-white px-4 py-2.5 pl-7 w-32 text-base font-semibold outline-none rounded-[2px] transition-all placeholder:text-brand-white/40 focus:border-brand-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="border-2 border-brand-white/40 bg-transparent text-brand-white px-4 py-2.5 pl-7 w-32 text-base font-semibold outline-none rounded-xs transition-all placeholder:text-brand-white/40 focus:border-brand-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               placeholder="Amount"
             />
             <button
@@ -285,7 +285,7 @@ function StageFallbackDonate({ stage }: { stage: SanityEcosystemStage }) {
           <button
             type="button"
             onClick={() => { setIsOtherAmount(true); setSelectedAmount(null); }}
-            className="border-2 border-brand-white/40 text-brand-white px-6 py-2.5 text-base font-semibold hover:bg-purple hover:border-purple transition-all rounded-[2px]"
+            className="border-2 border-brand-white/40 text-brand-white px-6 py-2.5 text-base font-semibold hover:bg-purple hover:border-purple transition-all rounded-xs"
           >
             Other Amount
           </button>

@@ -29,7 +29,6 @@ const PROJECT_QUERY = `
       noIndex
     },
     "projectCategory": projectCategory->{ name },
-    "stageSlug": ecosystemSection.stage->slug.current,
     headerImage,
     headerVideoUrl,
     headerVideoMute,
@@ -271,7 +270,6 @@ export default async function ProjectItem({
             data={project.donationSection}
             projectSlug={projectSlug}
             projectName={project.name}
-            stageSlug={project.stageSlug}
           />
           <Impact data={project.impactSection} />
           <ImageCarousel
