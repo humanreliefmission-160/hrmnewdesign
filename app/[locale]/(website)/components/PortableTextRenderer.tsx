@@ -1,8 +1,78 @@
 'use client';
 
 import { PortableText, PortableTextComponents } from '@portabletext/react';
+import { urlFor } from '@/sanity/lib/image';
+import { getYouTubeVideoId, getYouTubeEmbedUrl } from '@/app/[locale]/lib/youtubeHelpers';
 
-const components: PortableTextComponents = {
+export const components: PortableTextComponents = {
+  types: {
+    image: ({ value }) => {
+      if (!value?.asset) return null;
+      try {
+        const imageUrl = urlFor(value).width(1200).auto('format').fit('max').quality(85).url();
+        return (
+          <figure className="my-6">
+            <img
+              src={imageUrl}
+              alt={value.alt || value.caption || ''}
+              className="w-full h-auto rounded-sm object-cover max-h-125"
+              loading="lazy"
+            />
+            {value.caption && (
+              <figcaption className="mt-2 text-center text-xs text-brand-grey italic">
+                {value.caption}
+              </figcaption>
+            )}
+          </figure>
+        );
+      } catch (err) {
+        console.error('Failed to render PortableText image:', err);
+        return null;
+      }
+    },
+    imageWithAlt: ({ value }) => {
+      const asset = value?.image?.asset || value?.asset;
+      if (!asset) return null;
+      try {
+        const imageUrl = urlFor(asset).width(1200).auto('format').fit('max').quality(85).url();
+        return (
+          <figure className="my-6">
+            <img
+              src={imageUrl}
+              alt={value.altText || value.alt || value.caption || ''}
+              className="w-full h-auto rounded-sm object-cover max-h-125"
+              loading="lazy"
+            />
+            {value.caption && (
+              <figcaption className="mt-2 text-center text-xs text-brand-grey italic">
+                {value.caption}
+              </figcaption>
+            )}
+          </figure>
+        );
+      } catch (err) {
+        console.error('Failed to render PortableText imageWithAlt:', err);
+        return null;
+      }
+    },
+    youtube: ({ value }) => {
+      const url = value?.url || value?.videoUrl;
+      const videoId = getYouTubeVideoId(url);
+      if (!videoId) return null;
+      const embedUrl = getYouTubeEmbedUrl(videoId, { mute: false });
+      return (
+        <div className="my-6 aspect-video w-full overflow-hidden rounded-sm">
+          <iframe
+            src={embedUrl}
+            title="YouTube video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="h-full w-full border-0"
+          />
+        </div>
+      );
+    },
+  },
   block: {
     normal: ({ children }) => (
       <p className="text-brand-black/80 leading-[1.8] mb-5 text-[1.05rem]">{children}</p>
@@ -59,7 +129,7 @@ const components: PortableTextComponents = {
 };
 
 interface PortableTextRendererProps {
-  value: any[];
+  value?: any[] | null;
   className?: string;
 }
 
