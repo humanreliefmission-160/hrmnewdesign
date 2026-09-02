@@ -42,7 +42,7 @@ export default function Intro({ data }: { data?: IntroData }) {
           </div>
         )}
         {data.stats && (
-          <div className="mt-10 mb-20 max-w-285 flex flex-col sm:flex-row gap-6 align-middle align-center">
+          <div className="mt-10 mb-20 max-w-285 flex flex-col sm:flex-row gap-6 justify-center align-center">
             {data.stats.map((stat, idx) => (
               <div key={idx} className="bg-purple/5 rounded-sm py-6 px-4 border border-purple-100 flex flex-col items-center justify-center">
                 <p className="text-2xl font-bold text-purple sm:text-3xl">{stat.title}</p>
