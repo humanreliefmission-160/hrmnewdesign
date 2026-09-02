@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import YellowCTA from "../YellowCTA";
 import { FaInfoCircle } from "react-icons/fa";
-import { PortableText } from "next-sanity";
+import PortableTextRenderer from "../PortableTextRenderer";
 import type { DonationItemData } from "../../types/donationItem";
 import { useBasket } from "../../context/BasketContext";
 
@@ -131,7 +131,7 @@ export default function DonationOptions({ item, projectName, projectSlug }: Dona
       <br />
       {hasBody && (
         <div className="mb-8 portable-text text-md text-brand-black leading-relaxed">
-          <PortableText value={item.donationItemBody} />
+          <PortableTextRenderer value={item.donationItemBody} />
         </div>
       )}
 

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { PortableText } from "next-sanity";
+import PortableTextRenderer from "../PortableTextRenderer";
 import type { DonationItemData } from "../../types/donationItem";
 
 interface AccordionItemProps {
@@ -53,7 +53,7 @@ export default function AidItemDetails({ item }: { item: DonationItemData }) {
 		<div className="mt-10 border-t border-brand-lgrey pt-8">
 			{hasBody && (
 				<div className="mb-8 portable-text text-sm text-brand-grey leading-relaxed">
-					<PortableText value={item.donationItemBody} />
+					<PortableTextRenderer value={item.donationItemBody} />
 				</div>
 			)}
 

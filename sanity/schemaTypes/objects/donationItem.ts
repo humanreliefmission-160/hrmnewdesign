@@ -122,7 +122,25 @@ export const donationItem = defineType({
       name: 'donationItemBody',
       title: 'Donation Item Body',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [
+        { type: 'block' },
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Alternative Text',
+              type: 'string',
+            }),
+            defineField({
+              name: 'caption',
+              title: 'Caption',
+              type: 'string',
+            }),
+          ],
+        },
+      ],
     }),
 
     // ── Intentions ────────────────────────────────────────────
