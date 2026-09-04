@@ -9,14 +9,14 @@ export default function NotFound() {
 
       <main className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 w-full max-w-340 mx-auto">
         {/* Left "4" */}
-        <div className="relative select-none flex items-center justify-center" >
+        <div className="hidden md:flex relative select-none items-center justify-center">
           <span className="font-body font-black text-purple text-[20rem] md:text-[40rem] leading-none">
             4
           </span>
         </div>
 
         {/* Middle Card */}
-        <div className="bg-white rounded-sm p-8 md:p-10 shadow-2xl shadow-purple-dark/25 w-full max-w-[400px] flex flex-col text-center border border-white/10 select-none animate-fadeIn">
+        <div className="bg-white rounded-sm p-8 md:p-10 shadow-2xl shadow-purple-dark/25 w-full max-w-100 flex flex-col text-center border border-white/10 select-none animate-fadeIn">
           <span className="text-xs font-extrabold tracking-wider text-purple uppercase">
             {"404 error"}
           </span>
@@ -80,11 +80,10 @@ export default function NotFound() {
         </div>
 
         {/* Right "4" */}
-        <div className="relative select-none animate-fadeIn flex items-center justify-center" style={{ animationDelay: "0.3s" }}>
+        <div className="hidden md:flex relative select-none animate-fadeIn items-center justify-center" style={{ animationDelay: "0.3s" }}>
           <span className="font-body font-black text-purple text-[20rem] md:text-[40rem] leading-none">
             4
           </span>
-
         </div>
       </main>
     </div>

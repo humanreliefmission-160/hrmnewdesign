@@ -19,18 +19,18 @@ declare global {
  */
 function updateGtagConsent(analyticsGranted: boolean) {
   if (typeof window === 'undefined' || !window.gtag) return;
+  const status = analyticsGranted ? 'granted' : 'denied';
   window.gtag('consent', 'update', {
-    analytics_storage: analyticsGranted ? 'granted' : 'denied',
-    ad_storage: 'denied', // We don't use advertising cookies
-    ad_user_data: 'denied',
-    ad_personalization: 'denied',
+    analytics_storage: status,
+    ad_storage: status,
+    ad_user_data: status,
+    ad_personalization: status,
   });
 }
 
 /**
- * Renders <GoogleAnalytics> only when the user has consented to analytics.
- * For AMERICAS (opt-out) visitors, GA loads by default but can be revoked.
- * Also keeps GA4 Consent Mode v2 signals in sync.
+ * Renders <GoogleAnalytics> always so fundamental cookieless data is captured.
+ * Keeps GA4 Consent Mode v2 signals in sync based on user consent.
  */
 export default function ConsentedAnalytics() {
   const { consentState, preferences } = useConsent();
@@ -43,7 +43,7 @@ export default function ConsentedAnalytics() {
     updateGtagConsent(analyticsGranted);
   }, [consentState, analyticsGranted]);
 
-  if (!GA_ID || !analyticsGranted) return null;
+  if (!GA_ID) return null;
 
   return <GoogleAnalytics gaId={GA_ID} />;
 }
