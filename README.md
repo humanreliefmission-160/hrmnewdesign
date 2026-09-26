@@ -1,4 +1,4 @@
-# Human Relief Mission — Website
+# Human Relief Mission Website
 
 The official website and internal operations platform for **Human Relief Mission (HRM)**, a humanitarian non-profit organisation. The system is designed as a single, unified Next.js application that serves three distinct audiences: the public-facing charity website, an internal operations dashboard and an embedded Sanity CMS studio — all under one codebase and one deployment.
 
