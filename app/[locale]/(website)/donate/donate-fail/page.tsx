@@ -149,7 +149,7 @@ export default function DonationFail() {
                           </div>
                         </div>
                         {i < (data?.lineItems.length ?? 0) - 1 && (
-                          <hr className="h-0.25 border-t-0 bg-[#B60000]/25 mt-2 mx-3" />
+                          <hr className="h-px border-t-0 bg-[#B60000]/25 mt-2 mx-3" />
                         )}
                       </div>
                     ))

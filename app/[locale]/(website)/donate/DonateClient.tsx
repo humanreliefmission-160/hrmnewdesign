@@ -16,6 +16,7 @@ import { buildDonationStateFromBasket } from "../lib/donation/syncBasketToDonati
 import { subscribeNewsletter } from "../../../actions";
 
 export const DONATION_SESSION_KEY = "hrm_donation_result";
+export const DONATION_FORM_KEY = "hrm_donation_form";
 
 interface DonateClientProps {
   projects: DonationPortalProject[];
@@ -71,6 +72,28 @@ export default function DonateClient({
   const [postcode, setPostcode] = useState("");
   const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("GB");
+
+  // ── Restore form fields from session on mount (survives donate-fail redirect) ──
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(DONATION_FORM_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      if (saved.firstName)      setFirstName(saved.firstName);
+      if (saved.lastName)       setLastName(saved.lastName);
+      if (saved.email)          setEmail(saved.email);
+      if (saved.address)        setAddress(saved.address);
+      if (saved.city)           setCity(saved.city);
+      if (saved.postcode)       setPostcode(saved.postcode);
+      if (saved.phone)          setPhone(saved.phone);
+      if (saved.country)        setCountry(saved.country);
+      if (saved.newsletterOptIn !== undefined) setNewsletterOptIn(saved.newsletterOptIn);
+      if (saved.giftAid !== undefined && saved.giftAid !== null) {
+        setDonationState((prev) => ({ ...prev, giftAid: saved.giftAid }));
+      }
+    } catch { }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const setDonationType = (type: string) =>
     setDonationState({
@@ -186,6 +209,27 @@ export default function DonateClient({
 
   const setGiftAid = (giftAid: boolean) =>
     setDonationState((prev) => ({ ...prev, giftAid }));
+
+  // ── Persist form fields to session whenever they change ──────────────────────
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(
+        DONATION_FORM_KEY,
+        JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          address,
+          city,
+          postcode,
+          phone,
+          country,
+          newsletterOptIn,
+          giftAid: donationState.giftAid,
+        })
+      );
+    } catch { }
+  }, [firstName, lastName, email, address, city, postcode, phone, country, newsletterOptIn, donationState.giftAid]);
 
   const setDailyDates = (start: string, end: string) =>
     setDonationState((prev) => ({ ...prev, dailyStartDate: start, dailyEndDate: end }));
@@ -331,9 +375,10 @@ export default function DonateClient({
     try {
       sessionStorage.setItem(DONATION_SESSION_KEY, JSON.stringify(donationResult));
     } catch { }
-    // Clear basket on success
+    // Clear basket and saved form on success; keep form on failure so Try Again restores it
     if (success) {
       clearBasket();
+      try { sessionStorage.removeItem(DONATION_FORM_KEY); } catch { }
       router.push(`/${locale}/donate/donate-success`);
     } else {
       router.push(`/${locale}/donate/donate-fail`);
