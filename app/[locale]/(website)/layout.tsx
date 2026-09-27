@@ -26,6 +26,9 @@ const rubik = Rubik({
 export const metadata: Metadata = {
   title: "Human Relief Mission",
   description: "Helping Humanity Through Welfare",
+  icons: {
+    icon: '/favicon.ico',   // ← this line — path is relative to /public
+  },
 };
 
 const IMPACT_TICKER_QUERY = `

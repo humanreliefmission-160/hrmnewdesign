@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import YellowCTA from '../YellowCTA';
 import { DonationState } from './types';
@@ -7,10 +6,12 @@ import DonationStepFooter from './DonationStepFooter';
 import BasketItemCard from './BasketItemCard';
 import { useBasket } from '../../context/BasketContext';
 import { IoCardSharp, IoShieldCheckmark } from 'react-icons/io5';
-import { GrPaypal } from 'react-icons/gr';
+// ── PAYPAL DISABLED — icon import no longer needed while PayPal is hidden ──
+// import { GrPaypal } from 'react-icons/gr';
 import { AiFillLock } from 'react-icons/ai';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
-import { BsBank2 } from 'react-icons/bs';
+// ── BANK TRANSFER DISABLED — icon import no longer needed while Bank Transfer/Standing Order is hidden ──
+// import { BsBank2 } from 'react-icons/bs';
 import { MdOutlineAccountBalance } from 'react-icons/md';
 import {
   Elements,
@@ -49,6 +50,8 @@ interface DonationStepPaymentProps {
 }
 
 // Fee info shown on each payment method button
+// PayPal / BankTransfer labels kept here (harmless — unused data has no effect
+// on the build) in case either method is re-enabled later.
 const METHOD_FEE_LABELS: Record<string, string> = {
   Card: "Fee: 1.2% + 20p",
   PayPal: "Fee: 2.9% + 30p",
@@ -95,7 +98,6 @@ function DonationStepPaymentForm({
   const { items, totalAmount: basketTotal, itemCount, removeItem } = useBasket();
   const stripe = useStripe();
   const elements = useElements();
-
   const [localProcessing, setLocalProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isCardComplete, setIsCardComplete] = useState(false);
@@ -112,11 +114,13 @@ function DonationStepPaymentForm({
   const [bacsAccountNumber, setBacsAccountNumber] = useState('');
   const [bacsConsent, setBacsConsent] = useState(false);
 
-  // Bank Transfer / Standing Order form state
-  const [btName, setBtName] = useState('');
-  const [btTransferDate, setBtTransferDate] = useState('');
-  const [btBankName, setBtBankName] = useState('');
-  const [btConfirm, setBtConfirm] = useState(false);
+  // ── BANK TRANSFER DISABLED — form state kept but unused while hidden.
+  // Commented out (not deleted) so re-enabling only requires uncommenting
+  // this block plus the matching JSX/logic blocks marked below.
+  // const [btName, setBtName] = useState('');
+  // const [btTransferDate, setBtTransferDate] = useState('');
+  // const [btBankName, setBtBankName] = useState('');
+  // const [btConfirm, setBtConfirm] = useState(false);
 
   // Detect recurring frequency
   const isRecurringFrequency =
@@ -135,15 +139,16 @@ function DonationStepPaymentForm({
         fee: METHOD_FEE_LABELS.Card,
         recommended: !isRecurringFrequency,
       },
-      {
-        name: 'PayPal',
-        displayName: 'PayPal',
-        icon: <GrPaypal fill="#650199" className="sm:w-7 w-7 h-auto" />,
-        fee: METHOD_FEE_LABELS.PayPal,
-        comingSoon: true,
-      },
+      // ── PAYPAL DISABLED — remove this comment block to bring PayPal back
+      // as a selectable tile in the payment method grid.
+      // {
+      //   name: 'PayPal',
+      //   displayName: 'PayPal',
+      //   icon: <GrPaypal fill="#650199" className="sm:w-7 w-7 h-auto" />,
+      //   fee: METHOD_FEE_LABELS.PayPal,
+      //   comingSoon: true,
+      // },
     ];
-
     if (isRecurringFrequency) {
       methods.push({
         name: 'BACS',
@@ -153,14 +158,14 @@ function DonationStepPaymentForm({
         recommended: true,
       });
     }
-
-    methods.push({
-      name: 'BankTransfer',
-      displayName: isRecurringFrequency ? 'Standing Order' : 'Bank Transfer',
-      icon: <BsBank2 fill="#650199" className="sm:w-7 w-7 h-auto" />,
-      fee: METHOD_FEE_LABELS.BankTransfer,
-    });
-
+    // ── BANK TRANSFER DISABLED — remove this comment block to bring back
+    // the Bank Transfer / Standing Order tile.
+    // methods.push({
+    //   name: 'BankTransfer',
+    //   displayName: isRecurringFrequency ? 'Standing Order' : 'Bank Transfer',
+    //   icon: <BsBank2 fill="#650199" className="sm:w-7 w-7 h-auto" />,
+    //   fee: METHOD_FEE_LABELS.BankTransfer,
+    // });
     return methods;
   }, [isRecurringFrequency]);
 
@@ -188,6 +193,7 @@ function DonationStepPaymentForm({
     items,
     itemCount,
   });
+
   useEffect(() => {
     paymentValuesRef.current = {
       amountToPay,
@@ -220,7 +226,6 @@ function DonationStepPaymentForm({
           .join(', ')
         : `${vals.donationState.projectName || 'General'} (${vals.donationState.donationItemTitle || 'Donation'
         }) - £${vals.donationState.amount || 0}`;
-
     return {
       donation_reference: ref,
       donor_name: `${vals.firstName} ${vals.lastName}`,
@@ -236,7 +241,6 @@ function DonationStepPaymentForm({
   useEffect(() => {
     if (!stripe || amountToPay <= 0 || prInitialized.current) return;
     prInitialized.current = true;
-
     const pr = stripe.paymentRequest({
       country: 'GB',
       currency: 'gbp',
@@ -267,6 +271,7 @@ function DonationStepPaymentForm({
           : vals.donationState.type === 'weekly' || vals.donationState.type === 'friday'
             ? 'week'
             : 'month';
+
       const donorEmail = ev.payerEmail || vals.email;
       const donorName = ev.payerName || `${vals.firstName} ${vals.lastName}`;
 
@@ -378,24 +383,29 @@ function DonationStepPaymentForm({
     bacsAccountNumber.replace(/\D/g, '').length === 8 &&
     bacsConsent;
 
-  const isBTValid =
-    btName.trim().length > 1 &&
-    btTransferDate !== '' &&
-    btConfirm;
+  // ── BANK TRANSFER DISABLED — validation no longer needed while hidden.
+  // const isBTValid =
+  //   btName.trim().length > 1 &&
+  //   btTransferDate !== '' &&
+  //   btConfirm;
 
   // ─── Card / PayPal payment handler ───
   const isSubmitDisabled =
     isProcessing ||
     localProcessing ||
     (payMethod === 'Card' && (!stripe || !elements || !isCardComplete)) ||
-    (payMethod === 'BACS' && !isBACSValid) ||
-    (payMethod === 'BankTransfer' && !isBTValid);
+    (payMethod === 'BACS' && !isBACSValid);
+    // ── BANK TRANSFER DISABLED — condition removed from the disabled check
+    // since BankTransfer can no longer be selected as payMethod.
+    // || (payMethod === 'BankTransfer' && !isBTValid);
 
   const submitButtonLabel = (() => {
     if (isProcessing || localProcessing) return 'Processing...';
     if (payMethod === 'BACS') return `Confirm & Continue — £${formatMoney(amountToPay)}`;
-    if (payMethod === 'BankTransfer') return `Confirm & Continue — £${formatMoney(amountToPay)}`;
-    if (payMethod === 'PayPal') return `Continue to PayPal — £${formatMoney(amountToPay)}`;
+    // ── BANK TRANSFER DISABLED ──
+    // if (payMethod === 'BankTransfer') return `Confirm & Continue — £${formatMoney(amountToPay)}`;
+    // ── PAYPAL DISABLED ──
+    // if (payMethod === 'PayPal') return `Continue to PayPal — £${formatMoney(amountToPay)}`;
     return `Donate Now — £${formatMoney(amountToPay)}`;
   })();
 
@@ -404,29 +414,35 @@ function DonationStepPaymentForm({
       1000 + Math.random() * 9000
     )}`;
 
-    // Non-card methods: offline / redirect flows
-    if (payMethod === 'PayPal') {
-      // PayPal placeholder — coming soon
-      setErrorMessage('PayPal payments are coming soon. Please use another payment method for now.');
-      return;
-    }
+    // ── PAYPAL DISABLED — this branch is now unreachable since 'PayPal' can
+    // no longer be selected from the payment method grid above. Left in
+    // place (commented) so the "coming soon" messaging is ready to restore.
+    // if (payMethod === 'PayPal') {
+    //   setErrorMessage('PayPal payments are coming soon. Please use another payment method for now.');
+    //   return;
+    // }
 
-    if (payMethod === 'BACS' || payMethod === 'BankTransfer') {
+    if (payMethod === 'BACS') {
       setLocalProcessing(true);
-      const bankDetails: Record<string, string> =
-        payMethod === 'BACS'
-          ? {
-              method: 'BACS Direct Debit',
-              accountHolderName: bacsName.trim(),
-              sortCode: bacsSortCode.trim(),
-              accountNumber: bacsAccountNumber.trim(),
-            }
-          : {
-              method: isRecurringFrequency ? 'Standing Order' : 'Bank Transfer',
-              accountHolderName: btName.trim(),
-              estimatedTransferDate: btTransferDate,
-              bankName: btBankName.trim() || 'Not provided',
-            };
+      const bankDetails: Record<string, string> = {
+        method: 'BACS Direct Debit',
+        accountHolderName: bacsName.trim(),
+        sortCode: bacsSortCode.trim(),
+        accountNumber: bacsAccountNumber.trim(),
+      };
+      // ── BANK TRANSFER DISABLED — original code branched between BACS and
+      // BankTransfer here using a ternary. Since BankTransfer can no longer
+      // be selected, the ternary has been simplified to BACS only:
+      //
+      // const bankDetails: Record<string, string> =
+      //   payMethod === 'BACS'
+      //     ? { ...as above... }
+      //     : {
+      //         method: isRecurringFrequency ? 'Standing Order' : 'Bank Transfer',
+      //         accountHolderName: btName.trim(),
+      //         estimatedTransferDate: btTransferDate,
+      //         bankName: btBankName.trim() || 'Not provided',
+      //       };
       setTimeout(() => {
         setLocalProcessing(false);
         completeDonation(donationReference, true, bankDetails, stripeFeeAmt, adminFeeAmt);
@@ -444,7 +460,6 @@ function DonationStepPaymentForm({
     }
 
     if (!stripe || !elements) return;
-
     setLocalProcessing(true);
     setErrorMessage(null);
 
@@ -493,7 +508,6 @@ function DonationStepPaymentForm({
             metadata,
           }),
         });
-
         const data = await response.json();
         if (!response.ok || data.error) {
           setErrorMessage(data.error || 'Failed to create subscription.');
@@ -501,7 +515,6 @@ function DonationStepPaymentForm({
           completeDonation(donationReference, false, undefined, stripeFeeAmt, adminFeeAmt);
           return;
         }
-
         if (data.clientSecret) {
           const { error: confirmError } = await stripe.confirmCardPayment(
             data.clientSecret,
@@ -521,7 +534,6 @@ function DonationStepPaymentForm({
             return;
           }
         }
-
         setLocalProcessing(false);
         completeDonation(
           donationReference,
@@ -549,7 +561,6 @@ function DonationStepPaymentForm({
             metadata,
           }),
         });
-
         const data = await response.json();
         if (!response.ok || data.error) {
           setErrorMessage(data.error || 'Failed to initialize payment.');
@@ -557,7 +568,6 @@ function DonationStepPaymentForm({
           completeDonation(donationReference, false, undefined, stripeFeeAmt, adminFeeAmt);
           return;
         }
-
         const { error: confirmError, paymentIntent } =
           await stripe.confirmCardPayment(data.clientSecret, {
             payment_method: {
@@ -565,14 +575,12 @@ function DonationStepPaymentForm({
               billing_details: { name: `${firstName} ${lastName}`, email },
             },
           });
-
         if (confirmError) {
           setErrorMessage(confirmError.message || 'Payment confirmation failed.');
           setLocalProcessing(false);
           completeDonation(donationReference, false, undefined, stripeFeeAmt, adminFeeAmt);
           return;
         }
-
         if (paymentIntent && paymentIntent.status === 'succeeded') {
           setLocalProcessing(false);
           completeDonation(
@@ -669,7 +677,6 @@ function DonationStepPaymentForm({
             we receive your full donation?
           </span>
         </label>
-
         <label className="flex gap-3 items-start cursor-pointer group p-4 border border-brand-lgrey rounded-sm bg-brand-white hover:border-purple/40 transition-colors">
           <input
             type="checkbox"
@@ -692,7 +699,6 @@ function DonationStepPaymentForm({
           <span className="text-sm font-bold text-brand-black">Donation</span>
           <span className="font-bold text-brand-black">£{formatMoney(donatedTotal)}</span>
         </div>
-
         {donationState.giftAid && (
           <div className="flex justify-between items-center gap-4">
             <div>
@@ -706,23 +712,19 @@ function DonationStepPaymentForm({
             </span>
           </div>
         )}
-
         {coverStripeFee && (
           <div className="flex justify-between items-center gap-4">
             <span className="text-sm text-brand-grey">Transaction fee (1.2%)</span>
             <span className="text-sm font-semibold text-brand-black">+ £{formatMoney(stripeFeeAmt)}</span>
           </div>
         )}
-
         {coverAdminFee && (
           <div className="flex justify-between items-center gap-4">
             <span className="text-sm text-brand-grey">Admin fee</span>
             <span className="text-sm font-semibold text-brand-black">+ £1.00</span>
           </div>
         )}
-
         <hr className="text-brand-grey/50 mt-5" />
-
         <div className="border-t border-brand-lgrey pt-3 flex justify-between items-end">
           <span className="font-bold text-lg text-brand-black">
             {isRecurringFrequency ? 'Total per payment' : 'Total to pay'}
@@ -828,11 +830,11 @@ function DonationStepPaymentForm({
               }}
             >
               {/* Recommended badge */}
-              {method.recommended && (
-                <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[0.6rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full whitespace-nowrap shadow-sm">
+              {/*{method.recommended && (
+               <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[0.6rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full whitespace-nowrap shadow-sm">
                   ★ Recommended
-                </span>
-              )}
+                </span> 
+              )}*/}
               {/* Coming soon badge */}
               {method.comingSoon && !isSelected && (
                 <span className="absolute -top-2.5 right-2 bg-amber-400 text-white text-[0.6rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full whitespace-nowrap shadow-sm">
@@ -879,7 +881,6 @@ function DonationStepPaymentForm({
               Enter your bank account details below. Your bank may take 3–5 working days to activate the mandate.
             </p>
           </div>
-
           {/* Account holder name */}
           <div className="flex flex-col gap-1">
             <label className="text-xs font-bold text-brand-black" htmlFor="bacs-name">Account Holder Name *</label>
@@ -892,7 +893,6 @@ function DonationStepPaymentForm({
               className="w-full border border-brand-lgrey rounded-sm px-3 py-2.5 text-sm text-brand-black placeholder:text-brand-grey/60 focus:outline-none focus:border-purple transition-colors bg-brand-white"
             />
           </div>
-
           {/* Sort code */}
           <div className="flex flex-col gap-1">
             <label className="text-xs font-bold text-brand-black" htmlFor="bacs-sort">Sort Code * <span className="font-normal text-brand-grey">(e.g. 12-34-56)</span></label>
@@ -911,7 +911,6 @@ function DonationStepPaymentForm({
               className="w-full border border-brand-lgrey rounded-sm px-3 py-2.5 text-sm text-brand-black placeholder:text-brand-grey/60 focus:outline-none focus:border-purple transition-colors bg-brand-white font-mono"
             />
           </div>
-
           {/* Account number */}
           <div className="flex flex-col gap-1">
             <label className="text-xs font-bold text-brand-black" htmlFor="bacs-acc">Account Number * <span className="font-normal text-brand-grey">(8 digits)</span></label>
@@ -925,7 +924,6 @@ function DonationStepPaymentForm({
               className="w-full border border-brand-lgrey rounded-sm px-3 py-2.5 text-sm text-brand-black placeholder:text-brand-grey/60 focus:outline-none focus:border-purple transition-colors bg-brand-white font-mono"
             />
           </div>
-
           {/* Mandate consent */}
           <label className="flex gap-3 items-start cursor-pointer p-3 border border-brand-lgrey rounded-sm bg-brand-white hover:border-purple/40 transition-colors">
             <input
@@ -942,7 +940,15 @@ function DonationStepPaymentForm({
         </div>
       )}
 
-      {/* ── Bank Transfer / Standing Order form ── */}
+      {/* ── BANK TRANSFER DISABLED ──────────────────────────────────────────────
+          The entire Bank Transfer / Standing Order form block is commented out
+          below. It can never render anyway since 'BankTransfer' was removed
+          from paymentMethods above (so payMethod can never equal
+          'BankTransfer'), but it's kept here, fully intact, so restoring it is
+          just a matter of uncommenting this block plus the matching entries
+          in paymentMethods, isSubmitDisabled, submitButtonLabel, and
+          handlePayment above.
+
       {payMethod === 'BankTransfer' && (
         <div className="animate-in fade-in slide-in-from-top-2 duration-300 mb-6 space-y-4">
           <div className="p-4 border border-purple/30 bg-purple-faint rounded-sm">
@@ -958,8 +964,6 @@ function DonationStepPaymentForm({
                 : 'Please make a one-off bank transfer to Human Relief Mission using your name as the payment reference.'}
             </p>
           </div>
-
-          {/* HRM bank details */}
           <div className="p-4 border border-brand-lgrey rounded-sm bg-brand-white space-y-2">
             <p className="text-xs font-bold text-brand-black mb-2">Transfer to:</p>
             {[
@@ -974,8 +978,6 @@ function DonationStepPaymentForm({
               </div>
             ))}
           </div>
-
-          {/* Your name */}
           <div className="flex flex-col gap-1">
             <label className="text-xs font-bold text-brand-black" htmlFor="bt-name">Your Full Name *</label>
             <input
@@ -987,8 +989,6 @@ function DonationStepPaymentForm({
               className="w-full border border-brand-lgrey rounded-sm px-3 py-2.5 text-sm text-brand-black placeholder:text-brand-grey/60 focus:outline-none focus:border-purple transition-colors bg-brand-white"
             />
           </div>
-
-          {/* Estimated transfer date */}
           <div className="flex flex-col gap-1">
             <label className="text-xs font-bold text-brand-black" htmlFor="bt-date">
               {isRecurringFrequency ? 'First Payment Date *' : 'Estimated Transfer Date *'}
@@ -1002,8 +1002,6 @@ function DonationStepPaymentForm({
               className="w-full border border-brand-lgrey rounded-sm px-3 py-2.5 text-sm text-brand-black focus:outline-none focus:border-purple transition-colors bg-brand-white"
             />
           </div>
-
-          {/* Bank name (optional) */}
           <div className="flex flex-col gap-1">
             <label className="text-xs font-bold text-brand-black" htmlFor="bt-bank">Your Bank Name <span className="font-normal text-brand-grey">(optional)</span></label>
             <input
@@ -1015,8 +1013,6 @@ function DonationStepPaymentForm({
               className="w-full border border-brand-lgrey rounded-sm px-3 py-2.5 text-sm text-brand-black placeholder:text-brand-grey/60 focus:outline-none focus:border-purple transition-colors bg-brand-white"
             />
           </div>
-
-          {/* Confirmation checkbox */}
           <label className="flex gap-3 items-start cursor-pointer p-3 border border-brand-lgrey rounded-sm bg-brand-white hover:border-purple/40 transition-colors">
             <input
               type="checkbox"
@@ -1032,6 +1028,7 @@ function DonationStepPaymentForm({
         </div>
       )}
 
+      ── END BANK TRANSFER DISABLED ────────────────────────────────────────── */}
 
       {errorMessage && (
         <div className="text-[#B60000] text-sm font-semibold mb-6 bg-red-50 border border-red-200 p-3 rounded-sm animate-in fade-in duration-300">
@@ -1068,7 +1065,6 @@ function DonationStepPaymentForm({
 export default function DonationStepPayment(props: DonationStepPaymentProps) {
   const stripePromise = useMemo(() => getStripe(), []);
   if (props.currentStep !== 5) return null;
-
   return (
     <Elements stripe={stripePromise}>
       <DonationStepPaymentForm {...props} />
