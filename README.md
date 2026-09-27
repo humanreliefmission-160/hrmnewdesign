@@ -1,6 +1,6 @@
 # Human Relief Mission Website
 
-The official website and internal operations platform for **Human Relief Mission (HRM)**, a humanitarian non-profit organisation. The system is designed as a single, unified Next.js application that serves three distinct audiences: the public-facing charity website, an internal operations dashboard and an embedded Sanity CMS studio — all under one codebase and one deployment.
+The official website and internal operations platform for **Human Relief Mission (HRM)**, a humanitarian non-profit organisation. The system is designed as a single, unified Next.js application that serves three distinct audiences: the public facing charity website, an internal operations dashboard and an embedded Sanity CMS studio - all under one codebase and one deployment.
 
 ---
 
@@ -133,6 +133,43 @@ npm run seed:supabase
 npm run build
 npm run start
 ```
+
+---
+
+## Client-Side Session Storage
+
+The donation flow uses two `sessionStorage` keys to carry state across page navigations. Both keys are exported from `app/[locale]/(website)/donate/DonateClient.tsx` so they can be imported by any page that needs to read them.
+
+| Key | Constant | Purpose |
+|---|---|---|
+| `hrm_donation_result` | `DONATION_SESSION_KEY` | Full donation receipt payload written after every payment attempt (success **or** failure). Read by `/donate/donate-success` and `/donate/donate-fail` to render the summary card. |
+| `hrm_donation_form` | `DONATION_FORM_KEY` | Snapshot of the donor's form inputs (personal details + Gift Aid choice). Written on every field change during the checkout flow. Read on mount so that clicking **"Try Again"** after a declined payment restores all fields automatically. Removed when a payment succeeds. |
+
+### Lifecycle
+
+```
+User fills Step 3 (Gift Aid) + Step 4 (Details)
+  → hrm_donation_form written & kept in sync
+
+User clicks "Donate Now"
+  → completeDonation() runs
+  → hrm_donation_result written (always)
+
+  ┌─ Payment succeeds ─────────────────────────────────────────┐
+  │  hrm_donation_form removed                                 │
+  │  User redirected → /donate/donate-success                  │
+  └────────────────────────────────────────────────────────────┘
+
+  ┌─ Payment declined ─────────────────────────────────────────┐
+  │  hrm_donation_form kept in sessionStorage                  │
+  │  User redirected → /donate/donate-fail                     │
+  │  User clicks "Try Again" → /donate?step=5                  │
+  │  DonateClient mounts, reads hrm_donation_form              │
+  │  All fields pre-filled; user only needs to re-enter card   │
+  └────────────────────────────────────────────────────────────┘
+```
+
+> **Note:** `sessionStorage` is scoped to the browser tab and is cleared automatically when the tab is closed. A page *refresh* on `/donate` will still restore the saved form (sessionStorage survives refreshes). If a user wants a truly fresh start they should close and reopen the tab, or clear their browser storage.
 
 ---
 
