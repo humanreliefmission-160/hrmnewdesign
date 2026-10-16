@@ -85,7 +85,7 @@ export default function FundingDiagram() {
 
 			{/* ── Legend ────────────────────────────────────────────────── */}
 			<p className="mt-8 text-xs text-brand-grey text-left max-w-lg leading-relaxed">
-				All four funding streams above are exclusively for UK Administration costs, ensuring 100% of your donations go to the cause.
+				All three funding streams above are exclusively for UK Administration costs, ensuring 100% of your donations go to the cause.
 			</p>
 		</div>
 	);
