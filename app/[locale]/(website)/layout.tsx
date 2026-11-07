@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import Script from "next/script";
+import { GoogleTagManager } from "@next/third-parties/google";
 import Footer from "./components/Footer";
 import ImpactTicker from "./components/ImpactTicker";
 import NavbarWrapper from "./components/NavbarWrapper";
@@ -49,6 +50,9 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className={rubik.variable}>
+      {process.env.NEXT_PUBLIC_GTM_ID && (
+        <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
+      )}
       <body>
         {/* GA4 Consent Mode v2 — defaults to denied until user consents */}
         {process.env.NEXT_PUBLIC_GA_ID && (
